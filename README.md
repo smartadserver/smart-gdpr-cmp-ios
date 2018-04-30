@@ -17,6 +17,10 @@ _SmartCMP_ is a framework allowing you to retrieve and store the user's consent 
 
 Retrieving user consent will be mandatory in EU starting May 25th due to the _General Data Protection Regulation (GDPR)_.
 
+<p align="center">
+  <img src="images/ios-consent-tool.gif" alt="Consent tool on iOS"/>
+</p>
+
 ## Usage
 
 ### Installation
