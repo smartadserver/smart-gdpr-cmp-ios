@@ -67,6 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
                                            consentManagementPurposeDetailAllowText: "Allowed",
                                            consentManagementVendorDetailViewPolicyText: "View privacy policy",
                                            consentManagementVendorDetailPurposesText: "Required purposes",
+                                           consentManagementVendorDetailLegitimatePurposesText: "Legitimate interest purposes",
                                            consentManagementVendorDetailFeaturesText: "Features")
     }
     

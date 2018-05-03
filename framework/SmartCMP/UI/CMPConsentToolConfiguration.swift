@@ -99,6 +99,11 @@ import Foundation
     /// Eg: "Required purposes"
     let consentManagementVendorDetailPurposesText: String
     
+    /// Text displayed as the title of the list of the vendor's legitimate interest purposes.
+    ///
+    /// Eg: "Legitimate purposes"
+    let consentManagementVendorDetailLegitimatePurposesText: String
+    
     /// Text displayed as the title of the list of the vendor's features.
     ///
     /// Eg: "Features"
@@ -126,6 +131,7 @@ import Foundation
         - consentManagementPurposeDetailAllowText: Text displayed next to the switch to allow / disallow a purpose or a vendor.
         - consentManagementVendorDetailViewPolicyText: Text displayed to access vendor's privacy policy webpage.
         - consentManagementVendorDetailPurposesText: Text displayed as the title of the list of the vendor's purposes.
+        - consentManagementVendorDetailLegitimatePurposesText: Text displayed as the title of the list of the vendor's legitimate purposes.
         - consentManagementVendorDetailFeaturesText: Text displayed as the title of the list of the vendor's features.
      
      - Returns: A new instance of CMPConsentToolConfiguration.
@@ -146,6 +152,7 @@ import Foundation
                 consentManagementPurposeDetailAllowText: String,
                 consentManagementVendorDetailViewPolicyText: String,
                 consentManagementVendorDetailPurposesText: String,
+                consentManagementVendorDetailLegitimatePurposesText: String,
                 consentManagementVendorDetailFeaturesText: String) {
         
         self.homeScreenLogo = logo
@@ -163,6 +170,7 @@ import Foundation
         self.consentManagementPurposeDetailAllowText = consentManagementPurposeDetailAllowText
         self.consentManagementVendorDetailViewPolicyText = consentManagementVendorDetailViewPolicyText
         self.consentManagementVendorDetailPurposesText = consentManagementVendorDetailPurposesText
+        self.consentManagementVendorDetailLegitimatePurposesText = consentManagementVendorDetailLegitimatePurposesText
         self.consentManagementVendorDetailFeaturesText = consentManagementVendorDetailFeaturesText
         
     }

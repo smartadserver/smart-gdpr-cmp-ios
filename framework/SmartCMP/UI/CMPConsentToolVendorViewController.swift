@@ -24,7 +24,8 @@ internal class CMPConsentToolVendorViewController: UITableViewController {
     
     static let VendorSection = 0
     static let PurposeSection = 1
-    static let FeatureSection = 2
+    static let LegitimateInterestPurposeSection = 2
+    static let FeatureSection = 3
 
     static let DefaultCellIdentifier = "defaultCell"
     
@@ -42,17 +43,14 @@ internal class CMPConsentToolVendorViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        if let vendor = self.vendor {
-            if vendor.features.count > 0 {
-                return 3
-            }
-        }
-        return 2
+        return 4
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == CMPConsentToolVendorViewController.PurposeSection {
             return self.vendor?.purposes.count ?? 0
+        } else if section == CMPConsentToolVendorViewController.LegitimateInterestPurposeSection {
+            return self.vendor?.legitimatePurposes.count ?? 0
         } else if section == CMPConsentToolVendorViewController.FeatureSection {
             return self.vendor?.features.count ?? 0
         } else{
@@ -75,6 +73,13 @@ internal class CMPConsentToolVendorViewController: UITableViewController {
             cell.selectionStyle = .none
             cell.accessoryType = UITableViewCellAccessoryType.none;
 
+        } else if indexPath.section == CMPConsentToolVendorViewController.LegitimateInterestPurposeSection {
+            if let purposeId = self.vendor?.legitimatePurposes[indexPath.row], let consentToolManager = self.consentToolManager {
+                cell.textLabel?.text = consentToolManager.purposeName(forId: purposeId)
+            }
+            cell.selectionStyle = .none
+            cell.accessoryType = UITableViewCellAccessoryType.none;
+            
         } else if indexPath.section == CMPConsentToolVendorViewController.FeatureSection {
             if let featureId = self.vendor?.features[indexPath.row], let consentToolManager = self.consentToolManager {
                 cell.textLabel?.text = consentToolManager.featureName(forId: featureId)
@@ -92,20 +97,34 @@ internal class CMPConsentToolVendorViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case CMPConsentToolVendorViewController.PurposeSection:
-            return consentToolManager?.configuration.consentManagementVendorDetailPurposesText
-        case CMPConsentToolVendorViewController.FeatureSection:
-            return consentToolManager?.configuration.consentManagementVendorDetailFeaturesText
-        default:
+        case CMPConsentToolVendorViewController.VendorSection:
             return vendor?.name
+        case CMPConsentToolVendorViewController.PurposeSection:
+            if self.tableView(tableView, numberOfRowsInSection: section) > 0 {
+                return consentToolManager?.configuration.consentManagementVendorDetailPurposesText
+            }
+        case CMPConsentToolVendorViewController.LegitimateInterestPurposeSection:
+            if self.tableView(tableView, numberOfRowsInSection: section) > 0 {
+                return consentToolManager?.configuration.consentManagementVendorDetailLegitimatePurposesText
+            }
+        case CMPConsentToolVendorViewController.FeatureSection:
+            if self.tableView(tableView, numberOfRowsInSection: section) > 0 {
+                return consentToolManager?.configuration.consentManagementVendorDetailFeaturesText
+            }
+        default:
+            return nil
         }
+        return nil
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == CMPConsentToolVendorViewController.VendorSection {
             return 44.0
         }
-        return 32.0
+        if self.tableView(tableView, numberOfRowsInSection: section) > 0 {
+            return 32.0
+        }
+        return 0
     }
     
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int){
