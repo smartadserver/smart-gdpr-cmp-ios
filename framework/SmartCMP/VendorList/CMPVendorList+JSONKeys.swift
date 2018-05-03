@@ -22,7 +22,7 @@ internal extension CMPVendorList {
     class JsonKey {
         
         static let VENDOR_LIST_VERSION = "vendorListVersion"
-        static let LAST_UDPDATE = "lastUpdated"
+        static let LAST_UPDATED = "lastUpdated"
         
         class Purposes {
             static let PURPOSES = "purposes"

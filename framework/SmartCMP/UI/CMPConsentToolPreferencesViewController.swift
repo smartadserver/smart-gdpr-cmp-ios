@@ -37,8 +37,8 @@ internal class CMPConsentToolPreferencesViewController: UITableViewController {
         
         self.title = consentToolManager?.configuration.consentManagementScreenTitle
         
-        let color = UIColor(red: 14.0/255, green: 122.0/255, blue: 254.0/255, alpha: 1.0)
-        let activeColor = UIColor(red: 14.0/255, green: 122.0/255, blue: 254.0/255, alpha: 0.7)
+        let color = UINavigationBar.appearance().tintColor ?? UIColor(red: 14.0/255, green: 122.0/255, blue: 254.0/255, alpha: 1.0)
+        let activeColor = UINavigationBar.appearance().tintColor ?? UIColor(red: 14.0/255, green: 122.0/255, blue: 254.0/255, alpha: 0.7)
         
         // Cancel button
         let btnBack = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 20))
