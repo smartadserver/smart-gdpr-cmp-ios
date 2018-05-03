@@ -78,7 +78,7 @@ public class CMPVendorList : Equatable, Codable {
         guard let jsonData = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
             let json = jsonData,
             let vendorListVersion = json[JsonKey.VENDOR_LIST_VERSION] as? Int,
-            let lastUpdatedString = json[JsonKey.LAST_UDPDATE] as? String,
+            let lastUpdatedString = json[JsonKey.LAST_UPDATED] as? String,
             let lastUpdated = CMPVendorList.date(from: lastUpdatedString),
             let purposesJSON = json[JsonKey.Purposes.PURPOSES] as? [Any],
             let featuresJSON = json[JsonKey.Features.FEATURES] as? [Any],

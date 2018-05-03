@@ -165,7 +165,7 @@ internal extension CMPConsentString {
             for _ in (1...numEntries) {
                 
                 let singleOrRange = buffer.pop(numberOfBits: versionConfig.singleOrRangeBitSize)
-                guard singleOrRange.count == 1 else {
+                guard singleOrRange.count == versionConfig.singleOrRangeBitSize else {
                     return nil
                 }
                 
