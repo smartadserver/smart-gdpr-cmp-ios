@@ -88,12 +88,24 @@ class CMPVendorListTests : XCTestCase {
     }
     
     func testVendorListIsEquatable() {
-        let vendor1 = CMPVendorList(jsonData: vendorsJSON)
-        let vendor2 = CMPVendorList(jsonData: vendorsJSON)
-        let vendor3 = CMPVendorList(jsonData: updatedVendorsJSON)
+        let vendorList1 = CMPVendorList(jsonData: vendorsJSON)
+        let vendorList2 = CMPVendorList(jsonData: vendorsJSON)
+        let vendorList3 = CMPVendorList(jsonData: updatedVendorsJSON)
         
-        XCTAssertEqual(vendor1, vendor2)
-        XCTAssertNotEqual(vendor1, vendor3)
+        XCTAssertEqual(vendorList1, vendorList2)
+        XCTAssertNotEqual(vendorList1, vendorList3)
+    }
+    
+    func testVendorListCanBeEncoded() {
+        let vendorList = CMPVendorList(jsonData: vendorsJSON)
+        
+        let encodedVendorList = try? PropertyListEncoder().encode(vendorList)
+        XCTAssertNotNil(encodedVendorList)
+        
+        let decodedVendorList = try? PropertyListDecoder().decode(CMPVendorList.self, from: encodedVendorList!)
+        XCTAssertNotNil(decodedVendorList)
+        
+        XCTAssertEqual(vendorList, decodedVendorList)
     }
     
 }
