@@ -14,12 +14,15 @@ import Foundation
 /**
  Configuration for a given version of the consent string.
  */
-public class CMPVersionConfig {
+@objc
+public class CMPVersionConfig : NSObject {
     
     /// The lastest version of the consent string.
+    @objc
     public static let LATEST = CMPVersionConfig(version: 1)!
     
     /// The version of the consent string.
+    @objc
     public let version: Int
     
     /// The number of bits used to encode the version field.

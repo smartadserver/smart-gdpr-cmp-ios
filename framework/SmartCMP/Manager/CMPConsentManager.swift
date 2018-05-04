@@ -15,7 +15,8 @@ import AdSupport
 /**
  A class to manage the CMP.
  */
-@objc public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPConsentToolManagerDelegate {
+@objc
+public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPConsentToolManagerDelegate {
 
     // MARK: - Global singleton
     
@@ -67,12 +68,15 @@ import AdSupport
     // MARK: - Constants
     
     /// The URL used by default to fetch the vendor list.
+    @objc
     public static let DEFAULT_VENDORLIST_URL = URL(string: CMPConstants.VendorList.DefaultEndPoint)!
     
     /// The default refresh interval for the vendor list.
+    @objc
     public static let DEFAULT_VENDORLIST_REFRESH_TIME = 86400.0
     
     /// The behavior if LAT (Limited Ad Tracking) is enabled.
+    @objc
     public static let DEFAULT_LAT_VALUE = true
     
     // MARK: - Public methods

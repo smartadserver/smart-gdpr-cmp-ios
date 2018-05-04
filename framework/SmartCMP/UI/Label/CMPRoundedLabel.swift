@@ -8,7 +8,10 @@
 
 import UIKit
 
-class CMPRoundedLabel: UILabel {
+/**
+ UILabel subclass that displays its background with rounded corners.
+ */
+internal class CMPRoundedLabel: UILabel {
 
     override func drawText(in rect: CGRect) {
         let insets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)

@@ -43,12 +43,12 @@ class CMPVendorListTests : XCTestCase {
         XCTAssertEqual(vendorList?.purposes.count, 5)
         XCTAssertEqual(vendorList?.purposes[2].id, 3)
         XCTAssertEqual(vendorList?.purposes[2].name, "Ad selection, delivery, reporting")
-        XCTAssertEqual(vendorList?.purposes[2].description, "The collection of information, and combination with previously collected information, to select and deliver advertisements for you, and to measure the delivery and effectiveness of such advertisements. This includes using previously collected information about your interests to select ads, processing data about what advertisements were shown, how often they were shown, when and where they were shown, and whether you took any action related to the advertisement, including for example clicking an ad or making a purchase. ")
+        XCTAssertEqual(vendorList?.purposes[2].purposeDescription, "The collection of information, and combination with previously collected information, to select and deliver advertisements for you, and to measure the delivery and effectiveness of such advertisements. This includes using previously collected information about your interests to select ads, processing data about what advertisements were shown, how often they were shown, when and where they were shown, and whether you took any action related to the advertisement, including for example clicking an ad or making a purchase. ")
         
         XCTAssertEqual(vendorList?.features.count, 3)
         XCTAssertEqual(vendorList?.features[1].id, 2)
         XCTAssertEqual(vendorList?.features[1].name, "Linking Devices")
-        XCTAssertEqual(vendorList?.features[1].description, "Allow processing of a user's data to connect such user across multiple devices.")
+        XCTAssertEqual(vendorList?.features[1].featureDescription, "Allow processing of a user's data to connect such user across multiple devices.")
         
         XCTAssertEqual(vendorList?.vendors.count, 17)
         XCTAssertEqual(vendorList?.vendors[4].id, 27)

@@ -14,7 +14,8 @@ import Foundation
 /**
  Delegate of CMPVendorListManager.
  */
-@objc public protocol CMPConsentManagerDelegate : class {
+@objc
+public protocol CMPConsentManagerDelegate : class {
     
     /**
      Called when the consent manager found a reason to display the Consent Tool UI. The publisher should display
@@ -22,6 +23,7 @@ import Foundation
      
      - Parameter consentManager: The consent manager instance.
      */
-    @objc func consentManagerRequestsToShowConsentTool(_ consentManager: CMPConsentManager)
+    @objc
+    func consentManagerRequestsToShowConsentTool(_ consentManager: CMPConsentManager)
     
 }

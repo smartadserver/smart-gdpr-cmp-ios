@@ -14,30 +14,39 @@ import Foundation
 /**
  Representation of a vendor.
  */
-public class CMPVendor : Equatable, Codable {
+@objc
+public class CMPVendor : NSObject, Codable {
     
     /// The id of the vendor.
+    @objc
     public let id: Int
     
     /// The name of the vendor.
+    @objc
     public let name: String
     
     /// The list of purposes related to this vendor.
+    @objc
     public let purposes: [Int]
     
     /// The list of legitimate (aka non-consentable) purposes related to this vendor.
+    @objc
     public let legitimatePurposes: [Int]
     
     /// The list of features related to this vendor.
+    @objc
     public let features: [Int]
     
     /// The privacy policy's URL for this vendor.
+    @objc
     public let policyURL: URL
     
     /// A date of deletion of this vendor has been marked as deleted, nil otherwise.
+    @objc
     public let deletedDate: Date?
     
     /// true if the vendor is activated (ie not deleted), false otherwise.
+    @objc
     public var isActivated: Bool {
         return deletedDate == nil
     }
@@ -53,6 +62,7 @@ public class CMPVendor : Equatable, Codable {
         - features: The list of features related to this vendor.
         - policyURL: The privacy policy's URL for this vendor.
      */
+    @objc
     public convenience init(id: Int, name: String, purposes: [Int], legitimatePurposes: [Int], features: [Int], policyURL: URL) {
         self.init(id: id, name: name, purposes: purposes, legitimatePurposes: legitimatePurposes, features: features, policyURL: policyURL, deletedDate: nil)
     }
@@ -69,6 +79,7 @@ public class CMPVendor : Equatable, Codable {
         - policyURL: The privacy policy's URL for this vendor.
         - deletedDate: A date of deletion of this vendor has been marked as deleted, nil otherwise.
      */
+    @objc
     public init(id: Int, name: String, purposes: [Int], legitimatePurposes: [Int], features: [Int], policyURL: URL, deletedDate: Date?) {
         self.id = id
         self.name = name
@@ -77,6 +88,14 @@ public class CMPVendor : Equatable, Codable {
         self.features = features
         self.policyURL = policyURL
         self.deletedDate = deletedDate
+    }
+    
+    override public func isEqual(_ object: Any?) -> Bool {
+        if let object = object as? CMPVendor {
+            return self == object
+        } else {
+            return false
+        }
     }
     
     public static func == (lhs: CMPVendor, rhs: CMPVendor) -> Bool {
