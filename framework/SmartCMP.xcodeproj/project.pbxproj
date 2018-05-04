@@ -24,6 +24,9 @@
 		7E25FC81208F51CF00D05789 /* CMPBitsStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E25FC79208F51CF00D05789 /* CMPBitsStringTests.swift */; };
 		7E25FC82208F51CF00D05789 /* CMPBitUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E25FC7A208F51CF00D05789 /* CMPBitUtilsTest.swift */; };
 		7E25FC83208F51CF00D05789 /* CMPLanguageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E25FC7C208F51CF00D05789 /* CMPLanguageTests.swift */; };
+		7E2F0529209CB67500C8C9E0 /* CMPPurposeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F0528209CB67500C8C9E0 /* CMPPurposeTests.swift */; };
+		7E2F052B209CB68400C8C9E0 /* CMPFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F052A209CB68400C8C9E0 /* CMPFeatureTests.swift */; };
+		7E2F052D209CB6A500C8C9E0 /* CMPVendorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F052C209CB6A500C8C9E0 /* CMPVendorTests.swift */; };
 		7E5A5F752091F8920025BE51 /* CMPVendorListManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5A5F742091F8920025BE51 /* CMPVendorListManagerTests.swift */; };
 		7E5A5F78209228410025BE51 /* CMPConsentString+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5A5F77209228410025BE51 /* CMPConsentString+Utils.swift */; };
 		7E800B512090AEAC001FC83B /* CMPVendorList+JSONKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E800B4C2090AEAC001FC83B /* CMPVendorList+JSONKeys.swift */; };
@@ -90,6 +93,9 @@
 		7E25FC79208F51CF00D05789 /* CMPBitsStringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CMPBitsStringTests.swift; sourceTree = "<group>"; };
 		7E25FC7A208F51CF00D05789 /* CMPBitUtilsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CMPBitUtilsTest.swift; sourceTree = "<group>"; };
 		7E25FC7C208F51CF00D05789 /* CMPLanguageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CMPLanguageTests.swift; sourceTree = "<group>"; };
+		7E2F0528209CB67500C8C9E0 /* CMPPurposeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPPurposeTests.swift; sourceTree = "<group>"; };
+		7E2F052A209CB68400C8C9E0 /* CMPFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPFeatureTests.swift; sourceTree = "<group>"; };
+		7E2F052C209CB6A500C8C9E0 /* CMPVendorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPVendorTests.swift; sourceTree = "<group>"; };
 		7E5A5F742091F8920025BE51 /* CMPVendorListManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPVendorListManagerTests.swift; sourceTree = "<group>"; };
 		7E5A5F77209228410025BE51 /* CMPConsentString+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMPConsentString+Utils.swift"; sourceTree = "<group>"; };
 		7E800B4C2090AEAC001FC83B /* CMPVendorList+JSONKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CMPVendorList+JSONKeys.swift"; sourceTree = "<group>"; };
@@ -279,8 +285,11 @@
 		7E800B562090AED2001FC83B /* VendorList */ = {
 			isa = PBXGroup;
 			children = (
-				7E800B572090AED2001FC83B /* CMPVendorListTests.swift */,
 				7E5A5F742091F8920025BE51 /* CMPVendorListManagerTests.swift */,
+				7E800B572090AED2001FC83B /* CMPVendorListTests.swift */,
+				7E2F0528209CB67500C8C9E0 /* CMPPurposeTests.swift */,
+				7E2F052A209CB68400C8C9E0 /* CMPFeatureTests.swift */,
+				7E2F052C209CB6A500C8C9E0 /* CMPVendorTests.swift */,
 			);
 			path = VendorList;
 			sourceTree = "<group>";
@@ -526,11 +535,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E25FC7F208F51CF00D05789 /* CMPConsentStringTests.swift in Sources */,
+				7E2F0529209CB67500C8C9E0 /* CMPPurposeTests.swift in Sources */,
+				7E2F052B209CB68400C8C9E0 /* CMPFeatureTests.swift in Sources */,
 				E96661102090C50B00FCA161 /* CMPConsentManagerTests.swift in Sources */,
 				7E25FC83208F51CF00D05789 /* CMPLanguageTests.swift in Sources */,
 				7E800B582090AED2001FC83B /* CMPVendorListTests.swift in Sources */,
 				7E25FC82208F51CF00D05789 /* CMPBitUtilsTest.swift in Sources */,
 				7E5A5F752091F8920025BE51 /* CMPVendorListManagerTests.swift in Sources */,
+				7E2F052D209CB6A500C8C9E0 /* CMPVendorTests.swift in Sources */,
 				7E25FC80208F51CF00D05789 /* CMPBase64URLTests.swift in Sources */,
 				7E25FC81208F51CF00D05789 /* CMPBitsStringTests.swift in Sources */,
 				7E800B672090BF7A001FC83B /* CMPURLSessionTests.swift in Sources */,

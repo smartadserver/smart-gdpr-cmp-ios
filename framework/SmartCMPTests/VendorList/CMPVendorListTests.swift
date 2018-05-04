@@ -87,4 +87,13 @@ class CMPVendorListTests : XCTestCase {
         XCTAssertEqual(vendorList?.activatedVendorCount, 19)
     }
     
+    func testVendorListIsEquatable() {
+        let vendor1 = CMPVendorList(jsonData: vendorsJSON)
+        let vendor2 = CMPVendorList(jsonData: vendorsJSON)
+        let vendor3 = CMPVendorList(jsonData: updatedVendorsJSON)
+        
+        XCTAssertEqual(vendor1, vendor2)
+        XCTAssertNotEqual(vendor1, vendor3)
+    }
+    
 }
