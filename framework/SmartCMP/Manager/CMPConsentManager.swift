@@ -67,10 +67,6 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
     
     // MARK: - Constants
     
-    /// The URL used by default to fetch the vendor list.
-    @objc
-    public static let DEFAULT_VENDORLIST_URL = URL(string: CMPConstants.VendorList.DefaultEndPoint)!
-    
     /// The default refresh interval for the vendor list.
     @objc
     public static let DEFAULT_VENDORLIST_REFRESH_TIME = 86400.0
@@ -92,7 +88,6 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
     public func configureWithLanguage(_ language: CMPLanguage,
                                       consentToolConfiguration: CMPConsentToolConfiguration) {
         self.configure(
-            vendorListURL: CMPConsentManager.DEFAULT_VENDORLIST_URL,
             refreshInterval: CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_TIME,
             language: language,
             consentToolConfiguration: consentToolConfiguration,
@@ -111,8 +106,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
         - showConsentToolIfUserLimitedAdTracking: Whether or not the consent tool UI should be shown if user's checked Limit Ad Tracking in his device's preferences. If false, UI will never be shown if user checked LAT and consent string will be formatted has "user does not give consent".
      */
     @objc
-    public func configure(vendorListURL: URL = CMPConsentManager.DEFAULT_VENDORLIST_URL,
-                          refreshInterval: TimeInterval = CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_TIME,
+    public func configure(refreshInterval: TimeInterval = CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_TIME,
                           language: CMPLanguage,
                           consentToolConfiguration: CMPConsentToolConfiguration,
                           showConsentToolIfUserLimitedAdTracking: Bool = CMPConsentManager.DEFAULT_LAT_VALUE) {
@@ -133,7 +127,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
         self.showConsentToolIfLAT = showConsentToolIfUserLimitedAdTracking
         
         // Instantiate CPMVendorsManager with URL and RefreshTime and delegate
-        self.vendorListManager = CMPVendorListManager(url: vendorListURL, refreshInterval: refreshInterval, delegate: self)
+        self.vendorListManager = CMPVendorListManager(url: CMPVendorListURL(), refreshInterval: refreshInterval, delegate: self)
         
         // Check for already existing consent string in NSUserDefaults
         if let storedConsentString = readStringFromUserDefaults(key: CMPConstants.IABConsentKeys.ConsentString) {

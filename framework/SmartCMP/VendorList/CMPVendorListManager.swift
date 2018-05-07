@@ -35,7 +35,7 @@ internal class CMPVendorListManager {
     internal static let DEFAULT_TIMER_POLL_INTERVAL: TimeInterval = 60.0
     
     /// The URL of the vendor list.
-    let vendorListURL: URL
+    let vendorListURL: CMPVendorListURL
     
     /// The interval between each refresh.
     let refreshInterval: TimeInterval
@@ -70,7 +70,7 @@ internal class CMPVendorListManager {
          - refreshInterval: The interval between each refresh.
          - delegate: The delegate that should be warned when a vendor list is available or in case of errors.
      */
-    public convenience init(url: URL, refreshInterval: TimeInterval, delegate: CMPVendorListManagerDelegate) {
+    public convenience init(url: CMPVendorListURL, refreshInterval: TimeInterval, delegate: CMPVendorListManagerDelegate) {
         self.init(
             url: url,
             refreshInterval: refreshInterval,
@@ -92,7 +92,7 @@ internal class CMPVendorListManager {
          - pollInterval: A custom polling timer interval.
          - urlSession: A custom URL session used for network connection.
      */
-    public init(url: URL,
+    public init(url: CMPVendorListURL,
                 refreshInterval:TimeInterval,
                 delegate: CMPVendorListManagerDelegate,
                 pollInterval: TimeInterval,
@@ -154,9 +154,18 @@ internal class CMPVendorListManager {
      Refresh the vendor list from network.
      */
     public func refresh() {
+        refresh(vendorListURL: vendorListURL)
+    }
+    
+    /**
+     Refresh the vendor list from network.
+     
+     - Parameter vendorListURL: The url of the vendor list that must be fetched.
+     */
+    public func refresh(vendorListURL: CMPVendorListURL) {
         refreshHandler?(lastRefreshDate) // calling handler when refreshing for unit testing purposes only
         
-        urlSession.dataRequest(url: vendorListURL) { (data, response, error) in
+        urlSession.dataRequest(url: vendorListURL.url) { (data, response, error) in
             if let data = data, error == nil {
                 if let vendorList = CMPVendorList(jsonData: data) {
                     self.lastRefreshDate = Date()
