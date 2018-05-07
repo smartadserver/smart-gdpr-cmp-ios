@@ -29,7 +29,7 @@ internal class CMPVendorListManager {
     
     /// The default polling timer interval.
     ///
-    /// This timer is polling every minutes because we want to be able to retry quicly in case of
+    /// This timer is polling every minutes because we want to be able to retry quickly in case of
     /// issues when retrieving the vendor list.
     /// If the refresh is successful, the 'refreshInterval' will be honored by the timer.
     internal static let DEFAULT_TIMER_POLL_INTERVAL: TimeInterval = 60.0
@@ -159,6 +159,10 @@ internal class CMPVendorListManager {
     
     /**
      Refresh the vendor list from network.
+     
+     Note: a successful refresh will update the last refresh date, preventing the auto refresh to happen for some times,
+     a failed refresh will invalidate the last refresh date: an auto refresh will be triggered at the next timer fired
+     event.
      
      - Parameters
         - vendorListURL: The url of the vendor list that must be fetched.
