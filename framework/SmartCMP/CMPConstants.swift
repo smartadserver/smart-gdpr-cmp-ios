@@ -34,7 +34,7 @@ internal struct CMPConstants {
     /// Vendor list configuration
     struct VendorList {
         static let DefaultEndPoint                  = "https://vendorlist.consensu.org/vendorlist.json"
-        static let VendorListStorageKey             = "SmartCMP_lastVendorlist"
+        static let VersionedEndPoint                = "https://vendorlist.consensu.org/v-{version}/vendorlist.json"
     }
     
 }

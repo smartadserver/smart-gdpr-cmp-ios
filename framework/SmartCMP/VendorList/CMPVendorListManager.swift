@@ -35,7 +35,7 @@ internal class CMPVendorListManager {
     internal static let DEFAULT_TIMER_POLL_INTERVAL: TimeInterval = 60.0
     
     /// The URL of the vendor list.
-    let vendorListURL: URL
+    let vendorListURL: CMPVendorListURL
     
     /// The interval between each refresh.
     let refreshInterval: TimeInterval
@@ -70,7 +70,7 @@ internal class CMPVendorListManager {
          - refreshInterval: The interval between each refresh.
          - delegate: The delegate that should be warned when a vendor list is available or in case of errors.
      */
-    public convenience init(url: URL, refreshInterval: TimeInterval, delegate: CMPVendorListManagerDelegate) {
+    public convenience init(url: CMPVendorListURL, refreshInterval: TimeInterval, delegate: CMPVendorListManagerDelegate) {
         self.init(
             url: url,
             refreshInterval: refreshInterval,
@@ -92,7 +92,7 @@ internal class CMPVendorListManager {
          - pollInterval: A custom polling timer interval.
          - urlSession: A custom URL session used for network connection.
      */
-    public init(url: URL,
+    public init(url: CMPVendorListURL,
                 refreshInterval:TimeInterval,
                 delegate: CMPVendorListManagerDelegate,
                 pollInterval: TimeInterval,
@@ -154,22 +154,60 @@ internal class CMPVendorListManager {
      Refresh the vendor list from network.
      */
     public func refresh() {
+        refresh(vendorListURL: vendorListURL)
+    }
+    
+    /**
+     Refresh the vendor list from network.
+     
+     - Parameters
+        - vendorListURL: The url of the vendor list that must be fetched.
+        - responseHandler: Optional callback that will be used INSTEAD of the delegate if provided.
+     */
+    public func refresh(vendorListURL: CMPVendorListURL, responseHandler: ((CMPVendorList?, Error?) -> ())? = nil) {
         refreshHandler?(lastRefreshDate) // calling handler when refreshing for unit testing purposes only
         
-        urlSession.dataRequest(url: vendorListURL) { (data, response, error) in
+        urlSession.dataRequest(url: vendorListURL.url) { (data, response, error) in
             if let data = data, error == nil {
                 if let vendorList = CMPVendorList(jsonData: data) {
                     self.lastRefreshDate = Date()
                     
                     // Fetching successful
-                    self.delegate.vendorListManager(self, didFetchVendorList: vendorList)
+                    self.callRefreshCallback(vendorList: vendorList, error: nil, responseHandler: responseHandler)
                 } else {
+                    self.lastRefreshDate = nil
+                    
                     // Parsing error
-                    self.delegate.vendorListManager(self, didFailWithError: RefreshError.parsingError)
+                    self.callRefreshCallback(vendorList: nil, error: RefreshError.parsingError, responseHandler: responseHandler)
                 }
             } else {
+                self.lastRefreshDate = nil
+                
                 // Network error
-                self.delegate.vendorListManager(self, didFailWithError: RefreshError.networkError)
+                self.callRefreshCallback(vendorList: nil, error: RefreshError.networkError, responseHandler: responseHandler)
+            }
+        }
+    }
+    
+    /**
+     Call the relevant CMPVendorListManager delegate or callback.
+     
+     Called after a refresh attempt, this method will call a callback if provided when refresh() was invoked, otherwise
+     the standard delegate will be called.
+     
+     - Parameters:
+        - vendorList: An optional vendor list.
+        - error: An optional error.
+        - responseHandler: An optional response handler.
+     */
+    private func callRefreshCallback(vendorList: CMPVendorList?, error: Error?, responseHandler: ((CMPVendorList?, Error?) -> ())?) {
+        if let handler = responseHandler {
+            handler(vendorList, error)
+        } else {
+            if let vendorList = vendorList {
+                self.delegate.vendorListManager(self, didFetchVendorList: vendorList)
+            } else if let error = error {
+                self.delegate.vendorListManager(self, didFailWithError: error)
             }
         }
     }
