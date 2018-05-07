@@ -30,50 +30,64 @@ import Foundation
     }
     
     /// The consent string version.
+    @objc
     public let version: Int
     
     /// The consent string version configuration.
     private let versionConfig: CMPVersionConfig
     
     /// The date of the first consent string creation.
+    @objc
     public let created: Date
     
     /// The date of the last consent string update.
+    @objc
     public let lastUpdated: Date
     
     /// The id of the last Consent Manager Provider that updated the consent string.
+    @objc
     public let cmpId: Int
     
     /// The version of the Consent Manager Provider.
+    @objc
     public let cmpVersion: Int
     
     /// The screen number in the CMP where the consent was given.
+    @objc
     public let consentScreen: Int
     
     /// The language that the CMP asked for consent in.
+    @objc
     public let consentLanguage: CMPLanguage
     
     /// The version of the vendor list used in the most recent consent string update.
+    @objc
     public let vendorListVersion: Int
     
     /// The maximum vendor id that can be found in the current vendor list.
+    @objc
     public let maxVendorId: Int
     
     /// An array of allowed purposes id.
+    @objc
     public let allowedPurposes: IndexSet
     
     /// An array of allowed vendors id.
+    @objc
     public let allowedVendors: IndexSet
     
     /// The base64 representation of the consent string.
+    @objc
     public let consentString: String
     
     /// The 'parsed purpose consents' string that can be stored in the IABConsent_ParsedPurposeConsents key.
+    @objc
     public var parsedPurposeConsents: String {
         return (1...versionConfig.allowedPurposesBitSize).map { allowedPurposes.contains($0) ? "1" : "0" }.joined()
     }
     
     /// The 'parsed vendor consents' string that can be stored in the IABConsent_ParsedVendorConsents key.
+    @objc
     public var parsedVendorConsents: String {
         return (1...maxVendorId).map { allowedVendors.contains($0) ? "1" : "0" }.joined()
     }
@@ -94,6 +108,7 @@ import Foundation
          - vendorList: The vendor list corresponding to the consent string.
      - Returns: A new instance of CMPConsentString if version is valid, nil otherwise.
      */
+    @objc
     public convenience init?(version: Int,
                              created: Date,
                              lastUpdated: Date,
@@ -141,6 +156,7 @@ import Foundation
          - allowedVendors: An array of allowed vendors id.
      - Returns: A new instance of CMPConsentString if version is valid, nil otherwise.
      */
+    @objc
     public convenience init?(version: Int,
                              created: Date,
                              lastUpdated: Date,
@@ -187,6 +203,7 @@ import Foundation
          - allowedVendors: An array of allowed vendors id.
          - vendorList: The vendor list corresponding to the consent string.
      */
+    @objc
     public convenience init(versionConfig: CMPVersionConfig,
                             created: Date,
                             lastUpdated: Date,
@@ -229,6 +246,7 @@ import Foundation
          - allowedPurposes: An array of allowed purposes id.
          - allowedVendors: An array of allowed vendors id.
      */
+    @objc
     public convenience init(versionConfig: CMPVersionConfig, // no
                             created: Date, // no
                             lastUpdated: Date, // no
@@ -321,6 +339,7 @@ import Foundation
      - Parameter purposeId: The purpose id which should be checked.
      - Returns: true if the purpose is allowed, false otherwise.
      */
+    @objc
     public func isPurposeAllowed(purposeId: Int) -> Bool {
         return allowedPurposes.contains(purposeId)
     }
@@ -331,6 +350,7 @@ import Foundation
      - Parameter vendorId: The vendor id which should be checked.
      - Returns: true if the vendor is allowed, false otherwise.
      */
+    @objc
     public func isVendorAllowed(vendorId: Int) -> Bool {
         return allowedVendors.contains(vendorId)
     }
@@ -341,6 +361,7 @@ import Foundation
      - Parameter base64String: The base64 consent string.
      - Returns: A new instance of CMPConsentString if the string is valid, nil otherwise.
      */
+    @objc
     public static func from(base64 base64String: String) -> CMPConsentString? {
         if let bits = CMPBitsString(string: base64String)?.bitsValue {
             return CMPConsentString.decodeFromBits(bits: bits)

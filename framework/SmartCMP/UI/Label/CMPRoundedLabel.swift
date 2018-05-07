@@ -3,12 +3,18 @@
 //  SmartCMP
 //
 //  Created by Julien Gomez on 30/04/2018.
-//  Copyright © 2018 Smart AdServer. All rights reserved.
+//  Copyright © 2018 Smart AdServer.
+//
+//  This software is distributed under the Creative Commons Legal Code, Attribution 3.0 Unported license.
+//  Check the LICENSE file for more information.
 //
 
 import UIKit
 
-class CMPRoundedLabel: UILabel {
+/**
+ UILabel subclass that displays its background with rounded corners.
+ */
+internal class CMPRoundedLabel: UILabel {
 
     override func drawText(in rect: CGRect) {
         let insets = UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5)

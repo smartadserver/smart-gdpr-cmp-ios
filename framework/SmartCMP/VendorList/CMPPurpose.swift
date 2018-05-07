@@ -14,16 +14,20 @@ import Foundation
 /**
  Representation of a purpose.
  */
-public class CMPPurpose : Equatable, Codable {
+@objc
+public class CMPPurpose : NSObject, Codable {
     
     /// The id of the purpose.
+    @objc
     public let id: Int
     
     /// The name of the purpose.
+    @objc
     public let name: String
     
     /// The description of the purpose.
-    public let description: String
+    @objc
+    public let purposeDescription: String
     
     /**
      Initialize a new instance of CMPPurpose.
@@ -33,16 +37,25 @@ public class CMPPurpose : Equatable, Codable {
         - name: The name of the purpose.
         - description: The description of the purpose.
      */
+    @objc
     public init(id: Int, name: String, description: String) {
         self.id = id
         self.name = name
-        self.description = description
+        self.purposeDescription = description
+    }
+    
+    override public func isEqual(_ object: Any?) -> Bool {
+        if let object = object as? CMPPurpose {
+            return self == object
+        } else {
+            return false
+        }
     }
     
     public static func == (lhs: CMPPurpose, rhs: CMPPurpose) -> Bool {
         return lhs.id == rhs.id
             && lhs.name == rhs.name
-            && lhs.description == rhs.description
+            && lhs.purposeDescription == rhs.purposeDescription
     }
     
 }

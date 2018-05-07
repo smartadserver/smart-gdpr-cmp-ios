@@ -14,18 +14,23 @@ import Foundation
 /**
  ISO 639-1 language representation for the CMPConsentString
  */
-@objc public class CMPLanguage : NSObject {
+@objc
+public class CMPLanguage : NSObject {
     
     /// The CMP default language ('en' / English).
-    @objc public static let DEFAULT_LANGUAGE = CMPLanguage(string: "en")!
+    @objc
+    public static let DEFAULT_LANGUAGE = CMPLanguage(string: "en")!
     
     /// The list of valid letters for the language string.
+    @objc
     public static let VALID_LETTERS = (0..<26).map({ String(UnicodeScalar("a".unicodeScalars.first!.value + $0)! )})
     
     /// The valid length for the language string.
+    @objc
     public static let VALID_LENGTH = 2
     
     /// The string representation of the CMPLanguage instance.
+    @objc
     public let string: String
     
     /**

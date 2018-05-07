@@ -14,39 +14,49 @@ import Foundation
 /**
  Representation of a vendor list.
  */
-public class CMPVendorList : Equatable, Codable {
+@objc
+public class CMPVendorList : NSObject, Codable {
     
     /// The vendor list version.
+    @objc
     public let vendorListVersion: Int
     
     /// The date of the last vendor list update.
+    @objc
     public let lastUpdated: Date
     
     /// A list of purposes.
+    @objc
     public let purposes: [CMPPurpose]
     
     /// A list of features.
+    @objc
     public let features: [CMPFeature]
     
     /// A list of vendors.
+    @objc
     public let vendors: [CMPVendor]
     
     /// The list of activated vendors (ie not deleted).
+    @objc
     public var activatedVendors: [CMPVendor] {
         return vendors.filter { $0.isActivated }
     }
     
     /// The maximum vendor id used in the vendor list.
+    @objc
     public var maxVendorId: Int {
         return vendors.map({ $0.id }).reduce(0) { (acc, value) in value > acc ? value : acc }
     }
     
     /// The count of vendors in this vendor list.
+    @objc
     public var vendorCount: Int {
         return vendors.count
     }
     
     /// The count of activated vendors (ie not deleted) in this vendor list.
+    @objc
     public var activatedVendorCount: Int {
         return activatedVendors.count
     }
@@ -60,6 +70,7 @@ public class CMPVendorList : Equatable, Codable {
         - purposes: A list of purposes.
         - vendors: A list of vendors.
      */
+    @objc
     public init(vendorListVersion: Int, lastUpdated: Date, purposes: [CMPPurpose], features: [CMPFeature], vendors: [CMPVendor]) {
         self.vendorListVersion = vendorListVersion
         self.lastUpdated = lastUpdated
@@ -73,6 +84,7 @@ public class CMPVendorList : Equatable, Codable {
      
      - Parameter jsonData: The data representation of the vendor list JSON.
      */
+    @objc
     public convenience init?(jsonData: Data) {
         
         guard let jsonData = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
@@ -99,6 +111,7 @@ public class CMPVendorList : Equatable, Codable {
      - Parameter id: The id of the purpose that needs to be retrieved.
      - Returns: A purpose corresponding to the id if found, nil otherwise.
      */
+    @objc
     public func purpose(forId id: Int) -> CMPPurpose? {
         return purposes.filter { $0.id == id }.first
     }
@@ -109,6 +122,7 @@ public class CMPVendorList : Equatable, Codable {
      - Parameter id: The id of the feature that needs to be retrieved.
      - Returns: A feature corresponding to the id if found, nil otherwise.
      */
+    @objc
     public func feature(forId id: Int) -> CMPFeature? {
         return features.filter { $0.id == id }.first
     }
@@ -119,6 +133,7 @@ public class CMPVendorList : Equatable, Codable {
      - Parameter id: The id of the vendor that needs to be retrieved.
      - Returns: A vendor corresponding to the id if found, nil otherwise.
      */
+    @objc
     public func vendor(forId id: Int) -> CMPVendor? {
         return vendors.filter { $0.id == id }.first
     }
@@ -129,6 +144,7 @@ public class CMPVendorList : Equatable, Codable {
      - Parameter id: The id of the purpose name that needs to be retrieved.
      - Returns: A purpose name corresponding to the id if found, nil otherwise.
      */
+    @objc
     public func purposeName(forId id: Int) -> String? {
         return purpose(forId: id)?.name
     }
@@ -139,6 +155,7 @@ public class CMPVendorList : Equatable, Codable {
      - Parameter id: The id of the feature name that needs to be retrieved.
      - Returns: A feature name corresponding to the id if found, nil otherwise.
      */
+    @objc
     public func featureName(forId id: Int) -> String? {
         return feature(forId: id)?.name
     }
@@ -149,6 +166,7 @@ public class CMPVendorList : Equatable, Codable {
      - Parameter id: The id of the vendor name that needs to be retrieved.
      - Returns: A vendor name corresponding to the id if found, nil otherwise.
      */
+    @objc
     public func vendorName(forId id: Int) -> String? {
         return vendor(forId: id)?.name
     }
@@ -251,6 +269,14 @@ public class CMPVendorList : Equatable, Codable {
         }
         
         return result.count == json.count ? result : nil
+    }
+    
+    override public func isEqual(_ object: Any?) -> Bool {
+        if let object = object as? CMPVendorList {
+            return self == object
+        } else {
+            return false
+        }
     }
     
     public static func == (lhs: CMPVendorList, rhs: CMPVendorList) -> Bool {

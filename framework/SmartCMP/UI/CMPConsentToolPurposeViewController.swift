@@ -39,7 +39,7 @@ internal class CMPConsentToolPurposeViewController: UITableViewController {
         self.title = consentToolManager?.configuration.consentManagementScreenPurposeSectionHeaderText
         
         self.purposeNameLabel.text = purpose?.name
-        self.purposeDescriptionLabel.text = purpose?.description
+        self.purposeDescriptionLabel.text = purpose?.purposeDescription
         self.purposeDescriptionLabel.sizeToFit()
         self.allowLabel.text = consentToolManager?.configuration.consentManagementPurposeDetailAllowText
         if let consentToolManager = self.consentToolManager, let purpose = self.purpose {
