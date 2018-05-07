@@ -196,18 +196,31 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
     func vendorListManager(_ vendorListManager: CMPVendorListManager, didFetchVendorList vendorList: CMPVendorList) {
         self.lastVendorList = vendorList
         
-        DispatchQueue.main.async {
-            // Consent string exist
-            if let storedConsentString = self.consentString {
-                // Consent string has a different version than vendor list, ask for consent tool display
-                if storedConsentString.vendorListVersion != vendorList.vendorListVersion {
-                    // TODO migrate the consent string instead of creating a new one with full consent
-                    self.consentString = CMPConsentString.consentStringWithFullConsent(consentScreen: 0, consentLanguage: self.language, vendorList: vendorList, date: Date())
-                    
-                    // Display consent tool
-                    self.displayConsentTool(vendorList: vendorList)
+        // Consent string exist
+        if let storedConsentString = self.consentString {
+            // Consent string has a different version than vendor list, ask for consent tool display
+            if storedConsentString.vendorListVersion != vendorList.vendorListVersion {
+                // Fetching the old vendor list to migrate the consent string:
+                // Old purposes & vendors must keep their values, new one will be considered as accepted by default
+                vendorListManager.refresh(vendorListURL: CMPVendorListURL(version: storedConsentString.vendorListVersion)) { previousVendorList, error in
+                    if let error = error {
+                        self.logErrorMessage("CMPConsentManager cannot retrieve previous vendors list because of an error \"\(error.localizedDescription)\"")
+                    } else if let previousVendorList = previousVendorList {
+                        // Generate the updated consent string
+                        self.consentString = CMPConsentString.consentString(fromUpdatedVendorList: vendorList,
+                                                                            previousVendorList: previousVendorList,
+                                                                            previousConsentString: storedConsentString)
+                        
+                        DispatchQueue.main.async {
+                            // Display consent tool
+                            self.displayConsentTool(vendorList: vendorList)
+                        }
+                    }
                 }
-            } else { // Consent string does not exist, ask for consent tool display
+            }
+        } else {
+            DispatchQueue.main.async {
+                // Consent string does not exist, ask for consent tool display
                 self.displayConsentTool(vendorList: vendorList)
             }
         }

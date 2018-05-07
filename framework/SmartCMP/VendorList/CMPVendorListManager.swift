@@ -175,10 +175,14 @@ internal class CMPVendorListManager {
                     // Fetching successful
                     self.callRefreshCallback(vendorList: vendorList, error: nil, responseHandler: responseHandler)
                 } else {
+                    self.lastRefreshDate = nil
+                    
                     // Parsing error
                     self.callRefreshCallback(vendorList: nil, error: RefreshError.parsingError, responseHandler: responseHandler)
                 }
             } else {
+                self.lastRefreshDate = nil
+                
                 // Network error
                 self.callRefreshCallback(vendorList: nil, error: RefreshError.networkError, responseHandler: responseHandler)
             }
