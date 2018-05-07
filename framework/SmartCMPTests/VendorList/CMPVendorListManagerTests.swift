@@ -133,6 +133,48 @@ class CMPVendorListManagerTests : XCTestCase {
         waitForExpectations(timeout: 1.0)
     }
     
+    func testVendorListCanBeRetrievedManuallyForCustomVersionOnceWithCallback() {
+        let mockSessionProvider = MockSessionProvider(handler: { urlRequest in
+            XCTAssertEqual(urlRequest.url, URL(string: "https://vendorlist.consensu.org/v-42/vendorlist.json"))
+            return (self.vendorListJSON, nil)
+        })
+        
+        let urlSession = CMPURLSession(sessionProvider: mockSessionProvider)
+        
+        let mockDelegate = MockDelegate()
+        
+        let vendorListManager = CMPVendorListManager(
+            url: CMPVendorListURL(),
+            refreshInterval: 1.0,
+            delegate: mockDelegate,
+            pollInterval: 0.1,
+            urlSession: urlSession
+        )
+        
+        let successExpectation = expectation(description: "The call should be successful")
+        
+        mockDelegate.successHandler = { _, _ in
+            XCTFail("The should never been called!")
+        }
+        mockDelegate.failureHandler = { _, _ in
+            XCTFail("The should never been called!")
+        }
+        
+        // refresh() is called with a custom vendor list url, the url provided in the constructor will not be used
+        vendorListManager.refresh(vendorListURL: CMPVendorListURL(version: 42)) { vendorList, error in
+            XCTAssertNil(error)
+            
+            XCTAssertEqual(vendorList?.vendorListVersion, 6)
+            XCTAssertEqual(vendorList?.purposes.count, 5)
+            XCTAssertEqual(vendorList?.features.count, 3)
+            XCTAssertEqual(vendorList?.vendors.count, 17)
+            
+            successExpectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 1.0)
+    }
+    
     func testVendorListRefreshCanFailWithUnparsableJSON() {
         let mockSessionProvider = MockSessionProvider(handler: { urlRequest in
             return ("not a valid JSON", nil)
