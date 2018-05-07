@@ -37,9 +37,9 @@ public class CMPVendor : NSObject, Codable {
     @objc
     public let features: [Int]
     
-    /// The privacy policy's URL for this vendor.
+    /// The privacy policy's URL for this vendor if any, nil otherwise.
     @objc
-    public let policyURL: URL
+    public let policyURL: URL?
     
     /// A date of deletion of this vendor has been marked as deleted, nil otherwise.
     @objc
@@ -63,7 +63,7 @@ public class CMPVendor : NSObject, Codable {
         - policyURL: The privacy policy's URL for this vendor.
      */
     @objc
-    public convenience init(id: Int, name: String, purposes: [Int], legitimatePurposes: [Int], features: [Int], policyURL: URL) {
+    public convenience init(id: Int, name: String, purposes: [Int], legitimatePurposes: [Int], features: [Int], policyURL: URL?) {
         self.init(id: id, name: name, purposes: purposes, legitimatePurposes: legitimatePurposes, features: features, policyURL: policyURL, deletedDate: nil)
     }
     
@@ -80,7 +80,7 @@ public class CMPVendor : NSObject, Codable {
         - deletedDate: A date of deletion of this vendor has been marked as deleted, nil otherwise.
      */
     @objc
-    public init(id: Int, name: String, purposes: [Int], legitimatePurposes: [Int], features: [Int], policyURL: URL, deletedDate: Date?) {
+    public init(id: Int, name: String, purposes: [Int], legitimatePurposes: [Int], features: [Int], policyURL: URL?, deletedDate: Date?) {
         self.id = id
         self.name = name
         self.purposes = purposes

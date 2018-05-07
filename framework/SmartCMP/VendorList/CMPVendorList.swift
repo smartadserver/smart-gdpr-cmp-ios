@@ -244,8 +244,6 @@ public class CMPVendorList : NSObject, Codable {
                 let name = element[JsonKey.Vendors.NAME] as? String,
                 let purposes = element[JsonKey.Vendors.PURPOSE_IDS] as? [Int],
                 let legitimatePurposes = element[JsonKey.Vendors.LEGITIMATE_PURPOSE_IDS] as? [Int],
-                let policyURLString = element[JsonKey.Vendors.POLICY_URL] as? String,
-                let policyURL = URL(string: policyURLString),
                 let features = element[JsonKey.Vendors.FEATURE_IDS] as? [Int] else {
                     
                     return nil  // The JSON lacks requires keys and is considered invalid
@@ -254,6 +252,19 @@ public class CMPVendorList : NSObject, Codable {
             let deletedDate: Date? = {
                 if let deletedDateString = element[JsonKey.Vendors.DELETED_DATE] as? String  {
                     return date(from: deletedDateString)
+                } else {
+                    return nil
+                }
+            }()
+            
+            let policyURL: URL? = {
+                if let policyURLString = element[JsonKey.Vendors.POLICY_URL] as? String,
+                    let policyURL = URL(string: policyURLString),
+                    let policyURLScheme = policyURL.scheme,
+                    policyURLScheme.lowercased() == "http" || policyURLScheme.lowercased() == "https" {
+                    
+                    // A policy url is only considered as valid if it has an HTTP or HTTPS scheme
+                    return policyURL
                 } else {
                     return nil
                 }

@@ -59,6 +59,14 @@ class CMPVendorListTests : XCTestCase {
         XCTAssertEqual(vendorList?.vendors[4].features, [])
     }
     
+    func testInvalidPolicyURLAreRejectedByTheParser() {
+        let vendorList = CMPVendorList(jsonData: self.vendorsJSON)
+        XCTAssertNotNil(vendorList)
+        
+        XCTAssertEqual(vendorList?.vendors[12].name, "ADITION technologies AG")
+        XCTAssertNil(vendorList?.vendors[12].policyURL) // 'adition.com/datenschutz' is not valid because a scheme is needed
+    }
+    
     func testEmptyJSONIsRejectedByTheParser() {
         let vendorList1 = CMPVendorList(jsonData: "".data(using: String.Encoding.utf8)!)
         XCTAssertNil(vendorList1)
