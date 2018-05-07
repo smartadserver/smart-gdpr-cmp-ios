@@ -202,25 +202,18 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
     func vendorListManager(_ vendorListManager: CMPVendorListManager, didFetchVendorList vendorList: CMPVendorList) {
         self.lastVendorList = vendorList
         
-        // Consent string exist
-        if let storedConsentString = self.consentString {
-            // Consent string has a different version than vendor list, ask for consent tool display
-            if storedConsentString.vendorListVersion != vendorList.vendorListVersion {                
-                // We need to regenerate a consent string including the new purposes/vendors
-                // For this we need the original vendor list from which the current consent string was generated
-                // And make sure that versions are matching. If not, new purposes/vendors will be "no consent" by default
-                if let storedVendorList = self.retrieveSavedVendorList(), storedConsentString.vendorListVersion == storedVendorList.vendorListVersion {
-                    let updatedConsentString = CMPConsentString.consentString(fromUpdatedVendorList: vendorList, previousVendorList: storedVendorList, previousConsentString: storedConsentString)
-                    self.consentString = updatedConsentString
-                }
-                
-                // Display consent tool
-                DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            // Consent string exist
+            if let storedConsentString = self.consentString {
+                // Consent string has a different version than vendor list, ask for consent tool display
+                if storedConsentString.vendorListVersion != vendorList.vendorListVersion {
+                    // TODO migrate the consent string instead of creating a new one with full consent
+                    self.consentString = CMPConsentString.consentStringWithFullConsent(consentScreen: 0, consentLanguage: self.language, vendorList: vendorList, date: Date())
+                    
+                    // Display consent tool
                     self.displayConsentTool(vendorList: vendorList)
                 }
-            }
-        } else { // Consent string does not exist, ask for consent tool display
-            DispatchQueue.main.async {
+            } else { // Consent string does not exist, ask for consent tool display
                 self.displayConsentTool(vendorList: vendorList)
             }
         }
@@ -280,11 +273,6 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
         self.saveConsentString(newConsentString.consentString)
         self.saveVendorConsentString(newConsentString.parsedVendorConsents)
         self.savePurposeConsentString(newConsentString.parsedPurposeConsents)
-        
-        // Save current vendorList
-        if let vendorList = lastVendorList, newConsentString.vendorListVersion == vendorList.vendorListVersion {
-            self.saveVendorList(vendorList)
-        }
     }
         
     // MARK: - Utils - Error Display
@@ -360,40 +348,6 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
      */
     internal func saveVendorConsentString(_ string: String) {
         saveStringToUserDefaults(string: string, key: CMPConstants.IABConsentKeys.ParsedVendorConsent)
-    }
-    
-    /**
-     Save the current vendor list in user defaults.
-     
-     - Parameter string: The current vendor list to be saved.
-     */
-    internal func saveVendorList(_ vendorList: CMPVendorList) {
-        let userDefaults = UserDefaults.standard
-        userDefaults.set(try? PropertyListEncoder().encode(vendorList), forKey: CMPConstants.VendorList.VendorListStorageKey)
-        userDefaults.synchronize()
-    }
-    
-    /**
-     Erase the current vendor list from user defaults.
-     */
-    internal func clearVendorListStorage() {
-        let userDefaults = UserDefaults.standard
-        userDefaults.removeObject(forKey: CMPConstants.VendorList.VendorListStorageKey)
-        userDefaults.synchronize()
-    }
-    
-    /**
-     Return the current vendor list from user defaults.
-     
-     - Returns: The current vendor list from user defaults if any, nil otherwise.
-     */
-    internal func retrieveSavedVendorList() -> CMPVendorList? {
-        let userDefaults = UserDefaults.standard
-        if let data = userDefaults.object(forKey: CMPConstants.VendorList.VendorListStorageKey) as? Data {
-            return try? PropertyListDecoder().decode(CMPVendorList.self, from: data)
-        } else {
-            return nil
-        }
     }
     
     private override init() {}
