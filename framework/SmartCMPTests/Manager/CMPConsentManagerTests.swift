@@ -14,7 +14,7 @@ import XCTest
 
 class CMPConsentManagerTests : XCTestCase {
     
-    override func setUp() {
+    override func à() {
         super.setUp()
         cleanUserDefaults()
     }
