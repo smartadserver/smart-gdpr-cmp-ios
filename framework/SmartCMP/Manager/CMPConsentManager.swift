@@ -52,7 +52,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
     /// Last vendor list parsed
     private var lastVendorList: CMPVendorList?
     
-    /// Whether or not the consent tool should show if user's limited ad tracking from his device's settings.
+    /// Whether or not the consent tool should show if user has limited ad tracking in the device settings.
     /// If false and LAT is On, no consent will be given for any purpose or vendors.
     private var showConsentToolIfLAT: Bool = true
     
