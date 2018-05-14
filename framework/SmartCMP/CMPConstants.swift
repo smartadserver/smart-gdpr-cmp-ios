@@ -35,6 +35,9 @@ internal struct CMPConstants {
     struct VendorList {
         static let DefaultEndPoint                  = "https://vendorlist.consensu.org/vendorlist.json"
         static let VersionedEndPoint                = "https://vendorlist.consensu.org/v-{version}/vendorlist.json"
+        
+        static let DefaultLocalizedEndPoint         = "https://vendorlist.consensu.org/purposes-{language}.json"
+        static let VersionedLocalizedEndPoint       = "https://vendorlist.consensu.org/purposes-{language}-{version}.json"
     }
     
 }
