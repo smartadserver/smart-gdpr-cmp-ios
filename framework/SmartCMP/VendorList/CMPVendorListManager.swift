@@ -172,9 +172,8 @@ internal class CMPVendorListManager {
         refreshHandler?(lastRefreshDate) // calling handler when refreshing for unit testing purposes only
         
         fetchVendorList(vendorListURL: vendorListURL) { (vendorListData, vendorListError, localizedVendorListData, localizedVendorListError) in
-            // TODO handle the case where a localized vendor list is available
             if let vendorListData = vendorListData, vendorListError == nil {
-                if let vendorList = CMPVendorList(jsonData: vendorListData) {
+                if let vendorList = CMPVendorList(jsonData: vendorListData, localizedJsonData: localizedVendorListData) {
                     self.lastRefreshDate = Date()
                     
                     // Fetching successful
