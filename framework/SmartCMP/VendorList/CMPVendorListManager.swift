@@ -232,9 +232,9 @@ internal class CMPVendorListManager {
      Fetch a vendor list from a raw URL using a dispatch group for synchronization.
      
      - Parameters:
-     - dispatchGroup:
-     - url:
-     - responseHandler:
+        - dispatchGroup: The dispatch group that is going to be locked during the request.
+        - url: The raw URL that need to be fetched
+        - responseHandler: The callback that will be called when the request finished.
      */
     private func fetchVendorList(withDispatchGroup dispatchGroup: DispatchGroup, url: URL, responseHandler: @escaping (Data?, Error?) -> ()) {
         dispatchGroup.enter()
