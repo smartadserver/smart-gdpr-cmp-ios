@@ -282,20 +282,17 @@ public class CMPVendorList : NSObject, Codable {
      - Returns: A tuple containing a name
      */
     private static func nameAndDescription(fromLocalizedJson localizedJson: [Any]?, forId id: Int) -> (String?, String?) {
-        if let jsonElements = localizedJson {
-            for jsonElement in jsonElements {
-                if let element = jsonElement as? [String: Any],
-                    let elementId = element[JsonKey.Purposes.ID] as? Int,
-                    elementId == id {
-                    
-                    // Found a JSON element with the right ID: the name and the description can be extracted if possible
-                    return (element[JsonKey.Purposes.NAME] as? String, element[JsonKey.Purposes.DESCRIPTION] as? String)
-                }
+        // Getting name & description for the first element with the right ID
+        let nameAndDescription = localizedJson?.compactMap { jsonElement -> (String?, String?)? in
+            if let element = jsonElement as? [String: Any], let elementId = element[JsonKey.Purposes.ID] as? Int, elementId == id {
+                // Found a JSON element with the right ID: the name and the description can be extracted if possible
+                return (element[JsonKey.Purposes.NAME] as? String, element[JsonKey.Purposes.DESCRIPTION] as? String)
             }
-        }
+            return nil
+        }.first
         
-        // No element found for the given id, can't extract any info from localized JSON
-        return (nil, nil)
+        // Returning the name & description tuple or an empty tuple if the element search failed
+        return nameAndDescription ?? (nil, nil)
     }
     
     /**
