@@ -27,6 +27,8 @@
 		7E2F0529209CB67500C8C9E0 /* CMPPurposeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F0528209CB67500C8C9E0 /* CMPPurposeTests.swift */; };
 		7E2F052B209CB68400C8C9E0 /* CMPFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F052A209CB68400C8C9E0 /* CMPFeatureTests.swift */; };
 		7E2F052D209CB6A500C8C9E0 /* CMPVendorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F052C209CB6A500C8C9E0 /* CMPVendorTests.swift */; };
+		7E2F053320A0721900C8C9E0 /* CMPVendorListURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F053220A0721900C8C9E0 /* CMPVendorListURL.swift */; };
+		7E2F053520A074B800C8C9E0 /* CMPVendorListURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F053420A074B800C8C9E0 /* CMPVendorListURLTests.swift */; };
 		7E5A5F752091F8920025BE51 /* CMPVendorListManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5A5F742091F8920025BE51 /* CMPVendorListManagerTests.swift */; };
 		7E5A5F78209228410025BE51 /* CMPConsentString+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5A5F77209228410025BE51 /* CMPConsentString+Utils.swift */; };
 		7E800B512090AEAC001FC83B /* CMPVendorList+JSONKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E800B4C2090AEAC001FC83B /* CMPVendorList+JSONKeys.swift */; };
@@ -96,6 +98,8 @@
 		7E2F0528209CB67500C8C9E0 /* CMPPurposeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPPurposeTests.swift; sourceTree = "<group>"; };
 		7E2F052A209CB68400C8C9E0 /* CMPFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPFeatureTests.swift; sourceTree = "<group>"; };
 		7E2F052C209CB6A500C8C9E0 /* CMPVendorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPVendorTests.swift; sourceTree = "<group>"; };
+		7E2F053220A0721900C8C9E0 /* CMPVendorListURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPVendorListURL.swift; sourceTree = "<group>"; };
+		7E2F053420A074B800C8C9E0 /* CMPVendorListURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPVendorListURLTests.swift; sourceTree = "<group>"; };
 		7E5A5F742091F8920025BE51 /* CMPVendorListManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPVendorListManagerTests.swift; sourceTree = "<group>"; };
 		7E5A5F77209228410025BE51 /* CMPConsentString+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMPConsentString+Utils.swift"; sourceTree = "<group>"; };
 		7E800B4C2090AEAC001FC83B /* CMPVendorList+JSONKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CMPVendorList+JSONKeys.swift"; sourceTree = "<group>"; };
@@ -273,6 +277,7 @@
 			children = (
 				7E800B592090B677001FC83B /* CMPVendorListManager.swift */,
 				7E800B5B2090B840001FC83B /* CMPVendorListManagerDelegate.swift */,
+				7E2F053220A0721900C8C9E0 /* CMPVendorListURL.swift */,
 				7E800B4D2090AEAC001FC83B /* CMPVendorList.swift */,
 				7E800B4C2090AEAC001FC83B /* CMPVendorList+JSONKeys.swift */,
 				7E800B4E2090AEAC001FC83B /* CMPPurpose.swift */,
@@ -286,6 +291,7 @@
 			isa = PBXGroup;
 			children = (
 				7E5A5F742091F8920025BE51 /* CMPVendorListManagerTests.swift */,
+				7E2F053420A074B800C8C9E0 /* CMPVendorListURLTests.swift */,
 				7E800B572090AED2001FC83B /* CMPVendorListTests.swift */,
 				7E2F0528209CB67500C8C9E0 /* CMPPurposeTests.swift */,
 				7E2F052A209CB68400C8C9E0 /* CMPFeatureTests.swift */,
@@ -502,6 +508,7 @@
 				8529CA45209717DE00759E68 /* CMPConsentToolVendorViewController.swift in Sources */,
 				E9644109208F8498007FD26A /* CMPConsentManager.swift in Sources */,
 				8504B78820921E020011BE81 /* CMPPreferenceTableViewCell.swift in Sources */,
+				7E2F053320A0721900C8C9E0 /* CMPVendorListURL.swift in Sources */,
 				7E800B552090AEAC001FC83B /* CMPVendor.swift in Sources */,
 				E934FBD8209084E500FE808C /* CMPConsentToolPreferencesViewController.swift in Sources */,
 				7E25FC6B208F51AB00D05789 /* CMPBitUtils.swift in Sources */,
@@ -536,6 +543,7 @@
 			files = (
 				7E25FC7F208F51CF00D05789 /* CMPConsentStringTests.swift in Sources */,
 				7E2F0529209CB67500C8C9E0 /* CMPPurposeTests.swift in Sources */,
+				7E2F053520A074B800C8C9E0 /* CMPVendorListURLTests.swift in Sources */,
 				7E2F052B209CB68400C8C9E0 /* CMPFeatureTests.swift in Sources */,
 				E96661102090C50B00FCA161 /* CMPConsentManagerTests.swift in Sources */,
 				7E25FC83208F51CF00D05789 /* CMPLanguageTests.swift in Sources */,

@@ -67,10 +67,6 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
     
     // MARK: - Constants
     
-    /// The URL used by default to fetch the vendor list.
-    @objc
-    public static let DEFAULT_VENDORLIST_URL = URL(string: CMPConstants.VendorList.DefaultEndPoint)!
-    
     /// The default refresh interval for the vendor list.
     @objc
     public static let DEFAULT_VENDORLIST_REFRESH_TIME = 86400.0
@@ -92,7 +88,6 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
     public func configureWithLanguage(_ language: CMPLanguage,
                                       consentToolConfiguration: CMPConsentToolConfiguration) {
         self.configure(
-            vendorListURL: CMPConsentManager.DEFAULT_VENDORLIST_URL,
             refreshInterval: CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_TIME,
             language: language,
             consentToolConfiguration: consentToolConfiguration,
@@ -111,8 +106,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
         - showConsentToolIfUserLimitedAdTracking: Whether or not the consent tool UI should be shown if user's checked Limit Ad Tracking in his device's preferences. If false, UI will never be shown if user checked LAT and consent string will be formatted has "user does not give consent".
      */
     @objc
-    public func configure(vendorListURL: URL = CMPConsentManager.DEFAULT_VENDORLIST_URL,
-                          refreshInterval: TimeInterval = CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_TIME,
+    public func configure(refreshInterval: TimeInterval = CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_TIME,
                           language: CMPLanguage,
                           consentToolConfiguration: CMPConsentToolConfiguration,
                           showConsentToolIfUserLimitedAdTracking: Bool = CMPConsentManager.DEFAULT_LAT_VALUE) {
@@ -133,7 +127,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
         self.showConsentToolIfLAT = showConsentToolIfUserLimitedAdTracking
         
         // Instantiate CPMVendorsManager with URL and RefreshTime and delegate
-        self.vendorListManager = CMPVendorListManager(url: vendorListURL, refreshInterval: refreshInterval, delegate: self)
+        self.vendorListManager = CMPVendorListManager(url: CMPVendorListURL(), refreshInterval: refreshInterval, delegate: self)
         
         // Check for already existing consent string in NSUserDefaults
         if let storedConsentString = readStringFromUserDefaults(key: CMPConstants.IABConsentKeys.ConsentString) {
@@ -205,22 +199,28 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
         // Consent string exist
         if let storedConsentString = self.consentString {
             // Consent string has a different version than vendor list, ask for consent tool display
-            if storedConsentString.vendorListVersion != vendorList.vendorListVersion {                
-                // We need to regenerate a consent string including the new purposes/vendors
-                // For this we need the original vendor list from which the current consent string was generated
-                // And make sure that versions are matching. If not, new purposes/vendors will be "no consent" by default
-                if let storedVendorList = self.retrieveSavedVendorList(), storedConsentString.vendorListVersion == storedVendorList.vendorListVersion {
-                    let updatedConsentString = CMPConsentString.consentString(fromUpdatedVendorList: vendorList, previousVendorList: storedVendorList, previousConsentString: storedConsentString)
-                    self.consentString = updatedConsentString
-                }
-                
-                // Display consent tool
-                DispatchQueue.main.async {
-                    self.displayConsentTool(vendorList: vendorList)
+            if storedConsentString.vendorListVersion != vendorList.vendorListVersion {
+                // Fetching the old vendor list to migrate the consent string:
+                // Old purposes & vendors must keep their values, new one will be considered as accepted by default
+                vendorListManager.refresh(vendorListURL: CMPVendorListURL(version: storedConsentString.vendorListVersion)) { previousVendorList, error in
+                    if let error = error {
+                        self.logErrorMessage("CMPConsentManager cannot retrieve previous vendors list because of an error \"\(error.localizedDescription)\"")
+                    } else if let previousVendorList = previousVendorList {
+                        // Generate the updated consent string
+                        self.consentString = CMPConsentString.consentString(fromUpdatedVendorList: vendorList,
+                                                                            previousVendorList: previousVendorList,
+                                                                            previousConsentString: storedConsentString)
+                        
+                        DispatchQueue.main.async {
+                            // Display consent tool
+                            self.displayConsentTool(vendorList: vendorList)
+                        }
+                    }
                 }
             }
-        } else { // Consent string does not exist, ask for consent tool display
+        } else {
             DispatchQueue.main.async {
+                // Consent string does not exist, ask for consent tool display
                 self.displayConsentTool(vendorList: vendorList)
             }
         }
@@ -280,11 +280,6 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
         self.saveConsentString(newConsentString.consentString)
         self.saveVendorConsentString(newConsentString.parsedVendorConsents)
         self.savePurposeConsentString(newConsentString.parsedPurposeConsents)
-        
-        // Save current vendorList
-        if let vendorList = lastVendorList, newConsentString.vendorListVersion == vendorList.vendorListVersion {
-            self.saveVendorList(vendorList)
-        }
     }
         
     // MARK: - Utils - Error Display
@@ -360,40 +355,6 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
      */
     internal func saveVendorConsentString(_ string: String) {
         saveStringToUserDefaults(string: string, key: CMPConstants.IABConsentKeys.ParsedVendorConsent)
-    }
-    
-    /**
-     Save the current vendor list in user defaults.
-     
-     - Parameter string: The current vendor list to be saved.
-     */
-    internal func saveVendorList(_ vendorList: CMPVendorList) {
-        let userDefaults = UserDefaults.standard
-        userDefaults.set(try? PropertyListEncoder().encode(vendorList), forKey: CMPConstants.VendorList.VendorListStorageKey)
-        userDefaults.synchronize()
-    }
-    
-    /**
-     Erase the current vendor list from user defaults.
-     */
-    internal func clearVendorListStorage() {
-        let userDefaults = UserDefaults.standard
-        userDefaults.removeObject(forKey: CMPConstants.VendorList.VendorListStorageKey)
-        userDefaults.synchronize()
-    }
-    
-    /**
-     Return the current vendor list from user defaults.
-     
-     - Returns: The current vendor list from user defaults if any, nil otherwise.
-     */
-    internal func retrieveSavedVendorList() -> CMPVendorList? {
-        let userDefaults = UserDefaults.standard
-        if let data = userDefaults.object(forKey: CMPConstants.VendorList.VendorListStorageKey) as? Data {
-            return try? PropertyListDecoder().decode(CMPVendorList.self, from: data)
-        } else {
-            return nil
-        }
     }
     
     private override init() {}
