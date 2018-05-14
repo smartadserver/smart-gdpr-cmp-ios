@@ -171,9 +171,10 @@ internal class CMPVendorListManager {
     public func refresh(vendorListURL: CMPVendorListURL, responseHandler: ((CMPVendorList?, Error?) -> ())? = nil) {
         refreshHandler?(lastRefreshDate) // calling handler when refreshing for unit testing purposes only
         
-        urlSession.dataRequest(url: vendorListURL.url) { (data, response, error) in
-            if let data = data, error == nil {
-                if let vendorList = CMPVendorList(jsonData: data) {
+        fetchVendorList(vendorListURL: vendorListURL) { (vendorListData, vendorListError, localizedVendorListData, localizedVendorListError) in
+            // TODO handle the case where a localized vendor list is available
+            if let vendorListData = vendorListData, vendorListError == nil {
+                if let vendorList = CMPVendorList(jsonData: vendorListData) {
                     self.lastRefreshDate = Date()
                     
                     // Fetching successful
@@ -191,6 +192,58 @@ internal class CMPVendorListManager {
                 self.callRefreshCallback(vendorList: nil, error: RefreshError.networkError, responseHandler: responseHandler)
             }
         }
+    }
+    
+    /**
+     Fetch a vendor list and its localized version if it exists in parallel.
+     
+     - Parameters:
+        - vendorListURL: The vendor list URL.
+        - responseHandler: The callback called when the vendor list retrieval is finished. The first two parameters corresponds to
+     the main vendor list, the last two corresponds to the localized vendor list if it exists (if not, both Data & Error will be nil).
+     */
+    private func fetchVendorList(vendorListURL: CMPVendorListURL, responseHandler: @escaping (Data?, Error?, Data?, Error?) -> ()) {
+        let dispatchGroup = DispatchGroup()
+        
+        // Requesting for main vendor list JSON
+        var vendorListData: Data? = nil
+        var vendorListError: Error? = nil
+        fetchVendorList(withDispatchGroup: dispatchGroup, url: vendorListURL.url) { (data, error) in
+            vendorListData = data
+            vendorListError = error
+        }
+        
+        // Requesting for localized vendor list JSON if necessary
+        var localizedVendorListData: Data? = nil
+        var localizedVendorListError: Error? = nil
+        if let localizedURL = vendorListURL.localizedUrl {
+            fetchVendorList(withDispatchGroup: dispatchGroup, url: localizedURL) { (data, error) in
+                localizedVendorListData = data
+                localizedVendorListError = error
+            }
+        }
+        
+        // Waiting for both requests to complete
+        dispatchGroup.notify(queue: .main) {
+            responseHandler(vendorListData, vendorListError, localizedVendorListData, localizedVendorListError)
+        }
+    }
+    
+    /**
+     Fetch a vendor list from a raw URL using a dispatch group for synchronization.
+     
+     - Parameters:
+     - dispatchGroup:
+     - url:
+     - responseHandler:
+     */
+    private func fetchVendorList(withDispatchGroup dispatchGroup: DispatchGroup, url: URL, responseHandler: @escaping (Data?, Error?) -> ()) {
+        dispatchGroup.enter()
+        urlSession.dataRequest(url: url) { (data, response, error) in
+            responseHandler(data, error)
+            dispatchGroup.leave()
+        }
+        
     }
     
     /**
