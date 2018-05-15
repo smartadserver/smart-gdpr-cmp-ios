@@ -172,9 +172,7 @@
                             <outlet property="delegate" destination="2Y0-eq-fbA" id="Zs6-OT-3zl"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="User Privacy Preferences" id="BCQ-fB-iRy">
-                        <barButtonItem key="backBarButtonItem" title=" " id="25R-rg-t7Z"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="User Privacy Preferences" id="BCQ-fB-iRy"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d8A-Al-evZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -242,6 +240,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="sectionIndexBackgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="aYl-4g-vG9">
                             <rect key="frame" x="0.0" y="72" width="320" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>

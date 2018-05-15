@@ -18,11 +18,11 @@ import SafariServices
 internal class CMPConsentToolVendorViewController: UITableViewController {
 
     /// The vendor displayed by the view controller
-    weak var vendor: CMPVendor?
+    var vendor: CMPVendor?
     
     // MARK: - UI Elements
     
-    static let VendorSection = 0
+    static let PrivacyPolicySection = 0
     static let PurposeSection = 1
     static let LegitimateInterestPurposeSection = 2
     static let FeatureSection = 3
@@ -38,6 +38,7 @@ internal class CMPConsentToolVendorViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.backgroundColor = UIColor.groupTableViewBackground
+        self.title = vendor?.name
     }
 
     // MARK: - Table view data source
@@ -47,14 +48,16 @@ internal class CMPConsentToolVendorViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == CMPConsentToolVendorViewController.PurposeSection {
+        if section == CMPConsentToolVendorViewController.PrivacyPolicySection {
+            return vendor?.policyURL != nil ? 1 : 0
+        } else if section == CMPConsentToolVendorViewController.PurposeSection {
             return self.vendor?.purposes.count ?? 0
         } else if section == CMPConsentToolVendorViewController.LegitimateInterestPurposeSection {
             return self.vendor?.legitimatePurposes.count ?? 0
         } else if section == CMPConsentToolVendorViewController.FeatureSection {
             return self.vendor?.features.count ?? 0
-        } else{
-            return 1
+        } else {
+            return 0
         }
     }
 
@@ -97,8 +100,6 @@ internal class CMPConsentToolVendorViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case CMPConsentToolVendorViewController.VendorSection:
-            return vendor?.name
         case CMPConsentToolVendorViewController.PurposeSection:
             if self.tableView(tableView, numberOfRowsInSection: section) > 0 {
                 return consentToolManager?.configuration.consentManagementVendorDetailPurposesText
@@ -118,8 +119,8 @@ internal class CMPConsentToolVendorViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == CMPConsentToolVendorViewController.VendorSection {
-            return 44.0
+        if section == CMPConsentToolVendorViewController.PrivacyPolicySection {
+            return 0
         }
         if self.tableView(tableView, numberOfRowsInSection: section) > 0 {
             return 32.0
@@ -132,16 +133,15 @@ internal class CMPConsentToolVendorViewController: UITableViewController {
         let header = view as! UITableViewHeaderFooterView
         header.textLabel?.textColor = UIColor.darkGray
         switch section {
-        case CMPConsentToolVendorViewController.VendorSection:
+        case CMPConsentToolVendorViewController.PrivacyPolicySection:
             header.textLabel?.font = UIFont.systemFont(ofSize: 17.0)
         default:
             header.textLabel?.font = UIFont.systemFont(ofSize: 15.0)
-            
         }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == CMPConsentToolVendorViewController.VendorSection {
+        if indexPath.section == CMPConsentToolVendorViewController.PrivacyPolicySection {
             if let URL = vendor?.policyURL {
                 if #available(iOS 9.0, *) {
                     let svc:SFSafariViewController = SFSafariViewController(url: URL)
@@ -150,7 +150,6 @@ internal class CMPConsentToolVendorViewController: UITableViewController {
                     UIApplication.shared.openURL(URL)
                 }
             }
-            
         }
     }
     
