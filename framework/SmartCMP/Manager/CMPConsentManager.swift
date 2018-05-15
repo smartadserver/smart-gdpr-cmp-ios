@@ -202,7 +202,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
             if storedConsentString.vendorListVersion != vendorList.vendorListVersion {
                 // Fetching the old vendor list to migrate the consent string:
                 // Old purposes & vendors must keep their values, new one will be considered as accepted by default
-                vendorListManager.refresh(vendorListURL: CMPVendorListURL(version: storedConsentString.vendorListVersion, language: language)) { previousVendorList, error in
+                vendorListManager.refresh(vendorListURL: CMPVendorListURL(version: storedConsentString.vendorListVersion)) { previousVendorList, error in
                     if let error = error {
                         self.logErrorMessage("CMPConsentManager cannot retrieve previous vendors list because of an error \"\(error.localizedDescription)\"")
                     } else if let previousVendorList = previousVendorList {
