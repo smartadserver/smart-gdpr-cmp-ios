@@ -159,6 +159,11 @@ internal extension CMPConsentString {
         if let defaultValue = CMPBitUtils.bitsToBool(buffer.pop(numberOfBits: versionConfig.defaultConsentBitSize)),
             let numEntries = CMPBitUtils.bitsToInt(buffer.pop(numberOfBits: versionConfig.numEntriesBitSize)) {
             
+            // Nothing to do if numEntries is equal to zero: there is no vendors allowed
+            guard numEntries > 0 else {
+                return []
+            }
+            
             var vendors: [Int] = []
             
             // Converting every range into an array of vendor id
