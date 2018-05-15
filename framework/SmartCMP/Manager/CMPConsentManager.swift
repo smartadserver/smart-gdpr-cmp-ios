@@ -243,7 +243,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
     private func displayConsentTool(vendorList: CMPVendorList) {
         if let delegate = self.delegate {
             // Publisher will be responsible to trigger consent tool display
-            delegate.consentManagerRequestsToShowConsentTool(self)
+            delegate.consentManagerRequestsToShowConsentTool(self, forVendorList: vendorList)
         } else {
             // Force consent tool display depending on LAT status
             let isTrackingAllowed = ASIdentifierManager.shared().isAdvertisingTrackingEnabled

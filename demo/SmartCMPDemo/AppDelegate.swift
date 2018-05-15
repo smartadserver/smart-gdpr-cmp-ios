@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
 
     // MARK: - CMPConsentManagerDelegate
     
-    func consentManagerRequestsToShowConsentTool(_ consentManager: CMPConsentManager) {
+    func consentManagerRequestsToShowConsentTool(_ consentManager: CMPConsentManager, forVendorList vendorList: CMPVendorList) {
         NSLog("CMP Requested ConsentTool Display");
         
         // You should display the consent tool UI, when user is ready
