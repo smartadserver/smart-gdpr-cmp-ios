@@ -17,7 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 
@@ -27,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
         let endIndex = String.Index(encodedOffset: 2)
         let isoLg = String(preferedLanguage[startIndex..<endIndex])
         
-        // Becomes the delegate of CMPConsentManager shared instance to know when the consent should be requested to the user.
+        // Become the delegate of CMPConsentManager shared instance to know when the user should be asked for consent.
         //
         // This is not mandatory, if no delegate is found the CMPConsentManager will pop every time it is needed, whatever the user
         // is doing. Implementing this delegate is useful if you want to control when the consent tool will be launched (for better
@@ -73,8 +72,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
                                            consentManagementVendorDetailLegitimatePurposesText: "Legitimate interest purposes",
                                            consentManagementVendorDetailFeaturesText: "Features")
     }
-    
-    
     
 }
 
