@@ -5,9 +5,6 @@
 > - APIs not final
 > - Configuration object not final
 > - UI not final
-> - Vendor list model parsing may be too strict
-> - Some public APIs are missing in ObjC headers
-> - Localization is not implemented, this version leaves this whole topic to the publisher
 >
 > OPEN FOR COMMENT - create a Github issue if you want to participate
 
