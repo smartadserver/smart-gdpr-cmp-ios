@@ -12,14 +12,14 @@
 import Foundation
 
 /**
- Delegate of CMPVendorListManager.
+ Delegate of CMPConsentManager.
  */
 @objc
 public protocol CMPConsentManagerDelegate : class {
     
     /**
      Called when the consent manager found a reason to display the Consent Tool UI. The publisher should display
-     the consent tool has soon as possible.
+     the consent tool as soon as possible.
      
      - Parameters:
         - consentManager: The consent manager instance.
