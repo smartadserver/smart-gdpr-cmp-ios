@@ -242,7 +242,6 @@ internal class CMPVendorListManager {
             responseHandler(data, error)
             dispatchGroup.leave()
         }
-        
     }
     
     /**

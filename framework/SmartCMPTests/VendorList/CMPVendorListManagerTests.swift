@@ -20,6 +20,12 @@ class CMPVendorListManagerTests : XCTestCase {
         return String(data: jsonData, encoding: String.Encoding.utf8)!
     }()
     
+    private lazy var vendorFRListJSON: String = {
+        let url = Bundle(for: type(of: self)).url(forResource: "vendors-fr", withExtension: "json")!
+        let jsonData = try! Data(contentsOf: url)
+        return String(data: jsonData, encoding: String.Encoding.utf8)!
+    }()
+    
     class MockSessionProvider : CMPURLSessionProvider {
         
         let handler: (URLRequest) -> (String?, Error?)
@@ -282,6 +288,110 @@ class CMPVendorListManagerTests : XCTestCase {
         waitForExpectations(timeout: 1.5)
         
         vendorListManager.refreshHandler = nil
+    }
+    
+    func testVendorListCanBeTranslatedIfALanguageIsSetInTheURL() {
+        let vendorListUrlCalledExpectation = expectation(description: "The vendor list url has been called")
+        let vendorListFRUrlCalledExpectation = expectation(description: "The vendor FR list url has been called")
+        
+        let mockSessionProvider = MockSessionProvider(handler: { urlRequest in
+            switch urlRequest.url {
+            case URL(string: "https://vendorlist.consensu.org/vendorlist.json"):
+                vendorListUrlCalledExpectation.fulfill()
+                return (self.vendorListJSON, nil)
+            case URL(string: "https://vendorlist.consensu.org/purposes-fr.json"):
+                vendorListFRUrlCalledExpectation.fulfill()
+                return (self.vendorFRListJSON, nil)
+            default:
+                XCTFail("No other network requests should be made!")
+                return (nil, nil)
+            }
+        })
+        
+        let urlSession = CMPURLSession(sessionProvider: mockSessionProvider)
+        
+        let mockDelegate = MockDelegate()
+        
+        let vendorListManager = CMPVendorListManager(
+            url: CMPVendorListURL(language: CMPLanguage(string: "fr")!),
+            refreshInterval: 1.0,
+            delegate: mockDelegate,
+            pollInterval: 0.1,
+            urlSession: urlSession
+        )
+        
+        let successExpectation = expectation(description: "The call should be successful")
+        
+        mockDelegate.successHandler = { _, vendorList in
+            XCTAssertEqual(vendorList.vendorListVersion, 6)
+            XCTAssertEqual(vendorList.purposes.count, 5)
+            XCTAssertEqual(vendorList.features.count, 3)
+            XCTAssertEqual(vendorList.vendors.count, 17)
+            
+            XCTAssertEqual(vendorList.purposes[2].name, "Purpose 3 name translated in french")
+            XCTAssertEqual(vendorList.features[1].name, "Feature 2 name translated in french")
+            
+            successExpectation.fulfill()
+        }
+        mockDelegate.failureHandler = { _, _ in
+            XCTFail("The call should not fail")
+        }
+        
+        vendorListManager.refresh()
+        
+        waitForExpectations(timeout: 1.0)
+    }
+    
+    func testInvalidTranslationFileWillNotPreventTheVendorListFromBeingRetrieved() {
+        let vendorListUrlCalledExpectation = expectation(description: "The vendor list url has been called")
+        let vendorListFRUrlCalledExpectation = expectation(description: "The vendor FR list url has been called")
+        
+        let mockSessionProvider = MockSessionProvider(handler: { urlRequest in
+            switch urlRequest.url {
+            case URL(string: "https://vendorlist.consensu.org/vendorlist.json"):
+                vendorListUrlCalledExpectation.fulfill()
+                return (self.vendorListJSON, nil)
+            case URL(string: "https://vendorlist.consensu.org/purposes-fr.json"):
+                vendorListFRUrlCalledExpectation.fulfill()
+                return ("{}", nil)
+            default:
+                XCTFail("No other network requests should be made!")
+                return (nil, nil)
+            }
+        })
+        
+        let urlSession = CMPURLSession(sessionProvider: mockSessionProvider)
+        
+        let mockDelegate = MockDelegate()
+        
+        let vendorListManager = CMPVendorListManager(
+            url: CMPVendorListURL(language: CMPLanguage(string: "fr")!),
+            refreshInterval: 1.0,
+            delegate: mockDelegate,
+            pollInterval: 0.1,
+            urlSession: urlSession
+        )
+        
+        let successExpectation = expectation(description: "The call should be successful")
+        
+        mockDelegate.successHandler = { _, vendorList in
+            XCTAssertEqual(vendorList.vendorListVersion, 6)
+            XCTAssertEqual(vendorList.purposes.count, 5)
+            XCTAssertEqual(vendorList.features.count, 3)
+            XCTAssertEqual(vendorList.vendors.count, 17)
+            
+            XCTAssertEqual(vendorList.purposes[2].name, "Ad selection, delivery, reporting")
+            XCTAssertEqual(vendorList.features[1].name, "Linking Devices")
+            
+            successExpectation.fulfill()
+        }
+        mockDelegate.failureHandler = { _, _ in
+            XCTFail("The call should not fail")
+        }
+        
+        vendorListManager.refresh()
+        
+        waitForExpectations(timeout: 1.0)
     }
     
 }
