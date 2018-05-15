@@ -127,7 +127,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
         self.showConsentToolIfLAT = showConsentToolIfUserLimitedAdTracking
         
         // Instantiate CPMVendorsManager with URL and RefreshTime and delegate
-        self.vendorListManager = CMPVendorListManager(url: CMPVendorListURL(), refreshInterval: refreshInterval, delegate: self)
+        self.vendorListManager = CMPVendorListManager(url: CMPVendorListURL(language: language), refreshInterval: refreshInterval, delegate: self)
         
         // Check for already existing consent string in NSUserDefaults
         if let storedConsentString = readStringFromUserDefaults(key: CMPConstants.IABConsentKeys.ConsentString) {
@@ -243,7 +243,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
     private func displayConsentTool(vendorList: CMPVendorList) {
         if let delegate = self.delegate {
             // Publisher will be responsible to trigger consent tool display
-            delegate.consentManagerRequestsToShowConsentTool(self)
+            delegate.consentManagerRequestsToShowConsentTool(self, forVendorList: vendorList)
         } else {
             // Force consent tool display depending on LAT status
             let isTrackingAllowed = ASIdentifierManager.shared().isAdvertisingTrackingEnabled

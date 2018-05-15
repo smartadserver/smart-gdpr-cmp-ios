@@ -86,6 +86,29 @@ public class CMPVendorList : NSObject, Codable {
      */
     @objc
     public convenience init?(jsonData: Data) {
+        self.init(jsonData: jsonData, localizedJsonData: nil)
+    }
+    
+    /**
+     Initialize a list of vendors from a vendor list JSON (if valid).
+     
+     - Parameters:
+        - jsonData: The data representation of the vendor list JSON.
+        - localizedJsonData: The data representation of the localized vendor list JSON if any.
+     */
+    @objc
+    public convenience init?(jsonData: Data, localizedJsonData: Data?) {
+        
+        // The localized JSON will be used to translate purposes and features if possible, but it is not mandatory. If
+        // some keys are missing in this JSON, or if it's completely invalid, this will not stop the parser.
+        let (localizedPurposesJson, localizedFeaturesJson): ([Any]?, [Any]?) = {
+            if let localizedJsonData = localizedJsonData {
+                let localizedJson = (try? JSONSerialization.jsonObject(with: localizedJsonData)) as? [String: Any]
+                return (localizedJson?[JsonKey.Purposes.PURPOSES] as? [Any], localizedJson?[JsonKey.Features.FEATURES] as? [Any])
+            } else {
+                return (nil, nil)
+            }
+        }()
         
         guard let jsonData = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
             let json = jsonData,
@@ -95,8 +118,8 @@ public class CMPVendorList : NSObject, Codable {
             let purposesJSON = json[JsonKey.Purposes.PURPOSES] as? [Any],
             let featuresJSON = json[JsonKey.Features.FEATURES] as? [Any],
             let vendorsJSON = json[JsonKey.Vendors.VENDORS] as? [Any],
-            let purposes = CMPVendorList.parsePurposes(json: purposesJSON),
-            let features = CMPVendorList.parseFeatures(json: featuresJSON),
+            let purposes = CMPVendorList.parsePurposes(json: purposesJSON, localizedJson: localizedPurposesJson),
+            let features = CMPVendorList.parseFeatures(json: featuresJSON, localizedJson: localizedFeaturesJson),
             let vendors = CMPVendorList.parseVendors(json: vendorsJSON) else {
                 
             return nil // The JSON lacks requires keys and is considered invalid
@@ -192,19 +215,20 @@ public class CMPVendorList : NSObject, Codable {
     /**
      Parse a collection of purposes.
      
-     - Parameter json: A collection of purposes in JSON format.
+     - Parameters:
+        - json: A collection of purposes in JSON format.
+        - localizedJson: A collection of translation for the purposes, if any.
      - Returns: A collection of purposes, or nil if the JSON is invalid.
      */
-    private static func parsePurposes(json: [Any]) -> [CMPPurpose]? {
+    private static func parsePurposes(json: [Any], localizedJson: [Any]?) -> [CMPPurpose]? {
         let result: [CMPPurpose] = json.compactMap { jsonElement in
-            guard let element = jsonElement as? [String: Any],
-                let id = element[JsonKey.Purposes.ID] as? Int,
-                let name = element[JsonKey.Purposes.NAME] as? String,
-                let description = element[JsonKey.Purposes.DESCRIPTION] as? String else {
-                    
-                    return nil  // The JSON lacks requires keys and is considered invalid
+            switch parseJsonElement(jsonElement) {
+            case .some((let id, let name, let description)):
+                let (localizedName, localizedDescription) = nameAndDescription(fromLocalizedJson: localizedJson, forId: id)
+                return CMPPurpose(id: id, name: localizedName ?? name, description: localizedDescription ?? description)
+            default:
+                return nil
             }
-            return CMPPurpose(id: id, name: name, description: description)
         }
         
         return result.count == json.count ? result : nil
@@ -213,22 +237,62 @@ public class CMPVendorList : NSObject, Codable {
     /**
      Parse a collection of features.
      
-     - Parameter json: A collection of features in JSON format.
+     - Parameters:
+        - json: A collection of features in JSON format.
+        - localizedJson: A collection of translation for the features, if any.
      - Returns: A collection of features, or nil if the JSON is invalid.
      */
-    private static func parseFeatures(json: [Any]) -> [CMPFeature]? {
+    private static func parseFeatures(json: [Any], localizedJson: [Any]?) -> [CMPFeature]? {
         let result: [CMPFeature] = json.compactMap { jsonElement in
-            guard let element = jsonElement as? [String: Any],
-                let id = element[JsonKey.Features.ID] as? Int,
-                let name = element[JsonKey.Features.NAME] as? String,
-                let description = element[JsonKey.Features.DESCRIPTION] as? String else {
-                    
-                    return nil  // The JSON lacks requires keys and is considered invalid
+            switch parseJsonElement(jsonElement) {
+            case .some((let id, let name, let description)):
+                let (localizedName, localizedDescription) = nameAndDescription(fromLocalizedJson: localizedJson, forId: id)
+                return CMPFeature(id: id, name: localizedName ?? name, description: localizedDescription ?? description)
+            default:
+                return nil
             }
-            return CMPFeature(id: id, name: name, description: description)
         }
         
         return result.count == json.count ? result : nil
+    }
+    
+    /**
+     Parse a JSON element corresponding to a purpose or a feature if possible.
+     
+     - Parameter jsonElement: The JSON element to be parsed.
+     - Returns: A tuple containing the resulting parsing if successful, nil otherwise.
+     */
+    private static func parseJsonElement(_ jsonElement: Any) -> (Int, String, String)? {
+        guard let element = jsonElement as? [String: Any],
+            let id = element[JsonKey.Purposes.ID] as? Int,
+            let name = element[JsonKey.Purposes.NAME] as? String,
+            let description = element[JsonKey.Purposes.DESCRIPTION] as? String else {
+                return nil  // The JSON lacks requires keys and is considered invalid
+        }
+        
+        return (id, name, description)
+    }
+    
+    /**
+     Retrieve the name and the description of a localized element from the localized JSON and for a given ID.
+     
+     - Parameters:
+        - localizedJson: An optional localized JSON of purposes or features (if nil, this method will return nil for both name & description).
+        - id: The element ID that must be retrieved.
+     - Returns: A tuple containing a name
+     */
+    private static func nameAndDescription(fromLocalizedJson localizedJson: [Any]?, forId id: Int) -> (String?, String?) {
+        // Getting name & description for the first element with the right ID
+        let nameAndDescription = localizedJson?.compactMap { jsonElement -> (String?, String?)? in
+            if let element = jsonElement as? [String: Any], let elementId = element[JsonKey.Purposes.ID] as? Int, elementId == id {
+                // Found a JSON element with the right ID: the name and the description can be extracted if possible
+                return (element[JsonKey.Purposes.NAME] as? String, element[JsonKey.Purposes.DESCRIPTION] as? String)
+            }
+            return nil
+        }.first
+        
+        // Returning the name & description tuple or an empty tuple if the element search failed
+        return nameAndDescription ?? (nil, nil)
     }
     
     /**
@@ -244,8 +308,6 @@ public class CMPVendorList : NSObject, Codable {
                 let name = element[JsonKey.Vendors.NAME] as? String,
                 let purposes = element[JsonKey.Vendors.PURPOSE_IDS] as? [Int],
                 let legitimatePurposes = element[JsonKey.Vendors.LEGITIMATE_PURPOSE_IDS] as? [Int],
-                let policyURLString = element[JsonKey.Vendors.POLICY_URL] as? String,
-                let policyURL = URL(string: policyURLString),
                 let features = element[JsonKey.Vendors.FEATURE_IDS] as? [Int] else {
                     
                     return nil  // The JSON lacks requires keys and is considered invalid
@@ -254,6 +316,19 @@ public class CMPVendorList : NSObject, Codable {
             let deletedDate: Date? = {
                 if let deletedDateString = element[JsonKey.Vendors.DELETED_DATE] as? String  {
                     return date(from: deletedDateString)
+                } else {
+                    return nil
+                }
+            }()
+            
+            let policyURL: URL? = {
+                if let policyURLString = element[JsonKey.Vendors.POLICY_URL] as? String,
+                    let policyURL = URL(string: policyURLString),
+                    let policyURLScheme = policyURL.scheme,
+                    policyURLScheme.lowercased() == "http" || policyURLScheme.lowercased() == "https" {
+                    
+                    // A policy url is only considered as valid if it has an HTTP or HTTPS scheme
+                    return policyURL
                 } else {
                     return nil
                 }

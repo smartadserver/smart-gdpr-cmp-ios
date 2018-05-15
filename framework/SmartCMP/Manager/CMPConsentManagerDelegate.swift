@@ -21,9 +21,11 @@ public protocol CMPConsentManagerDelegate : class {
      Called when the consent manager found a reason to display the Consent Tool UI. The publisher should display
      the consent tool as soon as possible.
      
-     - Parameter consentManager: The consent manager instance.
+     - Parameters:
+        - consentManager: The consent manager instance.
+        - vendorList: The vendor list you should ask consent for.
      */
     @objc
-    func consentManagerRequestsToShowConsentTool(_ consentManager: CMPConsentManager)
+    func consentManagerRequestsToShowConsentTool(_ consentManager: CMPConsentManager, forVendorList vendorList: CMPVendorList)
     
 }

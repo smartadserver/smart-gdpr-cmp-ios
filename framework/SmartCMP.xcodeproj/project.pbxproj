@@ -29,6 +29,7 @@
 		7E2F052D209CB6A500C8C9E0 /* CMPVendorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F052C209CB6A500C8C9E0 /* CMPVendorTests.swift */; };
 		7E2F053320A0721900C8C9E0 /* CMPVendorListURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F053220A0721900C8C9E0 /* CMPVendorListURL.swift */; };
 		7E2F053520A074B800C8C9E0 /* CMPVendorListURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2F053420A074B800C8C9E0 /* CMPVendorListURLTests.swift */; };
+		7E2F053720A0A47400C8C9E0 /* vendors-fr.json in Resources */ = {isa = PBXBuildFile; fileRef = 7E2F053620A0A47300C8C9E0 /* vendors-fr.json */; };
 		7E5A5F752091F8920025BE51 /* CMPVendorListManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5A5F742091F8920025BE51 /* CMPVendorListManagerTests.swift */; };
 		7E5A5F78209228410025BE51 /* CMPConsentString+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5A5F77209228410025BE51 /* CMPConsentString+Utils.swift */; };
 		7E800B512090AEAC001FC83B /* CMPVendorList+JSONKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E800B4C2090AEAC001FC83B /* CMPVendorList+JSONKeys.swift */; };
@@ -100,6 +101,7 @@
 		7E2F052C209CB6A500C8C9E0 /* CMPVendorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPVendorTests.swift; sourceTree = "<group>"; };
 		7E2F053220A0721900C8C9E0 /* CMPVendorListURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPVendorListURL.swift; sourceTree = "<group>"; };
 		7E2F053420A074B800C8C9E0 /* CMPVendorListURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPVendorListURLTests.swift; sourceTree = "<group>"; };
+		7E2F053620A0A47300C8C9E0 /* vendors-fr.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "vendors-fr.json"; sourceTree = "<group>"; };
 		7E5A5F742091F8920025BE51 /* CMPVendorListManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPVendorListManagerTests.swift; sourceTree = "<group>"; };
 		7E5A5F77209228410025BE51 /* CMPConsentString+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMPConsentString+Utils.swift"; sourceTree = "<group>"; };
 		7E800B4C2090AEAC001FC83B /* CMPVendorList+JSONKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CMPVendorList+JSONKeys.swift"; sourceTree = "<group>"; };
@@ -268,6 +270,7 @@
 			children = (
 				7EBB616520932BFF00EAD3C7 /* vendors_updated.json */,
 				7E25FC75208F51CF00D05789 /* vendors.json */,
+				7E2F053620A0A47300C8C9E0 /* vendors-fr.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -487,6 +490,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E2F053720A0A47400C8C9E0 /* vendors-fr.json in Resources */,
 				7E25FC7E208F51CF00D05789 /* vendors.json in Resources */,
 				7EBB616620932BFF00EAD3C7 /* vendors_updated.json in Resources */,
 			);
