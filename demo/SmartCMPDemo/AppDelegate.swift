@@ -45,10 +45,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
     func consentManagerRequestsToShowConsentTool(_ consentManager: CMPConsentManager, forVendorList vendorList: CMPVendorList) {
         NSLog("CMP Requested ConsentTool Display");
         
-        // You should display the consent tool UI, when user is ready
+        // You should display the consent tool UI, when user is ready…
         if let controller = self.window?.rootViewController {
             consentManager.showConsentTool(fromController: controller)
         }
+        
+        // Since the vendor list is provided in parameter of this delegate method, you can also build your own UI to ask for
+        // user consent and simply save the resulting consent string in the relevant IAB keys (see the IAB specification for
+        // more details about this).
+        //
+        // To generate a valid IAB consent string easily, you can use the CMPConsentString class.
     }
     
     // MARK: - Consent Tool Configuration
@@ -71,6 +77,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
                                            consentManagementVendorDetailPurposesText: "Required purposes",
                                            consentManagementVendorDetailLegitimatePurposesText: "Legitimate interest purposes",
                                            consentManagementVendorDetailFeaturesText: "Features")
+        
+
     }
     
 }
