@@ -78,6 +78,14 @@ The current version of _SmartCMP_ has the following limitations:
 
 ## License
 
+### Code source licensing
+
 This software is distributed under the _Creative Commons Legal Code, Attribution 3.0 Unported_ license.
 
 Check the [LICENSE file](LICENSE) for more details.
+
+### Reusing SmartCMP ID
+
+The CMP ID _'33'_ used for consent string encoding is the CMP ID of _Smart AdServer_.
+
+You can use this CMP ID as long as you don't alter the source code of _SmartCMP_. If you do modify the source code, **YOU MUST REGISTER YOUR FORK AS A NEW CMP and change the CMP ID** in ```CMPConstants.CMPInfos.ID```. You can register your fork CMP and obtain your own ID here: https://register.consensu.org/CMP
