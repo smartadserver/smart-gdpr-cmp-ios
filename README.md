@@ -88,4 +88,4 @@ Check the [LICENSE file](LICENSE) for more details.
 
 The CMP ID _'33'_ used for consent string encoding is the CMP ID of _Smart AdServer_.
 
-You can use this CMP ID as long as you don't alter the source code of _SmartCMP_. If you do modify the source code, **YOU MUST REGISTER YOUR FORK AS A NEW CMP and change the CMP ID** in ```CMPConstants.CMPInfos.ID```. You can register your fork CMP and obtain your own ID here: https://register.consensu.org/CMP
+You can use this CMP ID as long as you don't alter the source code of _SmartCMP_. If you do modify the source code, **YOU MUST REGISTER YOUR FORK AS A NEW CMP and change the CMP ID** in ```CMPConstants.CMPInfos.ID```. You can register your forked eCMP and obtain your own ID here: https://register.consensu.org/CMP
