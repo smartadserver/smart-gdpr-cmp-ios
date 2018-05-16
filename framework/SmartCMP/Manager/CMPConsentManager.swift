@@ -213,7 +213,8 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
                         // Generate the updated consent string
                         self.consentString = CMPConsentString.consentString(fromUpdatedVendorList: vendorList,
                                                                             previousVendorList: previousVendorList,
-                                                                            previousConsentString: storedConsentString)
+                                                                            previousConsentString: storedConsentString,
+                                                                            consentLanguage: self.language)
                         
                         DispatchQueue.main.async {
                             // Display consent tool
