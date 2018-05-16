@@ -36,7 +36,7 @@ internal class CMPConsentToolPurposeViewController: UITableViewController {
         super.viewDidLoad()
 
         // Configure texts
-        self.title = consentToolManager?.configuration.consentManagementScreenPurposeSectionHeaderText
+        self.title = consentToolManager?.configuration.consentManagementPurposeDetailTitle
         
         self.purposeNameLabel.text = purpose?.name
         self.purposeDescriptionLabel.text = purpose?.purposeDescription

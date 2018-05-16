@@ -125,7 +125,7 @@ internal class CMPConsentToolPreferencesViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case CMPConsentToolPreferencesViewController.PurposeSection:
-            return consentToolManager?.configuration.consentManagementScreenPurposeSectionHeaderText
+            return consentToolManager?.configuration.consentManagementScreenPurposesSectionHeaderText
         default:
             return consentToolManager?.configuration.consentManagementScreenVendorsSectionHeaderText
         }
