@@ -473,10 +473,10 @@ class CMPConsentStringTests : XCTestCase {
         let expectedConsentString = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
                                                      created: date,
                                                      lastUpdated: updatedDate,
-                                                     cmpId: 1,
-                                                     cmpVersion: 2,
+                                                     cmpId: CMPConstants.CMPInfos.ID,
+                                                     cmpVersion: CMPConstants.CMPInfos.VERSION,
                                                      consentScreen: 3,
-                                                     consentLanguage: CMPLanguage(string: "en")!,
+                                                     consentLanguage: CMPLanguage(string: "fr")!,
                                                      allowedPurposes: [1, 2, 6, 7],
                                                      allowedVendors: [1, 2, 4, 40, 41, 42],
                                                      vendorList: updatedVendorList)
@@ -484,6 +484,7 @@ class CMPConsentStringTests : XCTestCase {
         let updatedConsentString = CMPConsentString.consentString(fromUpdatedVendorList: updatedVendorList,
                                                                   previousVendorList: vendorList,
                                                                   previousConsentString: consentString,
+                                                                  consentLanguage: CMPLanguage(string: "fr")!,
                                                                   lastUpdated: updatedDate)
         
         XCTAssertEqual(updatedConsentString, expectedConsentString)
@@ -508,10 +509,10 @@ class CMPConsentStringTests : XCTestCase {
         let expectedConsentString1 = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
                                                       created: date,
                                                       lastUpdated: updatedDate,
-                                                      cmpId: 1,
-                                                      cmpVersion: 2,
+                                                      cmpId: CMPConstants.CMPInfos.ID,
+                                                      cmpVersion: CMPConstants.CMPInfos.VERSION,
                                                       consentScreen: 3,
-                                                      consentLanguage: CMPLanguage(string: "en")!,
+                                                      consentLanguage: CMPLanguage(string: "fr")!,
                                                       vendorListVersion: 1,
                                                       maxVendorId: 6,
                                                       allowedPurposes: [1, 2, 4],
@@ -520,17 +521,17 @@ class CMPConsentStringTests : XCTestCase {
         let expectedConsentString2 = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
                                                       created: date,
                                                       lastUpdated: updatedDate,
-                                                      cmpId: 1,
-                                                      cmpVersion: 2,
+                                                      cmpId: CMPConstants.CMPInfos.ID,
+                                                      cmpVersion: CMPConstants.CMPInfos.VERSION,
                                                       consentScreen: 3,
-                                                      consentLanguage: CMPLanguage(string: "en")!,
+                                                      consentLanguage: CMPLanguage(string: "fr")!,
                                                       vendorListVersion: 1,
                                                       maxVendorId: 6,
                                                       allowedPurposes: [1, 2],
                                                       allowedVendors: [1, 2, 4])
         
-        let idDoesNotExistsConsentString = CMPConsentString.consentStringByAddingConsent(forPurposeId: 4, consentString: consentString, lastUpdated: updatedDate)
-        let idExistsConsentString = CMPConsentString.consentStringByAddingConsent(forPurposeId: 1, consentString: consentString, lastUpdated: updatedDate)
+        let idDoesNotExistsConsentString = CMPConsentString.consentStringByAddingConsent(forPurposeId: 4, consentString: consentString, consentLanguage: CMPLanguage(string: "fr")!, lastUpdated: updatedDate)
+        let idExistsConsentString = CMPConsentString.consentStringByAddingConsent(forPurposeId: 1, consentString: consentString, consentLanguage: CMPLanguage(string: "fr")!, lastUpdated: updatedDate)
         
         XCTAssertEqual(idDoesNotExistsConsentString, expectedConsentString1)
         XCTAssertEqual(idExistsConsentString, expectedConsentString2)
@@ -555,10 +556,10 @@ class CMPConsentStringTests : XCTestCase {
         let expectedConsentString1 = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
                                                       created: date,
                                                       lastUpdated: updatedDate,
-                                                      cmpId: 1,
-                                                      cmpVersion: 2,
+                                                      cmpId: CMPConstants.CMPInfos.ID,
+                                                      cmpVersion: CMPConstants.CMPInfos.VERSION,
                                                       consentScreen: 3,
-                                                      consentLanguage: CMPLanguage(string: "en")!,
+                                                      consentLanguage: CMPLanguage(string: "fr")!,
                                                       vendorListVersion: 1,
                                                       maxVendorId: 6,
                                                       allowedPurposes: [2],
@@ -567,17 +568,17 @@ class CMPConsentStringTests : XCTestCase {
         let expectedConsentString2 = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
                                                       created: date,
                                                       lastUpdated: updatedDate,
-                                                      cmpId: 1,
-                                                      cmpVersion: 2,
+                                                      cmpId: CMPConstants.CMPInfos.ID,
+                                                      cmpVersion: CMPConstants.CMPInfos.VERSION,
                                                       consentScreen: 3,
-                                                      consentLanguage: CMPLanguage(string: "en")!,
+                                                      consentLanguage: CMPLanguage(string: "fr")!,
                                                       vendorListVersion: 1,
                                                       maxVendorId: 6,
                                                       allowedPurposes: [1, 2],
                                                       allowedVendors: [1, 2, 4])
         
-        let idExistsConsentString = CMPConsentString.consentStringByRemovingConsent(forPurposeId: 1, consentString: consentString, lastUpdated: updatedDate)
-        let idDoesNotExistsConsentString = CMPConsentString.consentStringByRemovingConsent(forPurposeId: 4, consentString: consentString, lastUpdated: updatedDate)
+        let idExistsConsentString = CMPConsentString.consentStringByRemovingConsent(forPurposeId: 1, consentString: consentString, consentLanguage: CMPLanguage(string: "fr")!, lastUpdated: updatedDate)
+        let idDoesNotExistsConsentString = CMPConsentString.consentStringByRemovingConsent(forPurposeId: 4, consentString: consentString, consentLanguage: CMPLanguage(string: "fr")!, lastUpdated: updatedDate)
         
         XCTAssertEqual(idExistsConsentString, expectedConsentString1)
         XCTAssertEqual(idDoesNotExistsConsentString, expectedConsentString2)
@@ -602,10 +603,10 @@ class CMPConsentStringTests : XCTestCase {
         let expectedConsentString1 = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
                                                       created: date,
                                                       lastUpdated: updatedDate,
-                                                      cmpId: 1,
-                                                      cmpVersion: 2,
+                                                      cmpId: CMPConstants.CMPInfos.ID,
+                                                      cmpVersion: CMPConstants.CMPInfos.VERSION,
                                                       consentScreen: 3,
-                                                      consentLanguage: CMPLanguage(string: "en")!,
+                                                      consentLanguage: CMPLanguage(string: "fr")!,
                                                       vendorListVersion: 1,
                                                       maxVendorId: 6,
                                                       allowedPurposes: [1, 2],
@@ -614,17 +615,17 @@ class CMPConsentStringTests : XCTestCase {
         let expectedConsentString2 = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
                                                       created: date,
                                                       lastUpdated: updatedDate,
-                                                      cmpId: 1,
-                                                      cmpVersion: 2,
+                                                      cmpId: CMPConstants.CMPInfos.ID,
+                                                      cmpVersion: CMPConstants.CMPInfos.VERSION,
                                                       consentScreen: 3,
-                                                      consentLanguage: CMPLanguage(string: "en")!,
+                                                      consentLanguage: CMPLanguage(string: "fr")!,
                                                       vendorListVersion: 1,
                                                       maxVendorId: 6,
                                                       allowedPurposes: [1, 2],
                                                       allowedVendors: [1, 2, 4])
         
-        let idDoesNotExistsConsentString = CMPConsentString.consentStringByAddingConsent(forVendorId: 6, consentString: consentString, lastUpdated: updatedDate)
-        let idExistsConsentString = CMPConsentString.consentStringByAddingConsent(forVendorId: 1, consentString: consentString, lastUpdated: updatedDate)
+        let idDoesNotExistsConsentString = CMPConsentString.consentStringByAddingConsent(forVendorId: 6, consentString: consentString, consentLanguage: CMPLanguage(string: "fr")!, lastUpdated: updatedDate)
+        let idExistsConsentString = CMPConsentString.consentStringByAddingConsent(forVendorId: 1, consentString: consentString, consentLanguage: CMPLanguage(string: "fr")!, lastUpdated: updatedDate)
         
         XCTAssertEqual(idDoesNotExistsConsentString, expectedConsentString1)
         XCTAssertEqual(idExistsConsentString, expectedConsentString2)
@@ -649,10 +650,10 @@ class CMPConsentStringTests : XCTestCase {
         let expectedConsentString1 = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
                                                       created: date,
                                                       lastUpdated: updatedDate,
-                                                      cmpId: 1,
-                                                      cmpVersion: 2,
+                                                      cmpId: CMPConstants.CMPInfos.ID,
+                                                      cmpVersion: CMPConstants.CMPInfos.VERSION,
                                                       consentScreen: 3,
-                                                      consentLanguage: CMPLanguage(string: "en")!,
+                                                      consentLanguage: CMPLanguage(string: "fr")!,
                                                       vendorListVersion: 1,
                                                       maxVendorId: 6,
                                                       allowedPurposes: [1, 2],
@@ -661,17 +662,17 @@ class CMPConsentStringTests : XCTestCase {
         let expectedConsentString2 = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
                                                       created: date,
                                                       lastUpdated: updatedDate,
-                                                      cmpId: 1,
-                                                      cmpVersion: 2,
+                                                      cmpId: CMPConstants.CMPInfos.ID,
+                                                      cmpVersion: CMPConstants.CMPInfos.VERSION,
                                                       consentScreen: 3,
-                                                      consentLanguage: CMPLanguage(string: "en")!,
+                                                      consentLanguage: CMPLanguage(string: "fr")!,
                                                       vendorListVersion: 1,
                                                       maxVendorId: 6,
                                                       allowedPurposes: [1, 2],
                                                       allowedVendors: [2, 4])
         
-        let idDoesNotExistsConsentString = CMPConsentString.consentStringByRemovingConsent(forVendorId: 6, consentString: consentString, lastUpdated: updatedDate)
-        let idExistsConsentString = CMPConsentString.consentStringByRemovingConsent(forVendorId: 1, consentString: consentString, lastUpdated: updatedDate)
+        let idDoesNotExistsConsentString = CMPConsentString.consentStringByRemovingConsent(forVendorId: 6, consentString: consentString, consentLanguage: CMPLanguage(string: "fr")!, lastUpdated: updatedDate)
+        let idExistsConsentString = CMPConsentString.consentStringByRemovingConsent(forVendorId: 1, consentString: consentString, consentLanguage: CMPLanguage(string: "fr")!, lastUpdated: updatedDate)
         
         XCTAssertEqual(idDoesNotExistsConsentString, expectedConsentString1)
         XCTAssertEqual(idExistsConsentString, expectedConsentString2)

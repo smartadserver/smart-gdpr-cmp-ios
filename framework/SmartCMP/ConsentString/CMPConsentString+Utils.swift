@@ -28,9 +28,9 @@ internal extension CMPConsentString {
      - Returns: A new consent string with no consent given.
      */
     static func consentStringWithNoConsent(consentScreen: Int,
-                                             consentLanguage: CMPLanguage,
-                                             vendorList: CMPVendorList,
-                                             date: Date = Date()) -> CMPConsentString {
+                                           consentLanguage: CMPLanguage,
+                                           vendorList: CMPVendorList,
+                                           date: Date = Date()) -> CMPConsentString {
         
         return CMPConsentString(
             versionConfig: CMPVersionConfig.LATEST,
@@ -85,12 +85,14 @@ internal extension CMPConsentString {
         - updatedVendorList: The updated vendor list.
         - previousVendorList: The previous consent string that has been used to generated the previous consent string.
         - previousConsentString: The previous consent string.
+        - consentLanguage: The language that the CMP asked for consent in.
         - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
      - Returns: The new consent string.
      */
     static func consentString(fromUpdatedVendorList updatedVendorList: CMPVendorList,
                               previousVendorList: CMPVendorList,
                               previousConsentString: CMPConsentString,
+                              consentLanguage: CMPLanguage,
                               lastUpdated: Date = Date()) -> CMPConsentString {
         
         let updatedAllowedPurposes = IndexSet((1...updatedVendorList.purposes.count).compactMap { index in
@@ -113,10 +115,10 @@ internal extension CMPConsentString {
             versionConfig: CMPVersionConfig.LATEST,
             created: previousConsentString.created,
             lastUpdated: lastUpdated,
-            cmpId: previousConsentString.cmpId,
-            cmpVersion: previousConsentString.cmpVersion,
+            cmpId: CMPConstants.CMPInfos.ID,
+            cmpVersion: CMPConstants.CMPInfos.VERSION,
             consentScreen: previousConsentString.consentScreen,
-            consentLanguage: previousConsentString.consentLanguage,
+            consentLanguage: consentLanguage,
             allowedPurposes: updatedAllowedPurposes,
             allowedVendors: updatedAllowedVendors,
             vendorList: updatedVendorList
@@ -131,11 +133,13 @@ internal extension CMPConsentString {
      - Parameters:
         - purposeId: The purpose id which should be added to the consent list.
         - consentString: The consent string which should be copied.
+        - consentLanguage: The language that the CMP asked for consent in.
         - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
      - Returns: A new consent string with a consent given for a particular purpose.
      */
     static func consentStringByAddingConsent(forPurposeId purposeId: Int,
                                              consentString: CMPConsentString,
+                                             consentLanguage: CMPLanguage,
                                              lastUpdated: Date = Date()) -> CMPConsentString {
         
         let updatedAllowedPurposes = !consentString.allowedPurposes.contains(purposeId) ?
@@ -145,10 +149,10 @@ internal extension CMPConsentString {
             versionConfig: CMPVersionConfig.LATEST,
             created: consentString.created,
             lastUpdated: lastUpdated,
-            cmpId: consentString.cmpId,
-            cmpVersion: consentString.cmpVersion,
+            cmpId: CMPConstants.CMPInfos.ID,
+            cmpVersion: CMPConstants.CMPInfos.VERSION,
             consentScreen: consentString.consentScreen,
-            consentLanguage: consentString.consentLanguage,
+            consentLanguage: consentLanguage,
             vendorListVersion: consentString.vendorListVersion,
             maxVendorId: consentString.maxVendorId,
             allowedPurposes: updatedAllowedPurposes,
@@ -164,12 +168,14 @@ internal extension CMPConsentString {
      - Parameters:
         - purposeId: The purpose id which should be removed from the consent list.
         - consentString: The consent string which should be copied.
+        - consentLanguage: The language that the CMP asked for consent in.
         - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
      - Returns: A new consent string with a consent removed for a particular purpose.
      */
     static func consentStringByRemovingConsent(forPurposeId purposeId: Int,
-                                             consentString: CMPConsentString,
-                                             lastUpdated: Date = Date()) -> CMPConsentString {
+                                               consentString: CMPConsentString,
+                                               consentLanguage: CMPLanguage,
+                                               lastUpdated: Date = Date()) -> CMPConsentString {
         
         let updatedAllowedPurposes = consentString.allowedPurposes.filteredIndexSet(includeInteger: { $0 != purposeId })
         
@@ -177,10 +183,10 @@ internal extension CMPConsentString {
             versionConfig: CMPVersionConfig.LATEST,
             created: consentString.created,
             lastUpdated: lastUpdated,
-            cmpId: consentString.cmpId,
-            cmpVersion: consentString.cmpVersion,
+            cmpId: CMPConstants.CMPInfos.ID,
+            cmpVersion: CMPConstants.CMPInfos.VERSION,
             consentScreen: consentString.consentScreen,
-            consentLanguage: consentString.consentLanguage,
+            consentLanguage: consentLanguage,
             vendorListVersion: consentString.vendorListVersion,
             maxVendorId: consentString.maxVendorId,
             allowedPurposes: updatedAllowedPurposes,
@@ -196,11 +202,13 @@ internal extension CMPConsentString {
      - Parameters:
         - vendorId: The vendor id which should be added to the consent list.
         - consentString: The consent string which should be copied.
+        - consentLanguage: The language that the CMP asked for consent in.
         - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
      - Returns: A new consent string with a consent given for a particular vendor.
      */
     static func consentStringByAddingConsent(forVendorId vendorId: Int,
                                              consentString: CMPConsentString,
+                                             consentLanguage: CMPLanguage,
                                              lastUpdated: Date = Date()) -> CMPConsentString {
         
         let updatedAllowedVendors = !consentString.allowedVendors.contains(vendorId) ?
@@ -210,10 +218,10 @@ internal extension CMPConsentString {
             versionConfig: CMPVersionConfig.LATEST,
             created: consentString.created,
             lastUpdated: lastUpdated,
-            cmpId: consentString.cmpId,
-            cmpVersion: consentString.cmpVersion,
+            cmpId: CMPConstants.CMPInfos.ID,
+            cmpVersion: CMPConstants.CMPInfos.VERSION,
             consentScreen: consentString.consentScreen,
-            consentLanguage: consentString.consentLanguage,
+            consentLanguage: consentLanguage,
             vendorListVersion: consentString.vendorListVersion,
             maxVendorId: consentString.maxVendorId,
             allowedPurposes: consentString.allowedPurposes,
@@ -229,11 +237,13 @@ internal extension CMPConsentString {
      - Parameters:
         - vendorId: The vendor id which should be removed from the consent list.
         - consentString: The consent string which should be copied.
+        - consentLanguage: The language that the CMP asked for consent in.
         - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
      - Returns: A new consent string with a consent removed for a particular vendor.
      */
     static func consentStringByRemovingConsent(forVendorId vendorId: Int,
                                                consentString: CMPConsentString,
+                                               consentLanguage: CMPLanguage,
                                                lastUpdated: Date = Date()) -> CMPConsentString {
         
         let updatedAllowedVendors = consentString.allowedVendors.filteredIndexSet(includeInteger: { $0 != vendorId })
@@ -242,10 +252,10 @@ internal extension CMPConsentString {
             versionConfig: CMPVersionConfig.LATEST,
             created: consentString.created,
             lastUpdated: lastUpdated,
-            cmpId: consentString.cmpId,
-            cmpVersion: consentString.cmpVersion,
+            cmpId: CMPConstants.CMPInfos.ID,
+            cmpVersion: CMPConstants.CMPInfos.VERSION,
             consentScreen: consentString.consentScreen,
-            consentLanguage: consentString.consentLanguage,
+            consentLanguage: consentLanguage,
             vendorListVersion: consentString.vendorListVersion,
             maxVendorId: consentString.maxVendorId,
             allowedPurposes: consentString.allowedPurposes,
