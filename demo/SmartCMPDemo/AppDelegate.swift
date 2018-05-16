@@ -68,17 +68,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
                                            consentManagementCancelButtonTitle: "Cancel",
                                            consentManagementSaveButtonTitle: "Save",
                                            consentManagementScreenVendorsSectionHeaderText: "Vendors",
-                                           consentManagementScreenPurposeSectionHeaderText: "Purpose",
+                                           consentManagementScreenPurposesSectionHeaderText: "Purposes",
                                            consentManagementVendorsControllerAccessText: "Authorized vendors",
                                            consentManagementActivatedText: "yes",
                                            consentManagementDeactivatedText: "no",
+                                           consentManagementPurposeDetailTitle: "Purpose",
                                            consentManagementPurposeDetailAllowText: "Allowed",
                                            consentManagementVendorDetailViewPolicyText: "View privacy policy",
                                            consentManagementVendorDetailPurposesText: "Required purposes",
                                            consentManagementVendorDetailLegitimatePurposesText: "Legitimate interest purposes",
                                            consentManagementVendorDetailFeaturesText: "Features")
-        
-
     }
     
 }

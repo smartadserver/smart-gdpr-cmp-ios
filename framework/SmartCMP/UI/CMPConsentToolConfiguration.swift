@@ -61,10 +61,10 @@ public class CMPConsentToolConfiguration : NSObject {
     /// Eg: "Vendors"
     let consentManagementScreenVendorsSectionHeaderText: String
     
-    /// Text of the purpose section header.
+    /// Text of the purposes section header.
     ///
-    /// Eg: "Purpose"
-    let consentManagementScreenPurposeSectionHeaderText: String
+    /// Eg: "Purposes"
+    let consentManagementScreenPurposesSectionHeaderText: String
     
     /// Text to access the full vendor list.
     ///
@@ -81,9 +81,14 @@ public class CMPConsentToolConfiguration : NSObject {
     /// Eg: "no"
     let consentManagementDeactivatedText: String
     
+    /// The title of the purpose detail screen.
+    ///
+    /// Eg: "Purpose"
+    let consentManagementPurposeDetailTitle: String
+    
     // MARK: - Purpose Detail Controller
     
-    /// Text displayed next to the switch to allow / disallow a purpose or a vendor.
+    /// Text displayed next to the switch to allow / disallow a purpose.
     ///
     /// Eg: "Allowed"
     let consentManagementPurposeDetailAllowText: String
@@ -129,12 +134,12 @@ public class CMPConsentToolConfiguration : NSObject {
         - consentManagementVendorsControllerAccessText: The text displayed to access the whole vendor list.
         - consentManagementActivatedText: The text to displayed when a purpose / vendor has consent.
         - consentManagementDeactivatedText: The text to displayed when a purpose / vendor has no consent.
-        - consentManagementPurposeDetailAllowText: Text displayed next to the switch to allow / disallow a purpose or a vendor.
+        - consentManagementPurposeDetailTitle: The title of the purpose detail screen.
+        - consentManagementPurposeDetailAllowText: Text displayed next to the switch to allow / disallow a purpose.
         - consentManagementVendorDetailViewPolicyText: Text displayed to access vendor's privacy policy webpage.
         - consentManagementVendorDetailPurposesText: Text displayed as the title of the list of the vendor's purposes.
         - consentManagementVendorDetailLegitimatePurposesText: Text displayed as the title of the list of the vendor's legitimate purposes.
         - consentManagementVendorDetailFeaturesText: Text displayed as the title of the list of the vendor's features.
-     
      - Returns: A new instance of CMPConsentToolConfiguration.
      */
     @objc
@@ -146,10 +151,11 @@ public class CMPConsentToolConfiguration : NSObject {
                 consentManagementCancelButtonTitle: String,
                 consentManagementSaveButtonTitle: String,
                 consentManagementScreenVendorsSectionHeaderText: String,
-                consentManagementScreenPurposeSectionHeaderText: String,
+                consentManagementScreenPurposesSectionHeaderText: String,
                 consentManagementVendorsControllerAccessText: String,
                 consentManagementActivatedText: String,
                 consentManagementDeactivatedText: String,
+                consentManagementPurposeDetailTitle: String,
                 consentManagementPurposeDetailAllowText: String,
                 consentManagementVendorDetailViewPolicyText: String,
                 consentManagementVendorDetailPurposesText: String,
@@ -164,10 +170,11 @@ public class CMPConsentToolConfiguration : NSObject {
         self.consentManagementCancelButtonTitle = consentManagementCancelButtonTitle
         self.consentManagementSaveButtonTitle = consentManagementSaveButtonTitle
         self.consentManagementScreenVendorsSectionHeaderText = consentManagementScreenVendorsSectionHeaderText
-        self.consentManagementScreenPurposeSectionHeaderText = consentManagementScreenPurposeSectionHeaderText
+        self.consentManagementScreenPurposesSectionHeaderText = consentManagementScreenPurposesSectionHeaderText
         self.consentManagementVendorsControllerAccessText = consentManagementVendorsControllerAccessText
         self.consentManagementActivatedText = consentManagementActivatedText
         self.consentManagementDeactivatedText = consentManagementDeactivatedText
+        self.consentManagementPurposeDetailTitle = consentManagementPurposeDetailTitle
         self.consentManagementPurposeDetailAllowText = consentManagementPurposeDetailAllowText
         self.consentManagementVendorDetailViewPolicyText = consentManagementVendorDetailViewPolicyText
         self.consentManagementVendorDetailPurposesText = consentManagementVendorDetailPurposesText

@@ -23,22 +23,23 @@ Drag the ```SmartCMP.xcodeproj``` to your project and add the ```SmartCMP.framew
 You must setup the CMP before using it. Start by creating a configuration object that will define how the first screen of the consent tool will look like:
 
     let config = CMPConsentToolConfiguration(logo: UIImage(named: "logo")!,
-                                           homeScreenText: "[Place here your legal privacy notice for the consent tool, compliant with GDPR]",
-                                           homeScreenManageConsentButtonTitle: "MANAGE MY CHOICES",
-                                           homeScreenCloseButtonTitle: "GOT IT, THANKS!",
-                                           consentManagementScreenTitle: "Privacy preferences",
-                                           consentManagementCancelButtonTitle: "Cancel",
-                                           consentManagementSaveButtonTitle: "Save",
-                                           consentManagementScreenVendorsSectionHeaderText: "Vendors",
-                                           consentManagementScreenPurposeSectionHeaderText: "Purpose",
-                                           consentManagementVendorsControllerAccessText: "Authorized vendors",
-                                           consentManagementActivatedText: "yes",
-                                           consentManagementDeactivatedText: "no",
-                                           consentManagementPurposeDetailAllowText: "Allowed",
-                                           consentManagementVendorDetailViewPolicyText: "View privacy policy",
-                                           consentManagementVendorDetailPurposesText: "Required purposes",
-                                           consentManagementVendorDetailLegitimatePurposesText: "Legitimate interest purposes",
-                                           consentManagementVendorDetailFeaturesText: "Features")
+                                             homeScreenText: "[Place here your legal privacy notice for the consent tool, compliant with GDPR]",
+                                             homeScreenManageConsentButtonTitle: "MANAGE MY CHOICES",
+                                             homeScreenCloseButtonTitle: "GOT IT, THANKS!",
+                                             consentManagementScreenTitle: "Privacy preferences",
+                                             consentManagementCancelButtonTitle: "Cancel",
+                                             consentManagementSaveButtonTitle: "Save",
+                                             consentManagementScreenVendorsSectionHeaderText: "Vendors",
+                                             consentManagementScreenPurposesSectionHeaderText: "Purposes",
+                                             consentManagementVendorsControllerAccessText: "Authorized vendors",
+                                             consentManagementActivatedText: "yes",
+                                             consentManagementDeactivatedText: "no",
+                                             consentManagementPurposeDetailTitle: "Purpose",
+                                             consentManagementPurposeDetailAllowText: "Allowed",
+                                             consentManagementVendorDetailViewPolicyText: "View privacy policy",
+                                             consentManagementVendorDetailPurposesText: "Required purposes",
+                                             consentManagementVendorDetailLegitimatePurposesText: "Legitimate interest purposes",
+                                             consentManagementVendorDetailFeaturesText: "Features")
 
 Call the ```configure()``` method on ```CMPConsentManager.shared``` to start the CMP.
 
