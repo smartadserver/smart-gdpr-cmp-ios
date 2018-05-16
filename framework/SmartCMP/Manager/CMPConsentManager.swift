@@ -254,20 +254,20 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
         // Checking the 'Limited Ad Tracking' status of the device
         let isTrackingAllowed = ASIdentifierManager.shared().isAdvertisingTrackingEnabled
         
-        // If the 'Limited Ad Tracking' is disable on the device, or if the 'Limited Ad Tracking' is enable but the publisher
-        // wants to handle it itself…
-        if isTrackingAllowed || (!isTrackingAllowed && self.showConsentToolIfLAT) {
+        // If the 'Limited Ad Tracking' is disabled on the device, or if the 'Limited Ad Tracking' is enabled but the publisher
+        // wants to handle this option himself…
+        if isTrackingAllowed || self.showConsentToolIfLAT {
             if let delegate = self.delegate {
                 // The delegate is called so the publisher can ask for user's consent
                 delegate.consentManagerRequestsToShowConsentTool(self, forVendorList: vendorList)
             } else {
-                // There is no delegate so the CMP asked for user's consent automatically
+                // There is no delegate so the CMP will ask for user's consent automatically
                 if let viewController = UIApplication.shared.keyWindow?.rootViewController {
                     showConsentTool(fromController: viewController)
                 }
             }
         } else {
-            // If 'Limited Ad Tracking' is enabled and the publisher don't want to handle it itself, a consent string with no
+            // If 'Limited Ad Tracking' is enabled and the publisher don't want to handle it himself, a consent string with no
             // consent (for all vendors / purposes) is generated and stored.
             self.consentString = CMPConsentString.consentStringWithNoConsent(consentScreen: 0, consentLanguage: self.language, vendorList: vendorList, date: Date())
         }
