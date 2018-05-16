@@ -166,6 +166,50 @@ class CMPConsentStringTests : XCTestCase {
         XCTAssertEqual(consentString.consentString, "BOEFBi5OEFBi5ABACDENABwAAAAAaACgACAAQABA")
     }
     
+    func testEmptyConsentStringEncodingWithBitfieldAndDecoded() {
+        let date = self.date(from: "2017-11-07T18:59:04.9Z")
+        
+        let consentString = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
+                                             created: date,
+                                             lastUpdated: date,
+                                             cmpId: 1,
+                                             cmpVersion: 2,
+                                             consentScreen: 3,
+                                             consentLanguage: CMPLanguage(string: "en")!,
+                                             vendorListVersion: 1,
+                                             maxVendorId: 6,
+                                             allowedPurposes: [],
+                                             allowedVendors: [],
+                                             vendorListEncoding: .bitfield)
+        
+        let resultString = CMPConsentString.from(base64: consentString.consentString)
+        
+        XCTAssertNotNil(resultString)
+        XCTAssertEqual(consentString, resultString)
+    }
+    
+    func testEmptyConsentStringEncodingWithRangeAndDecoded() {
+        let date = self.date(from: "2017-11-07T18:59:04.9Z")
+        
+        let consentString = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
+                                             created: date,
+                                             lastUpdated: date,
+                                             cmpId: 1,
+                                             cmpVersion: 2,
+                                             consentScreen: 3,
+                                             consentLanguage: CMPLanguage(string: "en")!,
+                                             vendorListVersion: 1,
+                                             maxVendorId: 6,
+                                             allowedPurposes: [],
+                                             allowedVendors: [],
+                                             vendorListEncoding: .range)
+        
+        let resultString = CMPConsentString.from(base64: consentString.consentString)
+        
+        XCTAssertNotNil(resultString)
+        XCTAssertEqual(consentString, resultString)
+    }
+    
     func testConsentStringEncodingWithBitfieldAndUnorderedArrays() {
         let date = self.date(from: "2017-11-07T18:59:04.9Z")
         

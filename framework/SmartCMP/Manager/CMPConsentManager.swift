@@ -91,25 +91,29 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
             refreshInterval: CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_TIME,
             language: language,
             consentToolConfiguration: consentToolConfiguration,
-            showConsentToolIfUserLimitedAdTracking: CMPConsentManager.DEFAULT_LAT_VALUE
+            showConsentToolWhenLimitedAdTracking: CMPConsentManager.DEFAULT_LAT_VALUE
         )
     }
     
     /**
      Configure the CMPConsentManager. This method must be called only once per session.
      
+     Note: if you set 'showConsentToolWhenLimitedAdTracking' to true, you will be able to ask for user consent even if 'Limited Ad
+     Tracking' has been enabled on the device. In this case, remember that you still have to comply to Apple's App Store Terms and
+     Conditions regarding 'Limited Ad Tracking'.
+     
      - Parameters:
         - vendorListURL: The URL from where to fetch the vendor list (vendors.json). If you enter your own URL, your custom list MUST BE compatible with IAB specifications and respect vendorId and purposeId distributed by the IAB.
         - refreshInterval: The interval in seconds to refresh the vendor list.
         - language: an instance of CMPLanguage reflecting the device's current language.
         - consentToolConfiguration: an instance of CMPConsentToolConfiguration to configure of the consent tool UI.
-        - showConsentToolIfUserLimitedAdTracking: Whether or not the consent tool UI should be shown if user's checked Limit Ad Tracking in his device's preferences. If false, UI will never be shown if user checked LAT and consent string will be formatted has "user does not give consent".
+        - showConsentToolWhenLimitedAdTracking: Whether or not the consent tool UI should be shown if the user has enabled 'Limit Ad Tracking' in his device's preferences. If false, the consent tool will never be shown if user has enabled 'Limit Ad Tracking' and the consent string will be formatted has 'user does not give consent'. Note that if you have provided a delegate, it will not be called either.
      */
     @objc
     public func configure(refreshInterval: TimeInterval = CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_TIME,
                           language: CMPLanguage,
                           consentToolConfiguration: CMPConsentToolConfiguration,
-                          showConsentToolIfUserLimitedAdTracking: Bool = CMPConsentManager.DEFAULT_LAT_VALUE) {
+                          showConsentToolWhenLimitedAdTracking: Bool = CMPConsentManager.DEFAULT_LAT_VALUE) {
         // Check that we did not already configure, log error and stop if already configured
         if self.configured {
             logErrorMessage("CMPConsentManager is already configured for this session. You cannot reconfigure.")
@@ -124,7 +128,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
         
         // Consent Tool
         self.consentToolConfiguration = consentToolConfiguration
-        self.showConsentToolIfLAT = showConsentToolIfUserLimitedAdTracking
+        self.showConsentToolIfLAT = showConsentToolWhenLimitedAdTracking
         
         // Instantiate CPMVendorsManager with URL and RefreshTime and delegate
         self.vendorListManager = CMPVendorListManager(url: CMPVendorListURL(language: language), refreshInterval: refreshInterval, delegate: self)
@@ -213,7 +217,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
                         
                         DispatchQueue.main.async {
                             // Display consent tool
-                            self.displayConsentTool(vendorList: vendorList)
+                            self.handleVendorListChanged(vendorList)
                         }
                     }
                 }
@@ -221,7 +225,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
         } else {
             DispatchQueue.main.async {
                 // Consent string does not exist, ask for consent tool display
-                self.displayConsentTool(vendorList: vendorList)
+                self.handleVendorListChanged(vendorList)
             }
         }
     }
@@ -238,25 +242,34 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
     // MARK: - Trigger Consent Tool Display
     
     /**
-     Display the consent tool.
+     Handle the reception of a new vendor list. Calling this method will either:
+     
+     - show the consent tool manager (if we don't have any delegate),
+     - call the delegate with the new vendor list,
+     - generate an consent string without any consent if 'limited ad tracking' is enabled and the CMP is configured to handle it itself.
+     
+     - Parameter vendorList: The newly retrieved vendor list.
      */
-    private func displayConsentTool(vendorList: CMPVendorList) {
-        if let delegate = self.delegate {
-            // Publisher will be responsible to trigger consent tool display
-            delegate.consentManagerRequestsToShowConsentTool(self, forVendorList: vendorList)
-        } else {
-            // Force consent tool display depending on LAT status
-            let isTrackingAllowed = ASIdentifierManager.shared().isAdvertisingTrackingEnabled
-            
-            if isTrackingAllowed || (!isTrackingAllowed && self.showConsentToolIfLAT) {
-                // Find root view controller
+    private func handleVendorListChanged(_ vendorList: CMPVendorList) {
+        // Checking the 'Limited Ad Tracking' status of the device
+        let isTrackingAllowed = ASIdentifierManager.shared().isAdvertisingTrackingEnabled
+        
+        // If the 'Limited Ad Tracking' is disabled on the device, or if the 'Limited Ad Tracking' is enabled but the publisher
+        // wants to handle this option himself…
+        if isTrackingAllowed || self.showConsentToolIfLAT {
+            if let delegate = self.delegate {
+                // The delegate is called so the publisher can ask for user's consent
+                delegate.consentManagerRequestsToShowConsentTool(self, forVendorList: vendorList)
+            } else {
+                // There is no delegate so the CMP will ask for user's consent automatically
                 if let viewController = UIApplication.shared.keyWindow?.rootViewController {
                     showConsentTool(fromController: viewController)
                 }
-            } else {
-                // Generate consent string with no consent
-                self.consentString = CMPConsentString.consentStringWithNoConsent(consentScreen: 0, consentLanguage: self.language, vendorList: vendorList, date: Date())
             }
+        } else {
+            // If 'Limited Ad Tracking' is enabled and the publisher don't want to handle it himself, a consent string with no
+            // consent (for all vendors / purposes) is generated and stored.
+            self.consentString = CMPConsentString.consentStringWithNoConsent(consentScreen: 0, consentLanguage: self.language, vendorList: vendorList, date: Date())
         }
     }
     
