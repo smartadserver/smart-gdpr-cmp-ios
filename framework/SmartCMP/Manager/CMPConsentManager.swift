@@ -160,24 +160,31 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
     /**
      Present the consent tool UI modally.
      
+     Note: the consent tool will not be displayed if
+     
+     - you haven't called the configure() method first
+     - the consent tool is already displayed
+     - the vendor list has not been retrieved yet (or can't be retrieved for the moment).
+     
      - Parameter controller: The UIViewController instance which should present the consent tool UI.
+     - Returns: true if the consent tool has been displayed properly, false if it can't be displayed.
      */
     @objc
-    public func showConsentTool(fromController controller: UIViewController) {
+    public func showConsentTool(fromController controller: UIViewController) -> Bool {
         // Log error and stop if configuration is not made
         guard self.configured else {
             logErrorMessage("CMPConsentManager is not configured for this session. Please call CMPConsentManager.shared.configure() first.")
-            return;
+            return false;
         }
         
         guard !self.consentToolIsShown else {
             logErrorMessage("CMPConsentManager is already showing the consent tool view controller.")
-            return;
+            return false;
         }
         
         guard let lastVendorList = self.lastVendorList else {
             logErrorMessage("CMPConsentManager cannot show consent tool as no vendor list is available. Please wait.")
-            return;
+            return false;
         }
         
         // Consider consent tool as shown
@@ -188,6 +195,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
         self.consentToolManager = manager
         manager.showConsentTool(fromController: controller)
         
+        return true
     }
     
     // MARK: - CMPVendorListManagerDelegate
@@ -264,7 +272,7 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
             } else {
                 // There is no delegate so the CMP will ask for user's consent automatically
                 if let viewController = UIApplication.shared.keyWindow?.rootViewController {
-                    showConsentTool(fromController: viewController)
+                    let _ = showConsentTool(fromController: viewController)
                 }
             }
         } else {
