@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
         
         // You should display the consent tool UI, when user is ready…
         if let controller = self.window?.rootViewController {
-            consentManager.showConsentTool(fromController: controller)
+            let _ = consentManager.showConsentTool(fromController: controller)
         }
         
         // Since the vendor list is provided in parameter of this delegate method, you can also build your own UI to ask for
