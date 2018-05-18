@@ -50,7 +50,6 @@
 		8529CA45209717DE00759E68 /* CMPConsentToolVendorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8529CA44209717DE00759E68 /* CMPConsentToolVendorViewController.swift */; };
 		8529CA4B2097517800759E68 /* CMPRoundedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8529CA4A2097517800759E68 /* CMPRoundedLabel.swift */; };
 		85899A6A2092006100AC1B8C /* CMPConsentTool.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 85899A692092006100AC1B8C /* CMPConsentTool.storyboard */; };
-		85899A71209203A700AC1B8C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85899A70209203A700AC1B8C /* Assets.xcassets */; };
 		E934FBD8209084E500FE808C /* CMPConsentToolPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E934FBD7209084E500FE808C /* CMPConsentToolPreferencesViewController.swift */; };
 		E934FBDA209084F400FE808C /* CMPConsentToolVendorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E934FBD9209084F400FE808C /* CMPConsentToolVendorsViewController.swift */; };
 		E934FBDC2090850E00FE808C /* CMPConsentToolPurposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E934FBDB2090850E00FE808C /* CMPConsentToolPurposeViewController.swift */; };
@@ -122,7 +121,6 @@
 		8529CA44209717DE00759E68 /* CMPConsentToolVendorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPConsentToolVendorViewController.swift; sourceTree = "<group>"; };
 		8529CA4A2097517800759E68 /* CMPRoundedLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CMPRoundedLabel.swift; sourceTree = "<group>"; };
 		85899A692092006100AC1B8C /* CMPConsentTool.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CMPConsentTool.storyboard; sourceTree = "<group>"; };
-		85899A70209203A700AC1B8C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E934FBD7209084E500FE808C /* CMPConsentToolPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPConsentToolPreferencesViewController.swift; sourceTree = "<group>"; };
 		E934FBD9209084F400FE808C /* CMPConsentToolVendorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPConsentToolVendorsViewController.swift; sourceTree = "<group>"; };
 		E934FBDB2090850E00FE808C /* CMPConsentToolPurposeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPConsentToolPurposeViewController.swift; sourceTree = "<group>"; };
@@ -384,7 +382,6 @@
 		E96661172092170A00FCA161 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				85899A70209203A700AC1B8C /* Assets.xcassets */,
 				85899A692092006100AC1B8C /* CMPConsentTool.storyboard */,
 			);
 			path = Resources;
@@ -481,7 +478,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85899A71209203A700AC1B8C /* Assets.xcassets in Resources */,
 				85899A6A2092006100AC1B8C /* CMPConsentTool.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
