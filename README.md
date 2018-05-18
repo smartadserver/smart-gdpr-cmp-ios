@@ -23,22 +23,23 @@ Drag the ```SmartCMP.xcodeproj``` to your project and add the ```SmartCMP.framew
 You must setup the CMP before using it. Start by creating a configuration object that will define how the first screen of the consent tool will look like:
 
     let config = CMPConsentToolConfiguration(logo: UIImage(named: "logo")!,
-                                           homeScreenText: "[Place here your legal privacy notice for the consent tool, compliant with GDPR]",
-                                           homeScreenManageConsentButtonTitle: "MANAGE MY CHOICES",
-                                           homeScreenCloseButtonTitle: "GOT IT, THANKS!",
-                                           consentManagementScreenTitle: "Privacy preferences",
-                                           consentManagementCancelButtonTitle: "Cancel",
-                                           consentManagementSaveButtonTitle: "Save",
-                                           consentManagementScreenVendorsSectionHeaderText: "Vendors",
-                                           consentManagementScreenPurposeSectionHeaderText: "Purpose",
-                                           consentManagementVendorsControllerAccessText: "Authorized vendors",
-                                           consentManagementActivatedText: "yes",
-                                           consentManagementDeactivatedText: "no",
-                                           consentManagementPurposeDetailAllowText: "Allowed",
-                                           consentManagementVendorDetailViewPolicyText: "View privacy policy",
-                                           consentManagementVendorDetailPurposesText: "Required purposes",
-                                           consentManagementVendorDetailLegitimatePurposesText: "Legitimate interest purposes",
-                                           consentManagementVendorDetailFeaturesText: "Features")
+                                             homeScreenText: "[Place here your legal privacy notice for the consent tool, compliant with GDPR]",
+                                             homeScreenManageConsentButtonTitle: "MANAGE MY CHOICES",
+                                             homeScreenCloseButtonTitle: "GOT IT, THANKS!",
+                                             consentManagementScreenTitle: "Privacy preferences",
+                                             consentManagementCancelButtonTitle: "Cancel",
+                                             consentManagementSaveButtonTitle: "Save",
+                                             consentManagementScreenVendorsSectionHeaderText: "Vendors",
+                                             consentManagementScreenPurposesSectionHeaderText: "Purposes",
+                                             consentManagementVendorsControllerAccessText: "Authorized vendors",
+                                             consentManagementActivatedText: "yes",
+                                             consentManagementDeactivatedText: "no",
+                                             consentManagementPurposeDetailTitle: "Purpose",
+                                             consentManagementPurposeDetailAllowText: "Allowed",
+                                             consentManagementVendorDetailViewPolicyText: "View privacy policy",
+                                             consentManagementVendorDetailPurposesText: "Required purposes",
+                                             consentManagementVendorDetailLegitimatePurposesText: "Legitimate interest purposes",
+                                             consentManagementVendorDetailFeaturesText: "Features")
 
 Call the ```configure()``` method on ```CMPConsentManager.shared``` to start the CMP.
 
@@ -75,9 +76,18 @@ The current version of _SmartCMP_ has the following limitations:
 * _AppleTV_ apps are not supported.
 * The IAB specification allows publishers to display only a subset of purposes & vendors using a _pubvendors.json_ file, stored on their own infrastructure. _SmartCMP_ does not implement this feature at this time.
 * No static texts are provided by default (you must provide them to ```CMPConsentToolConfiguration```). The ```homeScreenText``` should be validated by your legal department.
+* _SmartCMP_ does not have any logic to know if GDPR applies or not based on user's location / age at this time. For the moment it is the publisher's responsibility to determine whether or not GDPR applies and if the consent tool UI should be shown to the user, as well as requesting permission to fetch location or other including / excluding criteria.
 
 ## License
+
+### Code source licensing
 
 This software is distributed under the _Creative Commons Legal Code, Attribution 3.0 Unported_ license.
 
 Check the [LICENSE file](LICENSE) for more details.
+
+### Reusing SmartCMP ID
+
+The CMP ID _'33'_ used for consent string encoding is the CMP ID of _Smart AdServer_.
+
+You can use this CMP ID as long as you don't alter the source code of _SmartCMP_. If you do modify the source code, **YOU MUST REGISTER YOUR FORK AS A NEW CMP and change the CMP ID** in ```CMPConstants.CMPInfos.ID```. You can register your forked CMP and obtain your own ID here: https://register.consensu.org/CMP

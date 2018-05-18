@@ -59,7 +59,19 @@ class ViewController: UIViewController {
     // MARK: Show consent tool action
     
     @IBAction func showConsentToolButtonTapped(_ sender: Any) {
-        CMPConsentManager.shared.showConsentTool(fromController: self)
+        // Showing the consent tool manually
+        if !CMPConsentManager.shared.showConsentTool(fromController: self) {
+            
+            // Note: showing the consent tool might fail for several reasons (check the API documentation for more information).
+            // For better user experience, it is advised to display an error if the consent tool can't be opened when it has been
+            // requested by the user.
+            let alert = UIAlertController(title: "Service unavailable",
+                                          message: "Setting your privacy preferences is not possible at the moment, please try again later",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true)
+            
+        }
     }
     
 }

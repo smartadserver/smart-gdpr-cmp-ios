@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
         
         // You should display the consent tool UI, when user is ready…
         if let controller = self.window?.rootViewController {
-            consentManager.showConsentTool(fromController: controller)
+            let _ = consentManager.showConsentTool(fromController: controller)
         }
         
         // Since the vendor list is provided in parameter of this delegate method, you can also build your own UI to ask for
@@ -68,17 +68,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
                                            consentManagementCancelButtonTitle: "Cancel",
                                            consentManagementSaveButtonTitle: "Save",
                                            consentManagementScreenVendorsSectionHeaderText: "Vendors",
-                                           consentManagementScreenPurposeSectionHeaderText: "Purpose",
+                                           consentManagementScreenPurposesSectionHeaderText: "Purposes",
                                            consentManagementVendorsControllerAccessText: "Authorized vendors",
                                            consentManagementActivatedText: "yes",
                                            consentManagementDeactivatedText: "no",
+                                           consentManagementPurposeDetailTitle: "Purpose",
                                            consentManagementPurposeDetailAllowText: "Allowed",
                                            consentManagementVendorDetailViewPolicyText: "View privacy policy",
                                            consentManagementVendorDetailPurposesText: "Required purposes",
                                            consentManagementVendorDetailLegitimatePurposesText: "Legitimate interest purposes",
                                            consentManagementVendorDetailFeaturesText: "Features")
-        
-
     }
     
 }

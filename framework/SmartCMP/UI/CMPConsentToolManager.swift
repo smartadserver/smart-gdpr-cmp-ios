@@ -269,7 +269,7 @@ internal class CMPConsentToolManager {
         }
         
         // Generate new consent string
-        self.generatedConsentString = CMPConsentString.consentStringByAddingConsent(forPurposeId: id, consentString: self.generatedConsentString, lastUpdated: Date())
+        self.generatedConsentString = CMPConsentString.consentStringByAddingConsent(forPurposeId: id, consentString: self.generatedConsentString, consentLanguage: language, lastUpdated: Date())
     }
     
     /**
@@ -283,7 +283,7 @@ internal class CMPConsentToolManager {
         }
         
         // Generate new consent string
-        self.generatedConsentString = CMPConsentString.consentStringByRemovingConsent(forPurposeId: id, consentString: self.generatedConsentString, lastUpdated: Date())
+        self.generatedConsentString = CMPConsentString.consentStringByRemovingConsent(forPurposeId: id, consentString: self.generatedConsentString, consentLanguage: language, lastUpdated: Date())
         
     }
     
@@ -298,7 +298,7 @@ internal class CMPConsentToolManager {
         }
 
         // Generate new consent string
-        self.generatedConsentString = CMPConsentString.consentStringByAddingConsent(forVendorId: id, consentString: self.generatedConsentString, lastUpdated: Date())
+        self.generatedConsentString = CMPConsentString.consentStringByAddingConsent(forVendorId: id, consentString: self.generatedConsentString, consentLanguage: language, lastUpdated: Date())
         
     }
     
@@ -313,7 +313,7 @@ internal class CMPConsentToolManager {
         }
         
         // Generate new consent string
-        self.generatedConsentString = CMPConsentString.consentStringByRemovingConsent(forVendorId: id, consentString: self.generatedConsentString, lastUpdated: Date())
+        self.generatedConsentString = CMPConsentString.consentStringByRemovingConsent(forVendorId: id, consentString: self.generatedConsentString, consentLanguage: language, lastUpdated: Date())
     }
     
     // MARK: - Utils
