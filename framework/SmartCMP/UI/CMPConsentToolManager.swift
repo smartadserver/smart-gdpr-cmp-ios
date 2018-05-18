@@ -123,6 +123,11 @@ internal class CMPConsentToolManager {
         return self.vendorList.activatedVendorCount;
     }
     
+    /// The activated vendors.
+    var activatedVendors: [CMPVendor] {
+        return self.vendorList.activatedVendors;
+    }
+    
     /// The number of allowed vendors among activated ones.
     var allowedVendorCount: Int {
         var count = 0
@@ -132,20 +137,6 @@ internal class CMPConsentToolManager {
             }
         }
         return count
-    }
-    
-    /**
-     Return the vendor by index.
-     
-     - Parameter index: The index.
-     - Returns: The vendor if any, nil otherwise.
-     */
-    func vendorAtIndex(_ index: Int) -> CMPVendor? {
-        guard index < self.activatedVendorCount else {
-            return nil
-        }
-        
-        return self.vendorList.vendors[index]
     }
     
     /**
@@ -221,27 +212,7 @@ internal class CMPConsentToolManager {
         } else {
             removeConsentForPurpose(id: purpose.id)
         }
-    }
-    
-    /**
-     Change the vendor consent by index.
-     
-     - Parameters:
-        - index: The index of the vendor to be changed.
-        - consent: true if consent must be added for the vendor, false to remove the consent.
-     */
-    func changeVendorConsent(index: Int, consent: Bool) {
-        guard let vendor = vendorAtIndex(index) else {
-            return
-        }
-        
-        if consent {
-            addConsentForVendor(id: vendor.id)
-        } else {
-            removeConsentForVendor(id: vendor.id)
-        }
-    }
-    
+    }    
     
     /**
      Change the vendor consent.

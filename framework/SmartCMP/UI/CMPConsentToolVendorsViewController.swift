@@ -46,7 +46,8 @@ internal class CMPConsentToolVendorsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: CMPConsentToolVendorsViewController.VendorCellIdentifier, for: indexPath) as! CMPVendorTableViewCell
         
         // Fill cell with vendor info
-        if let consentToolManager = self.consentToolManager, let vendor:CMPVendor = consentToolManager.vendorAtIndex(indexPath.row) {
+        if let consentToolManager = self.consentToolManager {
+            let vendor = consentToolManager.activatedVendors[indexPath.row]
             cell.vendorNameLabel.text = vendor.name
             cell.vendorActiveSwitch.isOn = consentToolManager.isVendorAllowed(vendor)
             cell.vendorActiveSwitchCallback =  { (switch) -> Void in
@@ -63,7 +64,7 @@ internal class CMPConsentToolVendorsViewController: UITableViewController {
         let vendorController:CMPConsentToolVendorViewController = segue.destination as! CMPConsentToolVendorViewController
         vendorController.consentToolManager = self.consentToolManager
         if let consentToolManager = self.consentToolManager, let selectedRow = self.tableView.indexPathForSelectedRow?.row {
-            vendorController.vendor = consentToolManager.vendorAtIndex(selectedRow)
+            vendorController.vendor = consentToolManager.activatedVendors[selectedRow]
         }
     }
 
