@@ -29,7 +29,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="d1F-fh-efk">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="d1F-fh-efk">
                                 <rect key="frame" x="67" y="20" width="186" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="KJw-uL-MIv"/>
@@ -377,7 +377,4 @@
             <point key="canvasLocation" x="-1529" y="-28"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="logo" width="278" height="115"/>
-    </resources>
 </document>
