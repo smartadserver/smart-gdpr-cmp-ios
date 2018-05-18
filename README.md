@@ -30,6 +30,14 @@ Download this repository, drag the ```SmartCMP.xcodeproj``` from the _framework_
 
 ### Integration
 
+The CMP must be imported before being used:
+
+    import SmartCMP
+
+Note: if your app is developed in Objective-C, you can import the CMP using:
+
+    #import <SmartCMP/SmartCMP-Swift.h>
+
 You must setup the CMP before using it. Start by creating a configuration object that will define how the first screen of the consent tool will look like:
 
     let config = CMPConsentToolConfiguration(logo: UIImage(named: "logo")!,
