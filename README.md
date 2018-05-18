@@ -16,7 +16,17 @@ Retrieving user consent is mandatory in EU starting May 25th due to the _General
 
 ### Installation
 
-Drag the ```SmartCMP.xcodeproj``` to your project and add the ```SmartCMP.framework``` target to the _Embedded Binaries_ section of your project _General_ properties.
+#### Using Cocoapods (recommended)
+
+Import the pod _SmartCMP_ in your project by adding to your _Podspec_ file:
+
+    pod 'SmartCMP'
+
+Then run ```pod update``` to install _SmartCMP_.
+
+#### From the Git repository
+
+Download this repository, drag the ```SmartCMP.xcodeproj``` from the _framework_ directory to your _Xcode_ project and add the ```SmartCMP.framework``` target to the _Embedded Binaries_ section of your project _General_ properties.
 
 ### Integration
 
