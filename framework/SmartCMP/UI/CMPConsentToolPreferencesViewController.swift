@@ -14,7 +14,7 @@ import UIKit
 /**
  Consent tool preferences view controller.
  */
-internal class CMPConsentToolPreferencesViewController: UITableViewController {
+internal class CMPConsentToolPreferencesViewController: CMPConsentToolBaseViewController {
     
     // MARK: - UI Elements
     
@@ -37,16 +37,13 @@ internal class CMPConsentToolPreferencesViewController: UITableViewController {
         
         self.title = consentToolManager?.configuration.consentManagementScreenTitle
         
-        let color = UINavigationBar.appearance().tintColor ?? UIColor(red: 14.0/255, green: 122.0/255, blue: 254.0/255, alpha: 1.0)
-        let activeColor = UINavigationBar.appearance().tintColor ?? UIColor(red: 14.0/255, green: 122.0/255, blue: 254.0/255, alpha: 0.7)
-        
         // Cancel button
         let btnBack = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 20))
         btnBack.setTitle(consentToolManager?.configuration.consentManagementCancelButtonTitle, for: .normal)
         btnBack.titleLabel?.textAlignment = .left
         btnBack.addTarget(self, action: #selector(cancelButtonTapped(sender:)), for: .touchUpInside)
-        btnBack.setTitleColor(color, for: .normal)
-        btnBack.setTitleColor(activeColor, for: .highlighted)
+        btnBack.setTitleColor(navigationButtonTintColor, for: .normal)
+        btnBack.setTitleColor(navigationButtonTintColor, for: .highlighted)
         let leftBarButton = UIBarButtonItem()
         leftBarButton.customView = btnBack
         self.navigationItem.leftBarButtonItem = leftBarButton
@@ -56,8 +53,8 @@ internal class CMPConsentToolPreferencesViewController: UITableViewController {
         btnSave.setTitle(consentToolManager?.configuration.consentManagementSaveButtonTitle, for: .normal)
         btnSave.titleLabel?.textAlignment = .right
         btnSave.addTarget(self, action: #selector(saveButtonTapped(sender:)), for: .touchUpInside)
-        btnSave.setTitleColor(color, for: .normal)
-        btnSave.setTitleColor(activeColor, for: .highlighted)
+        btnSave.setTitleColor(navigationButtonTintColor, for: .normal)
+        btnSave.setTitleColor(navigationButtonTintColor, for: .highlighted)
         let rightBarButton = UIBarButtonItem()
         rightBarButton.customView = btnSave
         self.navigationItem.rightBarButtonItem = rightBarButton
@@ -65,6 +62,8 @@ internal class CMPConsentToolPreferencesViewController: UITableViewController {
         // Footer
         self.tableView.tableFooterView = UIView()
         self.view.backgroundColor = UIColor.groupTableViewBackground
+        
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     override func viewWillAppear(_ animated: Bool) {

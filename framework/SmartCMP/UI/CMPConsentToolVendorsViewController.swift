@@ -14,7 +14,7 @@ import UIKit
 /**
  Consent tool vendors view controller.
  */
-internal class CMPConsentToolVendorsViewController: UITableViewController {
+internal class CMPConsentToolVendorsViewController: CMPConsentToolBaseViewController {
     
     // MARK: - UI Elements
 
