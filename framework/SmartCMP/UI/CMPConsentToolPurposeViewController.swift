@@ -14,7 +14,7 @@ import UIKit
 /**
  Consent tool purposes view controller.
  */
-internal class CMPConsentToolPurposeViewController: UITableViewController {
+internal class CMPConsentToolPurposeViewController: CMPConsentToolBaseViewController {
     
     /// The purpose displayed by the view controller
     weak var purpose: CMPPurpose?

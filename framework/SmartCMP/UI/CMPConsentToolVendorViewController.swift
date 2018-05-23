@@ -15,7 +15,7 @@ import SafariServices
 /**
  Consent tool vendors view controller.
  */
-internal class CMPConsentToolVendorViewController: UITableViewController {
+internal class CMPConsentToolVendorViewController: CMPConsentToolBaseViewController {
 
     /// The vendor displayed by the view controller
     var vendor: CMPVendor?
