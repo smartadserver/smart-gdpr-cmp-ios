@@ -377,7 +377,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
      - Parameters consentString: The consent string from which the advertising consent status will be retrieved.
      */
     internal func saveAdvertisingConsentStatus(forConsentString consentString: CMPConsentString) {
-        let advertisingConsentStatusString = consentString.allowedPurposes.contains(CMPConstants.AdvertisingConsentStatus.PurposeId) ? "1" : "0"
+        let advertisingConsentStatusString = consentString.isPurposeAllowed(purposeId: CMPConstants.AdvertisingConsentStatus.PurposeId) ? "1" : "0"
         saveStringToUserDefaults(string: advertisingConsentStatusString, key: CMPConstants.AdvertisingConsentStatus.Key)
     }
     
