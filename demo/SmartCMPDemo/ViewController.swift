@@ -43,16 +43,14 @@ class ViewController: UIViewController {
     }
     
     @objc func logRegisteredConsentString() {
-        if let consentString = UserDefaults.standard.object(forKey: ViewController.consentStringKey) as? String, storedConsentString != consentString {
-            NSLog("Stored consent string changed: \(consentString)")
-            storedConsentString = consentString
-            DispatchQueue.main.async {
-                self.textView.text = consentString
-            }            
-        } else {
-            DispatchQueue.main.async {
-                self.textView.text = nil
+        if let consentString = UserDefaults.standard.object(forKey: ViewController.consentStringKey) as? String {
+            if storedConsentString != consentString {
+                NSLog("Stored consent string changed: \(consentString)")
+                storedConsentString = consentString
+                textView.text = storedConsentString
             }
+        } else {
+            textView.text = nil
         }
     }
     
