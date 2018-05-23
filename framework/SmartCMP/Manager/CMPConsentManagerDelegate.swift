@@ -15,7 +15,7 @@ import Foundation
  Delegate of CMPConsentManager.
  */
 @objc
-public protocol CMPConsentManagerDelegate : class {
+public protocol CMPConsentManagerDelegate: class {
     
     /**
      Called when the consent manager found a reason to display the Consent Tool UI. The publisher should display

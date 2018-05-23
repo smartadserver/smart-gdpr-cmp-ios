@@ -12,7 +12,7 @@
 import XCTest
 @testable import SmartCMP
 
-class CMPVendorTests : XCTestCase {
+class CMPVendorTests: XCTestCase {
     
     func testVendorIsEquatable() {
         let vendor1 = CMPVendor(id: 1, name: "name1", purposes: [1], legitimatePurposes: [2], features: [3], policyURL: URL(string: "http://url1")!)

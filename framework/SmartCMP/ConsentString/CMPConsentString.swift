@@ -14,7 +14,7 @@ import Foundation
 /**
  Representation of an IAB consent string.
  */
-@objc public class CMPConsentString : NSObject, NSCopying {
+@objc public class CMPConsentString: NSObject, NSCopying {
     
     /// The type of encoding of the consent string.
     internal enum ConsentEncoding {

@@ -15,7 +15,7 @@ import Foundation
  Representation of a purpose.
  */
 @objc
-public class CMPPurpose : NSObject, Codable {
+public class CMPPurpose: NSObject, Codable {
     
     /// The id of the purpose.
     @objc

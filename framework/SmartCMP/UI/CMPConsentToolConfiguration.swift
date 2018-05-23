@@ -15,7 +15,7 @@ import Foundation
  The configuration class of CMPConsentToolManager.
  */
 @objc
-public class CMPConsentToolConfiguration : NSObject {
+public class CMPConsentToolConfiguration: NSObject {
     
     // MARK: - Home Screen Fields
     

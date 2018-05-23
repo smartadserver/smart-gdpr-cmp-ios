@@ -12,7 +12,7 @@
 import XCTest
 @testable import SmartCMP
 
-class CMPLanguageTests : XCTestCase {
+class CMPLanguageTests: XCTestCase {
     
     func testLanguageCanBeCreated() {
         let language1 = CMPLanguage(string: "en")

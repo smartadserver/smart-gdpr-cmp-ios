@@ -12,7 +12,7 @@
 import XCTest
 @testable import SmartCMP
 
-class CMPVendorListManagerTests : XCTestCase {
+class CMPVendorListManagerTests: XCTestCase {
     
     private lazy var vendorListJSON: String = {
         let url = Bundle(for: type(of: self)).url(forResource: "vendors", withExtension: "json")!

@@ -12,7 +12,7 @@
 import XCTest
 @testable import SmartCMP
 
-class CMPVendorListURLTests : XCTestCase {
+class CMPVendorListURLTests: XCTestCase {
     
     func testDefaultVendorListURLCorrespondsToTheLatest() {
         let expectedUrl = URL(string: "https://vendorlist.consensu.org/vendorlist.json")!

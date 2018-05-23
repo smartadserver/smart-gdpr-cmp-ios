@@ -12,7 +12,7 @@
 import XCTest
 @testable import SmartCMP
 
-class CMPURLSessionTests : XCTestCase {
+class CMPURLSessionTests: XCTestCase {
     
     class MockError: Error {
         
