@@ -15,7 +15,7 @@ import Foundation
  Representation of a feature.
  */
 @objc
-public class CMPFeature : NSObject, Codable {
+public class CMPFeature: NSObject, Codable {
     
     /// The id of the feature.
     @objc

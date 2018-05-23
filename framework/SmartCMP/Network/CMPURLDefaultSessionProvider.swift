@@ -14,7 +14,7 @@ import Foundation
 /**
  Default implementation of CMPURLSessionProvider, used by the shared instance of CMPURLSession.
  */
-internal class CMPURLDefaultSessionProvider : CMPURLSessionProvider {
+internal class CMPURLDefaultSessionProvider: CMPURLSessionProvider {
     
     /// A shared instance of CMPURLDefaultSessionProvider (using the shared instance of URLSession).
     static let shared = CMPURLDefaultSessionProvider(session: URLSession.shared)

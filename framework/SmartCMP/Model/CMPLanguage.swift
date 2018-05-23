@@ -15,7 +15,7 @@ import Foundation
  ISO 639-1 language representation for the CMPConsentString
  */
 @objc
-public class CMPLanguage : NSObject {
+public class CMPLanguage: NSObject {
     
     /// The CMP default language ('en' / English).
     @objc

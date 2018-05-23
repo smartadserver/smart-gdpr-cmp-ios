@@ -15,7 +15,7 @@ import Foundation
  Representation of a vendor.
  */
 @objc
-public class CMPVendor : NSObject, Codable {
+public class CMPVendor: NSObject, Codable {
     
     /// The id of the vendor.
     @objc

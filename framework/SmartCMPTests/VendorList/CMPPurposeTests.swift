@@ -12,7 +12,7 @@
 import XCTest
 @testable import SmartCMP
 
-class CMPPurposeTests : XCTestCase {
+class CMPPurposeTests: XCTestCase {
     
     func testPurposeIsEquatable() {
         let purpose1 = CMPPurpose(id: 1, name: "name1", description: "description1")

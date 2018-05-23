@@ -12,7 +12,7 @@
 import XCTest
 @testable import SmartCMP
 
-class CMPConsentManagerTests : XCTestCase {
+class CMPConsentManagerTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

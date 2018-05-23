@@ -16,7 +16,7 @@ import AdSupport
  A class to manage the CMP.
  */
 @objc
-public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPConsentToolManagerDelegate {
+public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConsentToolManagerDelegate {
 
     // MARK: - Global singleton
     

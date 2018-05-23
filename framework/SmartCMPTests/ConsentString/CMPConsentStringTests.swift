@@ -12,7 +12,7 @@
 import XCTest
 @testable import SmartCMP
 
-class CMPConsentStringTests : XCTestCase {
+class CMPConsentStringTests: XCTestCase {
     
     private func date(from string: String) -> Date {
         let formatter = DateFormatter()

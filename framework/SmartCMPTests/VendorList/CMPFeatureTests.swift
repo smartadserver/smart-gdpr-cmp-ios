@@ -12,7 +12,7 @@
 import XCTest
 @testable import SmartCMP
 
-class CMPFeatureTests : XCTestCase {
+class CMPFeatureTests: XCTestCase {
     
     func testFeatureIsEquatable() {
         let feature1 = CMPFeature(id: 1, name: "name1", description: "description1")

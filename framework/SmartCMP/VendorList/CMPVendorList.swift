@@ -15,7 +15,7 @@ import Foundation
  Representation of a vendor list.
  */
 @objc
-public class CMPVendorList : NSObject, Codable {
+public class CMPVendorList: NSObject, Codable {
     
     /// The vendor list version.
     @objc

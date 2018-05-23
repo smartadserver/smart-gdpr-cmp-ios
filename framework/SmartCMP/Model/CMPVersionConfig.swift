@@ -15,7 +15,7 @@ import Foundation
  Configuration for a given version of the consent string.
  */
 @objc
-public class CMPVersionConfig : NSObject {
+public class CMPVersionConfig: NSObject {
     
     /// The lastest version of the consent string.
     @objc
