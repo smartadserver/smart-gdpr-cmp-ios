@@ -295,13 +295,14 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
      Method called when the consent string has changed.
      */
     private func consentStringChanged() {
-        guard let newConsentString = self.consentString else {
+        guard let newConsentString = consentString else {
             return;
         }
         
-        self.saveConsentString(newConsentString.consentString)
-        self.saveVendorConsentString(newConsentString.parsedVendorConsents)
-        self.savePurposeConsentString(newConsentString.parsedPurposeConsents)
+        saveConsentString(newConsentString.consentString)
+        saveVendorConsentString(newConsentString.parsedVendorConsents)
+        savePurposeConsentString(newConsentString.parsedPurposeConsents)
+        saveAdvertisingConsentStatus(forConsentString: newConsentString)
     }
         
     // MARK: - Utils - Error Display
@@ -368,6 +369,16 @@ public class CMPConsentManager : NSObject, CMPVendorListManagerDelegate, CMPCons
      */
     internal func savePurposeConsentString(_ string: String) {
         saveStringToUserDefaults(string: string, key: CMPConstants.IABConsentKeys.ParsedPurposeConsent)
+    }
+    
+    /**
+     Save the advertising consent status in user defaults.
+     
+     - Parameters consentString: The consent string from which the advertising consent status will be retrieved.
+     */
+    internal func saveAdvertisingConsentStatus(forConsentString consentString: CMPConsentString) {
+        let advertisingConsentStatusString = consentString.allowedPurposes.contains(CMPConstants.AdvertisingConsentStatus.PurposeId) ? "1" : "0"
+        saveStringToUserDefaults(string: advertisingConsentStatusString, key: CMPConstants.AdvertisingConsentStatus.Key)
     }
     
     /**
