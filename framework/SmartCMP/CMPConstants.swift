@@ -39,11 +39,11 @@ internal struct CMPConstants {
     /// The AdvertisingConsentStatus NSUserDefaults key contains the current user consent for the advertising
     /// purpose of the current vendor list.
     ///
-    /// This status is only based on the answer of the user on the advertising purpose and does not take
+    /// This status is only based on the answer of the user for the advertising purpose and does not take
     /// vendors status into account. It should only be used for third party advertisement SDK that are not
-    /// IAB compliant.
+    /// IAB TCF compliant.
     ///
-    /// Note: this key is not part of the IAB specification.
+    /// Note: this key is not part of the IAB TCF specification.
     struct AdvertisingConsentStatus {
         static let PurposeId                        = 3 
         static let Key                              = "SmartCMP_advertisingConsentStatus"
