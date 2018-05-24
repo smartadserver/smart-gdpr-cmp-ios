@@ -63,8 +63,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
         // Note: depending on the situation, you might also want to allow or revoke all purposes consents without showing
         // the consent tool. You can do it using the allowAllPurposes() and revokeAllPurposes() methods.
         
-        // Allow all purposes consents without prompting the user, for instance if the user is not subject to GDPR (for instance,
-        // when he is living outside of the EU).
+        // Allow all purposes consents without prompting the user if the user is not subject to GDPR (for instance, when he
+        // is not an European citizen).
         // let _ = consentManager.allowAllPurposes()
         
         // Revoke all purposes consents without prompting the user, for instance if the user is under 16 years old (or younger

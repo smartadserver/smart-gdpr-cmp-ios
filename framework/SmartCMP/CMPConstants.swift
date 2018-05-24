@@ -18,7 +18,7 @@ internal struct CMPConstants {
     
     /// Generic information on the CMP framework.
     struct CMPInfos {
-        static let VERSION                          = 1
+        static let VERSION                          = 2
         
         // WARNING: '33' IS THE OFFICIAL CMP ID FOR SmartCMP.
         // You can use this ID as long as you don't change the source code of this project.
