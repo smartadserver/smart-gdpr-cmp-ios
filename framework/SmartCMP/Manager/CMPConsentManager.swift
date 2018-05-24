@@ -208,6 +208,76 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
         return true
     }
     
+    /**
+     Add all purposes consents for the current consent string if it is already defined, create a new consent string with full consent otherwise.
+     
+     - Returns: true if the modification has been done successfully, false otherwise.
+     */
+    @objc
+    public func allowAllPurposes() -> Bool {
+        // Log error and stop if configuration is not made
+        guard self.configured else {
+            logErrorMessage("CMPConsentManager is not configured for this session. Please call CMPConsentManager.shared.configure() first.")
+            return false;
+        }
+        
+        guard let lastVendorList = self.lastVendorList else {
+            logErrorMessage("Purposes can't be modified because the vendor list is not available or up-to-date.")
+            return false;
+        }
+        
+        let newConsentString: CMPConsentString? = {
+            if let consentString = self.consentString {
+                return CMPConsentString.consentStringWithAllPurposesConsent(fromConsentString: consentString, consentScreen: 0, consentLanguage: language, vendorList: lastVendorList)
+            } else {
+                return CMPConsentString.consentStringWithFullConsent(consentScreen: 0, consentLanguage: language, vendorList: lastVendorList)
+            }
+        }()
+        
+        guard newConsentString != nil else {
+            logErrorMessage("Purposes can't be modified because the vendor list is not available or up-to-date.")
+            return false
+        }
+        
+        self.consentString = newConsentString
+        return true
+    }
+    
+    /**
+     Remove all purposes consents for the current consent string if it is already defined, create a new consent string with full vendors consent and no purposes consent otherwise.
+     
+     - Returns: true if the modification has been done successfully, false otherwise.
+     */
+    @objc
+    public func revokeAllPurposes() -> Bool {
+        // Log error and stop if configuration is not made
+        guard self.configured else {
+            logErrorMessage("CMPConsentManager is not configured for this session. Please call CMPConsentManager.shared.configure() first.")
+            return false;
+        }
+        
+        guard let lastVendorList = self.lastVendorList else {
+            logErrorMessage("Purposes can't be modified because the vendor list is not available or up-to-date.")
+            return false;
+        }
+        
+        let newConsentString: CMPConsentString? = {
+            if let consentString = self.consentString {
+                return CMPConsentString.consentStringWithNoPurposesConsent(fromConsentString: consentString, consentScreen: 0, consentLanguage: language, vendorList: lastVendorList)
+            } else {
+                return CMPConsentString.consentStringWithNoConsent(consentScreen: 0, consentLanguage: language, vendorList: lastVendorList)
+            }
+        }()
+        
+        guard newConsentString != nil else {
+            logErrorMessage("Purposes can't be modified because the vendor list is not available or up-to-date.")
+            return false
+        }
+        
+        self.consentString = newConsentString
+        return true
+    }
+    
     // MARK: - Automatic vendor list monitoring management
     
     /**
