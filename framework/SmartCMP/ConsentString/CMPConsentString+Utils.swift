@@ -263,4 +263,82 @@ internal extension CMPConsentString {
         )
     }
     
+    /**
+     Return a new consent string identical to the one provided in parameters, with all purposed disallowed.
+     
+     Note: the vendor list provided must match the one used to generate the previous consent string, otherwise
+     this method will return nil.
+     
+     - Parameters:
+        - previousConsentString: The previous consent string.
+        - consentScreen: The screen number in the CMP where the consent was given.
+        - consentLanguage: The language that the CMP asked for consent in.
+        - vendorList: The vendor list corresponding to the consent string.
+        - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
+     - Returns: A new consent string identical to the one provided in parameters with all purposed disallowed if possible, nil otherwise.
+     */
+    static func consentStringWithNoPurposesConsent(fromConsentString previousConsentString: CMPConsentString,
+                                                   consentScreen: Int,
+                                                   consentLanguage: CMPLanguage,
+                                                   vendorList: CMPVendorList,
+                                                   lastUpdated: Date = Date()) -> CMPConsentString? {
+        
+        guard previousConsentString.vendorListVersion == vendorList.vendorListVersion else {
+            return nil
+        }
+        
+        return CMPConsentString(
+            versionConfig: CMPVersionConfig.LATEST,
+            created: previousConsentString.created,
+            lastUpdated: lastUpdated,
+            cmpId: CMPConstants.CMPInfos.ID,
+            cmpVersion: CMPConstants.CMPInfos.VERSION,
+            consentScreen: consentScreen,
+            consentLanguage: consentLanguage,
+            allowedPurposes: [], // No purpose allowed
+            allowedVendors: previousConsentString.allowedVendors,
+            vendorList: vendorList
+        )
+    }
+    
+    /**
+     Return a new consent string identical to the one provided in parameters, with all purposed allowed.
+     
+     Note: the vendor list provided must match the one used to generate the previous consent string, otherwise
+     this method will return nil.
+     
+     - Parameters:
+        - previousConsentString: The previous consent string.
+        - consentScreen: The screen number in the CMP where the consent was given.
+        - consentLanguage: The language that the CMP asked for consent in.
+        - vendorList: The vendor list corresponding to the consent string.
+        - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
+     - Returns: A new consent string identical to the one provided in parameters with all purposed allowed if possible, nil otherwise.
+     */
+    static func consentStringWithAllPurposesConsent(fromConsentString previousConsentString: CMPConsentString,
+                                                    consentScreen: Int,
+                                                    consentLanguage: CMPLanguage,
+                                                    vendorList: CMPVendorList,
+                                                    lastUpdated: Date = Date()) -> CMPConsentString? {
+        
+        guard previousConsentString.vendorListVersion == vendorList.vendorListVersion else {
+            return nil
+        }
+        
+        let allowedPurposes = IndexSet(vendorList.purposes.map { $0.id })
+        
+        return CMPConsentString(
+            versionConfig: CMPVersionConfig.LATEST,
+            created: previousConsentString.created,
+            lastUpdated: lastUpdated,
+            cmpId: CMPConstants.CMPInfos.ID,
+            cmpVersion: CMPConstants.CMPInfos.VERSION,
+            consentScreen: consentScreen,
+            consentLanguage: consentLanguage,
+            allowedPurposes: allowedPurposes,
+            allowedVendors: previousConsentString.allowedVendors,
+            vendorList: vendorList
+        )
+    }
+    
 }
