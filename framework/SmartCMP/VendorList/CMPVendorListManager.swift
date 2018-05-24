@@ -115,7 +115,7 @@ internal class CMPVendorListManager {
     public func startRefreshTimer() {
         if timer == nil {
             // Refresh is called automatically when the refresh timer is started
-            refresh()
+            refresh(forceRefresh: false)
             
             // Then the timer is started…
             timer = Timer.scheduledTimer(
@@ -141,20 +141,36 @@ internal class CMPVendorListManager {
      
      - Parameter timer: The timer that has been fired.
      */
-    @objc func timerFired(timer: Timer) {
-        switch lastRefreshDate {
-        case .some(let date) where Date().timeIntervalSince1970 - date.timeIntervalSince1970 > refreshInterval:
-            refresh()
-        default:
-            break
-        }
+    @objc
+    func timerFired(timer: Timer) {
+        refresh(forceRefresh: false)
     }
     
     /**
      Refresh the vendor list from network.
+     
+     - Parameter forceRefresh: true if the refresh should happen no matter what, false if it should check the 'last refresh date'.
      */
-    public func refresh() {
-        refresh(vendorListURL: vendorListURL)
+    public func refresh(forceRefresh: Bool) {
+        if forceRefresh || isRefreshNeeded() {
+            refresh(vendorListURL: vendorListURL)
+        }
+    }
+    
+    /**
+     Check if a vendor list refresh is needed.
+     
+     - Returns: true if a vendor list refresh is needed, false otherwise.
+     */
+    internal func isRefreshNeeded() -> Bool {
+        switch lastRefreshDate {
+        case .some(let date) where Date().timeIntervalSince1970 - date.timeIntervalSince1970 > refreshInterval:
+            return true
+        case .none:
+            return true
+        default:
+            return false
+        }
     }
     
     /**

@@ -75,6 +75,13 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     @objc
     public static let DEFAULT_LAT_VALUE = true
     
+    /**
+     Consent manager deinitializer.
+     */
+    deinit {
+        unregisterApplicationLifecycleNotifications()
+    }
+    
     // MARK: - Public methods
     
     /**
@@ -137,9 +144,12 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
         if let storedConsentString = readStringFromUserDefaults(key: CMPConstants.IABConsentKeys.ConsentString) {
             self.consentString = CMPConsentString.from(base64: storedConsentString)
         }
-
-        // Trigger refresh of vendor list
-        self.vendorListManager?.refresh();
+        
+        // Registering for application lifecycle events to allow the CMP to stop automatic monitoring when the app goes in background
+        registerApplicationLifecycleNotifications()
+        
+        // Starting the automatic vendor list monitoring by default
+        startVendorListMonitoring()
     }
 
     /**
@@ -148,13 +158,13 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     @objc
     public func refreshVendorsList() {
         // Log error and stop if configuration is not made
-        if !self.configured {
+        if !configured {
             logErrorMessage("CMPConsentManager is not configured for this session. Please call CMPConsentManager.shared.configure() first.")
             return;
         }
         
         // Refresh vendor list
-        self.vendorListManager?.refresh();
+        vendorListManager?.refresh(forceRefresh: true);
     }
     
     /**
@@ -196,6 +206,67 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
         manager.showConsentTool(fromController: controller)
         
         return true
+    }
+    
+    // MARK: - Automatic vendor list monitoring management
+    
+    /**
+     Start the vendor list monitoring.
+     */
+    internal func startVendorListMonitoring() {
+        vendorListManager?.startRefreshTimer()
+    }
+    
+    /**
+     Stop the vendor list monitoring.
+     */
+    internal func stopVendorListMonitoring() {
+        vendorListManager?.stopRefreshTimer()
+    }
+    
+    // MARK: - Application lifecycle notifications
+    
+    /**
+     Register the consent manager has an observer for application lifecycle notifications.
+     */
+    internal func registerApplicationLifecycleNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(applicationWillEnterForeground(notification:)),
+                                               name: NSNotification.Name.UIApplicationWillEnterForeground,
+                                               object: UIApplication.shared)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(applicationDidEnterBackground(notification:)),
+                                               name: NSNotification.Name.UIApplicationDidEnterBackground,
+                                               object: UIApplication.shared)
+    }
+    
+    /**
+     Unregister the consent manager has an observer for application lifecycle notifications.
+     */
+    internal func unregisterApplicationLifecycleNotifications() {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillEnterForeground, object: UIApplication.shared)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidEnterBackground, object: UIApplication.shared)
+    }
+    
+    /**
+     Method called when the application will enter foreground state.
+     
+     - Parameter notification: The 'application will enter foreground' notification emitted by iOS.
+     */
+    @objc
+    func applicationWillEnterForeground(notification: Notification) {
+        startVendorListMonitoring()
+    }
+    
+    /**
+     Method called when the application did enter background state.
+     
+     - Parameter notification: The 'application did enter background' notification emitted by iOS.
+     */
+    @objc
+    func applicationDidEnterBackground(notification: Notification) {
+        stopVendorListMonitoring()
     }
     
     // MARK: - CMPVendorListManagerDelegate
