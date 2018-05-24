@@ -96,7 +96,7 @@ class CMPVendorListManagerTests: XCTestCase {
             XCTFail("The call should not fail")
         }
         
-        vendorListManager.refresh()
+        vendorListManager.refresh(forceRefresh: true)
         
         waitForExpectations(timeout: 1.0)
     }
@@ -212,7 +212,7 @@ class CMPVendorListManagerTests: XCTestCase {
             failureExpectation.fulfill()
         }
         
-        vendorListManager.refresh()
+        vendorListManager.refresh(forceRefresh: true)
         
         waitForExpectations(timeout: 1.0)
     }
@@ -252,7 +252,7 @@ class CMPVendorListManagerTests: XCTestCase {
             failureExpectation.fulfill()
         }
         
-        vendorListManager.refresh()
+        vendorListManager.refresh(forceRefresh: true)
         
         waitForExpectations(timeout: 1.0)
     }
@@ -337,7 +337,7 @@ class CMPVendorListManagerTests: XCTestCase {
             XCTFail("The call should not fail")
         }
         
-        vendorListManager.refresh()
+        vendorListManager.refresh(forceRefresh: true)
         
         waitForExpectations(timeout: 1.0)
     }
@@ -389,7 +389,7 @@ class CMPVendorListManagerTests: XCTestCase {
             XCTFail("The call should not fail")
         }
         
-        vendorListManager.refresh()
+        vendorListManager.refresh(forceRefresh: true)
         
         waitForExpectations(timeout: 1.0)
     }
