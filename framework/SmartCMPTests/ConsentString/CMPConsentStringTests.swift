@@ -678,4 +678,126 @@ class CMPConsentStringTests: XCTestCase {
         XCTAssertEqual(idExistsConsentString, expectedConsentString2)
     }
     
+    func testConsentStringFromConsentStringWithNoPurposeConsent() {
+        let date = self.date(from: "2017-11-07T18:59:04.9Z")
+        let updatedDate = self.date(from: "2018-11-07T18:59:04.9Z")
+        
+        let consentString = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
+                                             created: date,
+                                             lastUpdated: date,
+                                             cmpId: 1,
+                                             cmpVersion: 2,
+                                             consentScreen: 3,
+                                             consentLanguage: CMPLanguage(string: "en")!,
+                                             allowedPurposes: [1, 2],
+                                             allowedVendors: [1, 2, 4],
+                                             vendorList: vendorList)
+        
+        let expectedConsentString = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
+                                                     created: date,
+                                                     lastUpdated: updatedDate,
+                                                     cmpId: CMPConstants.CMPInfos.ID,
+                                                     cmpVersion: CMPConstants.CMPInfos.VERSION,
+                                                     consentScreen: 4,
+                                                     consentLanguage: CMPLanguage(string: "fr")!,
+                                                     allowedPurposes: [],
+                                                     allowedVendors: [1, 2, 4],
+                                                     vendorList: vendorList)
+        
+        let resultConsentString = CMPConsentString.consentStringWithNoPurposesConsent(fromConsentString: consentString,
+                                                                                      consentScreen: 4,
+                                                                                      consentLanguage: CMPLanguage(string: "fr")!,
+                                                                                      vendorList: vendorList,
+                                                                                      lastUpdated: updatedDate)
+        
+        XCTAssertEqual(resultConsentString, expectedConsentString)
+    }
+    
+    func testConsentStringFromConsentStringWithNoPurposeConsentFailsIfVendorListVersionDiffers() {
+        let date = self.date(from: "2017-11-07T18:59:04.9Z")
+        let updatedDate = self.date(from: "2018-11-07T18:59:04.9Z")
+        
+        let consentString = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
+                                             created: date,
+                                             lastUpdated: date,
+                                             cmpId: 1,
+                                             cmpVersion: 2,
+                                             consentScreen: 3,
+                                             consentLanguage: CMPLanguage(string: "en")!,
+                                             allowedPurposes: [1, 2],
+                                             allowedVendors: [1, 2, 4],
+                                             vendorList: vendorList)
+        
+        let expectedConsentString: CMPConsentString? = nil
+        
+        let resultConsentString = CMPConsentString.consentStringWithNoPurposesConsent(fromConsentString: consentString,
+                                                                                      consentScreen: 4,
+                                                                                      consentLanguage: CMPLanguage(string: "fr")!,
+                                                                                      vendorList: updatedVendorList,
+                                                                                      lastUpdated: updatedDate)
+        
+        XCTAssertEqual(resultConsentString, expectedConsentString)
+    }
+    
+    func testConsentStringFromConsentStringWithAllPurposeConsent() {
+        let date = self.date(from: "2017-11-07T18:59:04.9Z")
+        let updatedDate = self.date(from: "2018-11-07T18:59:04.9Z")
+        
+        let consentString = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
+                                             created: date,
+                                             lastUpdated: date,
+                                             cmpId: 1,
+                                             cmpVersion: 2,
+                                             consentScreen: 3,
+                                             consentLanguage: CMPLanguage(string: "en")!,
+                                             allowedPurposes: [1, 2],
+                                             allowedVendors: [1, 2, 4],
+                                             vendorList: vendorList)
+        
+        let expectedConsentString = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
+                                                     created: date,
+                                                     lastUpdated: updatedDate,
+                                                     cmpId: CMPConstants.CMPInfos.ID,
+                                                     cmpVersion: CMPConstants.CMPInfos.VERSION,
+                                                     consentScreen: 4,
+                                                     consentLanguage: CMPLanguage(string: "fr")!,
+                                                     allowedPurposes: [1, 2, 3, 4, 5],
+                                                     allowedVendors: [1, 2, 4],
+                                                     vendorList: vendorList)
+        
+        let resultConsentString = CMPConsentString.consentStringWithAllPurposesConsent(fromConsentString: consentString,
+                                                                                       consentScreen: 4,
+                                                                                       consentLanguage: CMPLanguage(string: "fr")!,
+                                                                                       vendorList: vendorList,
+                                                                                       lastUpdated: updatedDate)
+        
+        XCTAssertEqual(resultConsentString, expectedConsentString)
+    }
+    
+    func testConsentStringFromConsentStringWithAllPurposeConsentFailsIfVendorListVersionDiffers() {
+        let date = self.date(from: "2017-11-07T18:59:04.9Z")
+        let updatedDate = self.date(from: "2018-11-07T18:59:04.9Z")
+        
+        let consentString = CMPConsentString(versionConfig: CMPVersionConfig(version: 1)!,
+                                             created: date,
+                                             lastUpdated: date,
+                                             cmpId: 1,
+                                             cmpVersion: 2,
+                                             consentScreen: 3,
+                                             consentLanguage: CMPLanguage(string: "en")!,
+                                             allowedPurposes: [1, 2],
+                                             allowedVendors: [1, 2, 4],
+                                             vendorList: vendorList)
+        
+        let expectedConsentString: CMPConsentString? = nil
+        
+        let resultConsentString = CMPConsentString.consentStringWithAllPurposesConsent(fromConsentString: consentString,
+                                                                                       consentScreen: 4,
+                                                                                       consentLanguage: CMPLanguage(string: "fr")!,
+                                                                                       vendorList: updatedVendorList,
+                                                                                       lastUpdated: updatedDate)
+        
+        XCTAssertEqual(resultConsentString, expectedConsentString)
+    }
+    
 }

@@ -45,6 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
     func consentManagerRequestsToShowConsentTool(_ consentManager: CMPConsentManager, forVendorList vendorList: CMPVendorList) {
         NSLog("CMP Requested ConsentTool Display");
         
+        // ---------------------------------------------------------------------------------------------------------------------
+        
         // You should display the consent tool UI, when user is ready…
         if let controller = self.window?.rootViewController {
             let _ = consentManager.showConsentTool(fromController: controller)
@@ -55,6 +57,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CMPConsentManagerDelegate
         // more details about this).
         //
         // To generate a valid IAB consent string easily, you can use the CMPConsentString class.
+        
+        // ---------------------------------------------------------------------------------------------------------------------
+        
+        // Note: depending on the situation, you might also want to allow or revoke all purposes consents without showing
+        // the consent tool. You can do it using the allowAllPurposes() and revokeAllPurposes() methods.
+        
+        // Allow all purposes consents without prompting the user, for instance if the user is not subject to GDPR (for instance,
+        // when he is living outside of the EU).
+        // let _ = consentManager.allowAllPurposes()
+        
+        // Revoke all purposes consents without prompting the user, for instance if the user is under 16 years old (or younger
+        // depending on the country where the user is located).
+        // let _ = consentManager.revokeAllPurposes()
     }
     
     // MARK: - Consent Tool Configuration
