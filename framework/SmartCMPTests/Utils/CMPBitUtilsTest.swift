@@ -82,6 +82,7 @@ class CMPBitUtilsTests: XCTestCase {
     }
     
     func testBitsToLetter() {
+        // Valid letters
         XCTAssertEqual(CMPBitUtils.bitsToLetter("0"), "a")
         XCTAssertEqual(CMPBitUtils.bitsToLetter("1010"), "k")
         XCTAssertEqual(CMPBitUtils.bitsToLetter("11001"), "z")
@@ -90,6 +91,10 @@ class CMPBitUtilsTests: XCTestCase {
         XCTAssertEqual(CMPBitUtils.bitsToLetter("011001"), "z")
         XCTAssertNil(CMPBitUtils.bitsToLetter(""))
         XCTAssertNil(CMPBitUtils.bitsToLetter("a"))
+        
+        // Valid integers, but invalid letters
+        XCTAssertNil(CMPBitUtils.bitsToLetter("011010"))
+        XCTAssertNil(CMPBitUtils.bitsToLetter("111111"))
     }
     
     func testBitsToLanguage() {
