@@ -136,7 +136,8 @@ internal class CMPBitUtils {
      */
     public static func bitsToLetter(_ bits: String) -> String? {
         if let letterIndex = bitsToInt(bits) {
-            return CMPLanguage.VALID_LETTERS[letterIndex]
+            // Checking if the index correspond to a valid letter
+            return letterIndex < CMPLanguage.VALID_LETTERS.count ? CMPLanguage.VALID_LETTERS[letterIndex] : nil
         } else {
             return nil
         }
