@@ -32,8 +32,8 @@ internal struct CMPConstants {
         static let CMPPresent                       = "IABConsent_CMPPresent"
         static let SubjectToGDPR                    = "IABConsent_SubjectToGDPR"
         static let ConsentString                    = "IABConsent_ConsentString"
-        static let ParsedPurposeConsent             = "IABConsent_ParsedPurposeConsent"
-        static let ParsedVendorConsent              = "IABConsent_ParsedVendorConsent"
+        static let ParsedPurposeConsent             = "IABConsent_ParsedPurposeConsents"
+        static let ParsedVendorConsent              = "IABConsent_ParsedVendorConsents"
     }
     
     /// The AdvertisingConsentStatus NSUserDefaults key contains the current user consent for the advertising
