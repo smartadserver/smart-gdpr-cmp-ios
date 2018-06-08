@@ -331,12 +331,12 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     
     // MARK: - CMPVendorListManagerDelegate
     
-    func vendorListManager(_ vendorListManager: CMPVendorListManager, didFailWithError error: Error) {
+    public func vendorListManager(_ vendorListManager: CMPVendorListManager, didFailWithError error: Error) {
         logErrorMessage("CMPConsentManager cannot retrieve vendors list because of an error \"\(error.localizedDescription)\" a new attempt will be made later.")
         return;
     }
     
-    func vendorListManager(_ vendorListManager: CMPVendorListManager, didFetchVendorList vendorList: CMPVendorList) {
+    public func vendorListManager(_ vendorListManager: CMPVendorListManager, didFetchVendorList vendorList: CMPVendorList) {
         self.lastVendorList = vendorList
         
         // Consent string exist

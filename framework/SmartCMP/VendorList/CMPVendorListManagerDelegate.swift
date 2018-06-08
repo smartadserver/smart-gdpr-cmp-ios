@@ -14,7 +14,7 @@ import Foundation
 /**
  Delegate of CMPVendorListManager.
  */
-internal protocol CMPVendorListManagerDelegate {
+public protocol CMPVendorListManagerDelegate {
     
     /**
      Method called when the vendor list manager did fetch a vendor list successfully.

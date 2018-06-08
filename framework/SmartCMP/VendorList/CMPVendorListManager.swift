@@ -14,10 +14,10 @@ import Foundation
 /**
  Retrieves and parse a vendor list from internet.
  */
-internal class CMPVendorListManager {
+public class CMPVendorListManager {
     
     /// Represents an error happening during vendor list refresh.
-    enum RefreshError : Error {
+    public enum RefreshError : Error {
         
         /// The vendor list refresh fails because of a network error.
         case networkError
@@ -92,7 +92,7 @@ internal class CMPVendorListManager {
          - pollInterval: A custom polling timer interval.
          - urlSession: A custom URL session used for network connection.
      */
-    public init(url: CMPVendorListURL,
+    internal init(url: CMPVendorListURL,
                 refreshInterval:TimeInterval,
                 delegate: CMPVendorListManagerDelegate,
                 pollInterval: TimeInterval,
