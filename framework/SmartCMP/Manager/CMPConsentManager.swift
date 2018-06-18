@@ -35,8 +35,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     public var subjectToGDPR: Bool = false { didSet { gdrpStatusChanged() } }
     
     /// The consent string.
-    @objc
-    public var consentString: CMPConsentString? { didSet { consentStringChanged() } }
+    private var consentString: CMPConsentString? { didSet { consentStringChanged() } }
     
     // MARK: - Private fields
     
