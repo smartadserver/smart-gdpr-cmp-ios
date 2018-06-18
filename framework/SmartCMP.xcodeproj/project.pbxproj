@@ -46,6 +46,8 @@
 		7E800B672090BF7A001FC83B /* CMPURLSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E800B662090BF7A001FC83B /* CMPURLSessionTests.swift */; };
 		7EBB616620932BFF00EAD3C7 /* vendors_updated.json in Resources */ = {isa = PBXBuildFile; fileRef = 7EBB616520932BFF00EAD3C7 /* vendors_updated.json */; };
 		7EE68E2220B56626007394CE /* CMPConsentToolBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE68E2120B56626007394CE /* CMPConsentToolBaseViewController.swift */; };
+		7EEC034920D8114900E4620E /* CMPConsentManagerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EEC034820D8114900E4620E /* CMPConsentManagerState.swift */; };
+		7EEC034B20D811CF00E4620E /* CMPConsentManagerStateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EEC034A20D811CF00E4620E /* CMPConsentManagerStateProvider.swift */; };
 		8504B78820921E020011BE81 /* CMPPreferenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8504B78520921E020011BE81 /* CMPPreferenceTableViewCell.swift */; };
 		8504B78B209237070011BE81 /* CMPVendorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8504B78A209237070011BE81 /* CMPVendorTableViewCell.swift */; };
 		8529CA45209717DE00759E68 /* CMPConsentToolVendorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8529CA44209717DE00759E68 /* CMPConsentToolVendorViewController.swift */; };
@@ -118,6 +120,8 @@
 		7E800B662090BF7A001FC83B /* CMPURLSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPURLSessionTests.swift; sourceTree = "<group>"; };
 		7EBB616520932BFF00EAD3C7 /* vendors_updated.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = vendors_updated.json; sourceTree = "<group>"; };
 		7EE68E2120B56626007394CE /* CMPConsentToolBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPConsentToolBaseViewController.swift; sourceTree = "<group>"; };
+		7EEC034820D8114900E4620E /* CMPConsentManagerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPConsentManagerState.swift; sourceTree = "<group>"; };
+		7EEC034A20D811CF00E4620E /* CMPConsentManagerStateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPConsentManagerStateProvider.swift; sourceTree = "<group>"; };
 		8504B78520921E020011BE81 /* CMPPreferenceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CMPPreferenceTableViewCell.swift; sourceTree = "<group>"; };
 		8504B78A209237070011BE81 /* CMPVendorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPVendorTableViewCell.swift; sourceTree = "<group>"; };
 		8529CA44209717DE00759E68 /* CMPConsentToolVendorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMPConsentToolVendorViewController.swift; sourceTree = "<group>"; };
@@ -362,6 +366,8 @@
 			children = (
 				E9644108208F8498007FD26A /* CMPConsentManager.swift */,
 				E96661122090E0B200FCA161 /* CMPConsentManagerDelegate.swift */,
+				7EEC034820D8114900E4620E /* CMPConsentManagerState.swift */,
+				7EEC034A20D811CF00E4620E /* CMPConsentManagerStateProvider.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -518,6 +524,8 @@
 				7E25FC6B208F51AB00D05789 /* CMPBitUtils.swift in Sources */,
 				E96661132090E0B200FCA161 /* CMPConsentManagerDelegate.swift in Sources */,
 				7E800B632090BA44001FC83B /* CMPURLSessionProvider.swift in Sources */,
+				7EEC034B20D811CF00E4620E /* CMPConsentManagerStateProvider.swift in Sources */,
+				7EEC034920D8114900E4620E /* CMPConsentManagerState.swift in Sources */,
 				7E25FC6E208F51AB00D05789 /* CMPConsentString+Decoding.swift in Sources */,
 				E96661192092173F00FCA161 /* CMPConsentToolManager.swift in Sources */,
 				E966611D2093222200FCA161 /* CMPConsentToolConfiguration.swift in Sources */,

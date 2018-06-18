@@ -65,11 +65,18 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     /// Whether or not the consent tool is presented.
     private var consentToolIsShown: Bool = false
     
+    /// A state object used to store persistent data.
+    private let managerState = CMPConsentManagerState()
+    
     // MARK: - Constants
+    
+    /// The default minimum interval between two presentation of the consent tool (or between to call to the delegate).
+    @objc
+    public static let DEFAULT_VENDORLIST_PRESENTATION_INTERVAL = 7.0 * 24.0 * 60.0 * 60.0;  // 1 week
     
     /// The default refresh interval for the vendor list.
     @objc
-    public static let DEFAULT_VENDORLIST_REFRESH_TIME = 86400.0
+    public static let DEFAULT_VENDORLIST_REFRESH_INTERVAL = 60.0 * 60.0; // 1 hour
     
     /// The behavior if LAT (Limited Ad Tracking) is enabled.
     @objc
@@ -95,7 +102,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     public func configureWithLanguage(_ language: CMPLanguage,
                                       consentToolConfiguration: CMPConsentToolConfiguration) {
         self.configure(
-            refreshInterval: CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_TIME,
+            presentationInterval: CMPConsentManager.DEFAULT_VENDORLIST_PRESENTATION_INTERVAL,
             language: language,
             consentToolConfiguration: consentToolConfiguration,
             showConsentToolWhenLimitedAdTracking: CMPConsentManager.DEFAULT_LAT_VALUE
@@ -111,13 +118,13 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
      
      - Parameters:
         - vendorListURL: The URL from where to fetch the vendor list (vendors.json). If you enter your own URL, your custom list MUST BE compatible with IAB specifications and respect vendorId and purposeId distributed by the IAB.
-        - refreshInterval: The interval in seconds to refresh the vendor list.
+        - presentationInterval: The minimum interval between two presentation of the consent tool (or between to call to the delegate).
         - language: an instance of CMPLanguage reflecting the device's current language.
         - consentToolConfiguration: an instance of CMPConsentToolConfiguration to configure of the consent tool UI.
         - showConsentToolWhenLimitedAdTracking: Whether or not the consent tool UI should be shown if the user has enabled 'Limit Ad Tracking' in his device's preferences. If false, the consent tool will never be shown if user has enabled 'Limit Ad Tracking' and the consent string will be formatted has 'user does not give consent'. Note that if you have provided a delegate, it will not be called either.
      */
     @objc
-    public func configure(refreshInterval: TimeInterval = CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_TIME,
+    public func configure(presentationInterval: TimeInterval = CMPConsentManager.DEFAULT_VENDORLIST_PRESENTATION_INTERVAL,
                           language: CMPLanguage,
                           consentToolConfiguration: CMPConsentToolConfiguration,
                           showConsentToolWhenLimitedAdTracking: Bool = CMPConsentManager.DEFAULT_LAT_VALUE) {
@@ -138,10 +145,10 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
         self.showConsentToolIfLAT = showConsentToolWhenLimitedAdTracking
         
         // Instantiate CPMVendorsManager with URL and RefreshTime and delegate
-        self.vendorListManager = CMPVendorListManager(url: CMPVendorListURL(language: language), refreshInterval: refreshInterval, delegate: self)
+        self.vendorListManager = CMPVendorListManager(url: CMPVendorListURL(language: language), refreshInterval: CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_INTERVAL, delegate: self)
         
         // Check for already existing consent string in NSUserDefaults
-        if let storedConsentString = readStringFromUserDefaults(key: CMPConstants.IABConsentKeys.ConsentString) {
+        if let storedConsentString = managerState.consentString() {
             self.consentString = CMPConsentString.from(base64: storedConsentString)
         }
         
@@ -419,7 +426,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
      Method called when the GDPR status variable has changed.
      */
     private func gdrpStatusChanged() {
-        saveGDPRStatus(self.subjectToGDPR)
+        managerState.saveGDPRStatus(self.subjectToGDPR)
     }
     
     /**
@@ -430,10 +437,10 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
             return;
         }
         
-        saveConsentString(newConsentString.consentString)
-        saveVendorConsentString(newConsentString.parsedVendorConsents)
-        savePurposeConsentString(newConsentString.parsedPurposeConsents)
-        saveAdvertisingConsentStatus(forConsentString: newConsentString)
+        managerState.saveConsentString(newConsentString.consentString)
+        managerState.saveVendorConsentString(newConsentString.parsedVendorConsents)
+        managerState.savePurposeConsentString(newConsentString.parsedPurposeConsents)
+        managerState.saveAdvertisingConsentStatus(forConsentString: newConsentString)
     }
         
     // MARK: - Utils - Error Display
@@ -445,80 +452,6 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
      */
     private func logErrorMessage(_ message: String) {
         NSLog("[ERROR] SmartCMP: \(message)")
-    }
-    
-    // MARK: - Utils - NSUserDefault Management
-    
-    /**
-     Save a string in user defaults.
-     
-     - Parameters:
-        - string: The string that needs to be saved.
-        - key: The key in user defaults where the string will be saved.
-     */
-    private func saveStringToUserDefaults(string: String, key: String) {
-        let userDefaults = UserDefaults.standard
-        userDefaults.set(string, forKey: key)
-        userDefaults.synchronize()
-    }
-    
-    /**
-     Read a string from user defaults.
-     
-     - Parameters key: The key in user defaults from where the string will be read.
-     - Returns: The string read if any, nil otherwise.
-     */
-    private func readStringFromUserDefaults(key: String) -> String? {
-        let userDefaults = UserDefaults.standard
-        let string = userDefaults.object(forKey: key) as? String
-        return string
-    }
-    
-    /**
-     Save the GDPR status in user defaults.
-     
-     - Parameter status: The status to be saved.
-     */
-    internal func saveGDPRStatus(_ status: Bool) {
-        let statusString = status ? "1" : "0"
-        saveStringToUserDefaults(string: statusString, key: CMPConstants.IABConsentKeys.SubjectToGDPR)
-    }
-    
-    /**
-     Save the consent string in user defaults.
-     
-     - Parameter string: The consent string to be saved.
-     */
-    internal func saveConsentString(_ string: String) {
-        saveStringToUserDefaults(string: string, key: CMPConstants.IABConsentKeys.ConsentString)
-    }
-    
-    /**
-     Save the purposes consent string in user defaults.
-     
-     - Parameter string: The purposes consent string to be saved.
-     */
-    internal func savePurposeConsentString(_ string: String) {
-        saveStringToUserDefaults(string: string, key: CMPConstants.IABConsentKeys.ParsedPurposeConsent)
-    }
-    
-    /**
-     Save the advertising consent status in user defaults.
-     
-     - Parameters consentString: The consent string from which the advertising consent status will be retrieved.
-     */
-    internal func saveAdvertisingConsentStatus(forConsentString consentString: CMPConsentString) {
-        let advertisingConsentStatusString = consentString.isPurposeAllowed(purposeId: CMPConstants.AdvertisingConsentStatus.PurposeId) ? "1" : "0"
-        saveStringToUserDefaults(string: advertisingConsentStatusString, key: CMPConstants.AdvertisingConsentStatus.Key)
-    }
-    
-    /**
-     Save the vendors consent string in user defaults.
-     
-     - Parameter string: The vendors consent string to be saved.
-     */
-    internal func saveVendorConsentString(_ string: String) {
-        saveStringToUserDefaults(string: string, key: CMPConstants.IABConsentKeys.ParsedVendorConsent)
     }
     
     private override init() {}
