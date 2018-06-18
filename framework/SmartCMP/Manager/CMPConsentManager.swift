@@ -177,6 +177,9 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
      - the consent tool is already displayed
      - the vendor list has not been retrieved yet (or can't be retrieved for the moment).
      
+     If you want to check if the consent tool will be displayed without issue before actually displaying
+     it, you can use the method canShowConsentTool().
+     
      - Parameter controller: The UIViewController instance which should present the consent tool UI.
      - Returns: true if the consent tool has been displayed properly, false if it can't be displayed.
      */
@@ -207,6 +210,22 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
         manager.showConsentTool(fromController: controller)
         
         return true
+    }
+    
+    /**
+     Check if the consent tool can be presented.
+     
+     Note: the consent tool cannot be displayed if
+     
+     - you haven't called the configure() method first
+     - the consent tool is already displayed
+     - the vendor list has not been retrieved yet (or can't be retrieved for the moment).
+     
+     - Returns: true if presenting the consent tool with the showConsentTool() method will be successful, false if it will fail.
+     */
+    @objc
+    public func canShowConsentTool() -> Bool {
+        return self.configured && !self.consentToolIsShown && self.vendorList != nil;
     }
     
     /**
