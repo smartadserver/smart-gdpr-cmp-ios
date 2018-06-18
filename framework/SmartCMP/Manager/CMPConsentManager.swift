@@ -38,6 +38,10 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     @objc
     public var consentString: CMPConsentString? { didSet { consentStringChanged() } }
     
+    /// Most up-to-date vendor list retrieved by the consent manager, or nil if no vendor list is available yet.
+    @objc
+    public var vendorList: CMPVendorList?
+    
     // MARK: - Private fields
     
     /// Whether or not the CMPConsentManager has been configured by the publisher.
@@ -48,9 +52,6 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     
     /// Instance of CMPVendorListManager that is responsible for fetching, parsing and creating a model of CMPVendorList.
     private var vendorListManager: CMPVendorListManager?
-    
-    /// Last vendor list parsed
-    private var lastVendorList: CMPVendorList?
     
     /// Whether or not the consent tool should show if user has limited ad tracking in the device settings.
     /// If false and LAT is On, no consent will be given for any purpose or vendors.
@@ -192,7 +193,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
             return false;
         }
         
-        guard let lastVendorList = self.lastVendorList else {
+        guard let lastVendorList = self.vendorList else {
             logErrorMessage("CMPConsentManager cannot show consent tool as no vendor list is available. Please wait.")
             return false;
         }
@@ -254,7 +255,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
             return false;
         }
         
-        guard let lastVendorList = self.lastVendorList else {
+        guard let lastVendorList = self.vendorList else {
             logErrorMessage("Purposes can't be modified because the vendor list is not available or up-to-date.")
             return false;
         }
@@ -337,7 +338,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     }
     
     func vendorListManager(_ vendorListManager: CMPVendorListManager, didFetchVendorList vendorList: CMPVendorList) {
-        self.lastVendorList = vendorList
+        self.vendorList = vendorList
         
         // Consent string exist
         if let storedConsentString = self.consentString {
