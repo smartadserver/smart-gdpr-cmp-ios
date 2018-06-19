@@ -68,6 +68,9 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     /// A state object used to store persistent data.
     private let managerState: CMPConsentManagerState
     
+    /// The minimum interval between two consent tool presentation.
+    private var presentationInterval: TimeInterval = DEFAULT_VENDORLIST_PRESENTATION_INTERVAL
+    
     // MARK: - Constants
     
     /// The default minimum interval between two presentation of the consent tool (or between to call to the delegate).
@@ -159,6 +162,9 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
         
         // Language
         self.language = language
+        
+        // Presentation interval
+        self.presentationInterval = presentationInterval
         
         // Consent Tool
         self.consentToolConfiguration = consentToolConfiguration
@@ -366,6 +372,14 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     func vendorListManager(_ vendorListManager: CMPVendorListManager, didFetchVendorList vendorList: CMPVendorList) {
         self.lastVendorList = vendorList
         
+        // TODO save the updated vendor list even if the consent tool is not displayed
+        
+        let lastPresentationDate = managerState.lastPresentationDate() ?? Date(timeIntervalSince1970: 0)
+        guard Date().timeIntervalSince1970 - lastPresentationDate.timeIntervalSince1970 > presentationInterval else {
+            // Don't display the consent tool and don't call the delegate if the presentation interval isn't elapsed
+            return;
+        }
+        
         // Consent string exist
         if let storedConsentString = self.consentString {
             // Consent string has a different version than vendor list, ask for consent tool display
@@ -433,6 +447,8 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
                     let _ = showConsentTool(fromController: viewController)
                 }
             }
+            // Persistent save of the last presentation date to avoid spamming the user with the consent tool
+            managerState.saveLastPresentationDate(Date())
         } else {
             // If 'Limited Ad Tracking' is enabled and the publisher don't want to handle it himself, a consent string with no
             // consent (for all vendors / purposes) is generated and stored.
