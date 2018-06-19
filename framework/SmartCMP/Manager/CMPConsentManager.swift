@@ -72,6 +72,15 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     /// The minimum interval between two consent tool presentation.
     private var presentationInterval: TimeInterval = DEFAULT_VENDORLIST_PRESENTATION_INTERVAL
     
+    /// The vendor list that has been used to generate the current consent string if available (and if there is a consent string), nil otherwise.
+    public var previousVendorList: CMPVendorList?
+    
+    /// true if the constent tool's presentation interval is elapsed, false otherwise.
+    private var isPresentationIntervalElapsed: Bool {
+        let lastPresentationDate = managerState.lastPresentationDate() ?? Date(timeIntervalSince1970: 0)
+        return Date().timeIntervalSince1970 - lastPresentationDate.timeIntervalSince1970 > presentationInterval
+    }
+    
     // MARK: - Constants
     
     /// The default minimum interval between two presentation of the consent tool (or between to call to the delegate).
@@ -234,6 +243,10 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
             return false;
         }
         
+        // If there is a previous consent string & a previous vendor list, this consent string must be migrated
+        // before displaying the consent tool so the new vendors/purposes are initialized properly
+        migrateConsentStringIfNeeded()
+        
         // Consider consent tool as shown
         self.consentToolIsShown = true
         
@@ -392,14 +405,6 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     func vendorListManager(_ vendorListManager: CMPVendorListManager, didFetchVendorList vendorList: CMPVendorList) {
         self.vendorList = vendorList
         
-        // TODO save the updated vendor list even if the consent tool is not displayed
-        
-        let lastPresentationDate = managerState.lastPresentationDate() ?? Date(timeIntervalSince1970: 0)
-        guard Date().timeIntervalSince1970 - lastPresentationDate.timeIntervalSince1970 > presentationInterval else {
-            // Don't display the consent tool and don't call the delegate if the presentation interval isn't elapsed
-            return;
-        }
-        
         // Consent string exist
         if let storedConsentString = self.consentString {
             // Consent string has a different version than vendor list, ask for consent tool display
@@ -410,11 +415,13 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
                     if let error = error {
                         self.logErrorMessage("CMPConsentManager cannot retrieve previous vendors list because of an error \"\(error.localizedDescription)\"")
                     } else if let previousVendorList = previousVendorList {
-                        // Generate the updated consent string
-                        self.consentString = CMPConsentString.consentString(fromUpdatedVendorList: vendorList,
-                                                                            previousVendorList: previousVendorList,
-                                                                            previousConsentString: storedConsentString,
-                                                                            consentLanguage: self.language)
+                        // The previous vendor list is stored
+                        self.previousVendorList = previousVendorList
+                        
+                        // Don't display the consent tool immediately if the presentation interval isn't elapsed
+                        guard self.isPresentationIntervalElapsed else {
+                            return;
+                        }
                         
                         DispatchQueue.main.async {
                             // Display consent tool
@@ -458,6 +465,10 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
         // If the 'Limited Ad Tracking' is disabled on the device, or if the 'Limited Ad Tracking' is enabled but the publisher
         // wants to handle this option himself…
         if isTrackingAllowed || self.showConsentToolIfLAT {
+            // If there is a previous consent string & a previous vendor list, this consent string must be migrated
+            // before displaying the consent tool so the new vendors/purposes are initialized properly
+            migrateConsentStringIfNeeded()
+            
             if let delegate = self.delegate {
                 // The delegate is called so the publisher can ask for user's consent
                 delegate.consentManagerRequestsToShowConsentTool(self, forVendorList: vendorList)
@@ -467,6 +478,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
                     let _ = showConsentTool(fromController: viewController)
                 }
             }
+            
             // Persistent save of the last presentation date to avoid spamming the user with the consent tool
             managerState.saveLastPresentationDate(Date())
         } else {
@@ -474,6 +486,35 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
             // consent (for all vendors / purposes) is generated and stored.
             self.consentString = CMPConsentString.consentStringWithNoConsent(consentScreen: 0, consentLanguage: self.language, vendorList: vendorList, date: Date())
         }
+    }
+    
+    /**
+     Migrate the current consent string to the current vendor list.
+     
+     This method is useful when the current consent string used by the manager has been generated using a previousVendorList
+     but when a new vendorList is available. In this case, we want to upgrade the consent string version and add the new purposes
+     and vendors into the string.
+     
+     If the consent string is migrated, the previousVendorList will be set to nil to indicates that no more migration are required.
+     
+     Note: this method will always check that the migration is actually needed so it can called without issue from anywhere.
+     */
+    private func migrateConsentStringIfNeeded() {
+        if let storedConsentString = self.consentString,
+            let previousVendorList = self.previousVendorList,
+            let vendorList = self.vendorList,
+            storedConsentString.vendorListVersion != vendorList.vendorListVersion
+                && storedConsentString.vendorListVersion == previousVendorList.vendorListVersion {
+
+            // Generate the updated consent string
+            self.consentString = CMPConsentString.consentString(fromUpdatedVendorList: vendorList,
+                                                                previousVendorList: previousVendorList,
+                                                                previousConsentString: storedConsentString,
+                                                                consentLanguage: self.language)
+        }
+
+        // Since the consent string has been updated, the previous vendor list is not needed anymore
+        self.previousVendorList = nil
     }
     
     // MARK: - Variables changes
