@@ -116,6 +116,28 @@ internal class CMPConsentManagerState {
     
     // MARK: - Consent tool state
     
-    // TODO
+    /**
+     Save the consent tool's last presentation date.
+     
+     - Parameter lastPresentationDate: The consent tool's last presentation date to be saved.
+     */
+    public func saveLastPresentationDate(_ lastPresentationDate: Date) {
+        let dateString = String(lastPresentationDate.timeIntervalSince1970)
+        provider.saveString(string: dateString, key: CMPConstants.MiscKeys.LastPresentationDate)
+    }
+    
+    /**
+     Return the consent tool's last presentation date.
+     
+     - Returns: The consent tool's last presentation date.
+     */
+    public func lastPresentationDate() -> Date? {
+        if let dateString = provider.readString(key: CMPConstants.MiscKeys.LastPresentationDate),
+            let dateDouble = Double(dateString) {
+            return Date(timeIntervalSince1970: dateDouble)
+        } else {
+            return nil
+        }
+    }
     
 }

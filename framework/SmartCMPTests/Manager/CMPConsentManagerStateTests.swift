@@ -166,4 +166,41 @@ class CMPConsentManagerStateTests: XCTestCase {
         managerState.saveVendorConsentString("vendor string")
     }
     
+    func testSaveLastPresentationDate() {
+        let mockManagerStateProvider = MockManagerStateProvider()
+        let managerState = CMPConsentManagerState(provider: mockManagerStateProvider)
+        
+        mockManagerStateProvider.readStringHandler = { _ -> String? in
+            XCTFail("Nothing should be read from storage")
+            return nil
+        }
+        
+        mockManagerStateProvider.saveStringHandler = { string, key in
+            XCTAssertEqual("SmartCMP_lastPresentationDate", key)
+            XCTAssertEqual("1234.0", string)
+        }
+        managerState.saveLastPresentationDate(Date(timeIntervalSince1970: 1234))
+    }
+    
+    func testLastPresentationDate() {
+        let mockManagerStateProvider = MockManagerStateProvider()
+        let managerState = CMPConsentManagerState(provider: mockManagerStateProvider)
+        
+        mockManagerStateProvider.saveStringHandler = { _, _ in
+            XCTFail("Nothing should be stored")
+        }
+        
+        mockManagerStateProvider.readStringHandler = { key -> String? in
+            XCTAssertEqual("SmartCMP_lastPresentationDate", key)
+            return nil
+        }
+        XCTAssertNil(managerState.lastPresentationDate())
+        
+        mockManagerStateProvider.readStringHandler = { key -> String? in
+            XCTAssertEqual("SmartCMP_lastPresentationDate", key)
+            return "1234.0"
+        }
+        XCTAssertEqual(Date(timeIntervalSince1970: 1234), managerState.lastPresentationDate())
+    }
+    
 }
