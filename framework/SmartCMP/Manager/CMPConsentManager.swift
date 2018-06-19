@@ -66,7 +66,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     private var consentToolIsShown: Bool = false
     
     /// A state object used to store persistent data.
-    private let managerState = CMPConsentManagerState()
+    private let managerState: CMPConsentManagerState
     
     // MARK: - Constants
     
@@ -87,6 +87,26 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
      */
     deinit {
         unregisterApplicationLifecycleNotifications()
+    }
+    
+    /**
+     Initialize a consent manager instance.
+     
+     Note: this initializer should only be used to construct the shared instance.
+     */
+    private override init() {
+        self.managerState = CMPConsentManagerState()
+    }
+    
+    /**
+     Initialize a consent manager instance with a custom state manager.
+     
+     Note: this initializer should only be used for unit testing. For other use cases, use the shared instance.
+     
+     - Parameter managerState: A state object used to store persistent data.
+     */
+    internal init(managerState: CMPConsentManagerState) {
+        self.managerState = managerState
     }
     
     // MARK: - Public methods
@@ -453,7 +473,5 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     private func logErrorMessage(_ message: String) {
         NSLog("[ERROR] SmartCMP: \(message)")
     }
-    
-    private override init() {}
     
 }
