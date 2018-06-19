@@ -38,6 +38,10 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     @objc
     public var consentString: CMPConsentString? { didSet { consentStringChanged() } }
     
+    /// Most up-to-date vendor list retrieved by the consent manager, or nil if no vendor list is available yet.
+    @objc
+    public var vendorList: CMPVendorList?
+    
     // MARK: - Private fields
     
     /// Whether or not the CMPConsentManager has been configured by the publisher.
@@ -48,9 +52,6 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     
     /// Instance of CMPVendorListManager that is responsible for fetching, parsing and creating a model of CMPVendorList.
     private var vendorListManager: CMPVendorListManager?
-    
-    /// Last vendor list parsed
-    private var lastVendorList: CMPVendorList?
     
     /// Whether or not the consent tool should show if user has limited ad tracking in the device settings.
     /// If false and LAT is On, no consent will be given for any purpose or vendors.
@@ -209,6 +210,9 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
      - the consent tool is already displayed
      - the vendor list has not been retrieved yet (or can't be retrieved for the moment).
      
+     If you want to check if the consent tool will be displayed without issue before actually displaying
+     it, you can use the method canShowConsentTool().
+     
      - Parameter controller: The UIViewController instance which should present the consent tool UI.
      - Returns: true if the consent tool has been displayed properly, false if it can't be displayed.
      */
@@ -225,7 +229,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
             return false;
         }
         
-        guard let lastVendorList = self.lastVendorList else {
+        guard let lastVendorList = self.vendorList else {
             logErrorMessage("CMPConsentManager cannot show consent tool as no vendor list is available. Please wait.")
             return false;
         }
@@ -239,6 +243,22 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
         manager.showConsentTool(fromController: controller)
         
         return true
+    }
+    
+    /**
+     Check if the consent tool can be presented.
+     
+     Note: the consent tool cannot be displayed if
+     
+     - you haven't called the configure() method first
+     - the consent tool is already displayed
+     - the vendor list has not been retrieved yet (or can't be retrieved for the moment).
+     
+     - Returns: true if presenting the consent tool with the showConsentTool() method will be successful, false if it will fail.
+     */
+    @objc
+    public func canShowConsentTool() -> Bool {
+        return self.configured && !self.consentToolIsShown && self.vendorList != nil;
     }
     
     /**
@@ -287,7 +307,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
             return false;
         }
         
-        guard let lastVendorList = self.lastVendorList else {
+        guard let lastVendorList = self.vendorList else {
             logErrorMessage("Purposes can't be modified because the vendor list is not available or up-to-date.")
             return false;
         }
@@ -370,7 +390,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     }
     
     func vendorListManager(_ vendorListManager: CMPVendorListManager, didFetchVendorList vendorList: CMPVendorList) {
-        self.lastVendorList = vendorList
+        self.vendorList = vendorList
         
         // TODO save the updated vendor list even if the consent tool is not displayed
         
