@@ -65,11 +65,30 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     /// Whether or not the consent tool is presented.
     private var consentToolIsShown: Bool = false
     
+    /// A state object used to store persistent data.
+    private let managerState: CMPConsentManagerState
+    
+    /// The minimum interval between two consent tool presentation.
+    private var presentationInterval: TimeInterval = DEFAULT_VENDORLIST_PRESENTATION_INTERVAL
+    
+    /// The vendor list that has been used to generate the current consent string if available (and if there is a consent string), nil otherwise.
+    public var previousVendorList: CMPVendorList?
+    
+    /// true if the constent tool's presentation interval is elapsed, false otherwise.
+    private var isPresentationIntervalElapsed: Bool {
+        let lastPresentationDate = managerState.lastPresentationDate() ?? Date(timeIntervalSince1970: 0)
+        return Date().timeIntervalSince1970 - lastPresentationDate.timeIntervalSince1970 > presentationInterval
+    }
+    
     // MARK: - Constants
+    
+    /// The default minimum interval between two presentation of the consent tool (or between to call to the delegate).
+    @objc
+    public static let DEFAULT_VENDORLIST_PRESENTATION_INTERVAL = 7.0 * 24.0 * 60.0 * 60.0;  // 1 week
     
     /// The default refresh interval for the vendor list.
     @objc
-    public static let DEFAULT_VENDORLIST_REFRESH_TIME = 86400.0
+    public static let DEFAULT_VENDORLIST_REFRESH_INTERVAL = 60.0 * 60.0; // 1 hour
     
     /// The behavior if LAT (Limited Ad Tracking) is enabled.
     @objc
@@ -80,6 +99,26 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
      */
     deinit {
         unregisterApplicationLifecycleNotifications()
+    }
+    
+    /**
+     Initialize a consent manager instance.
+     
+     Note: this initializer should only be used to construct the shared instance.
+     */
+    private override init() {
+        self.managerState = CMPConsentManagerState()
+    }
+    
+    /**
+     Initialize a consent manager instance with a custom state manager.
+     
+     Note: this initializer should only be used for unit testing. For other use cases, use the shared instance.
+     
+     - Parameter managerState: A state object used to store persistent data.
+     */
+    internal init(managerState: CMPConsentManagerState) {
+        self.managerState = managerState
     }
     
     // MARK: - Public methods
@@ -95,7 +134,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     public func configureWithLanguage(_ language: CMPLanguage,
                                       consentToolConfiguration: CMPConsentToolConfiguration) {
         self.configure(
-            refreshInterval: CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_TIME,
+            presentationInterval: CMPConsentManager.DEFAULT_VENDORLIST_PRESENTATION_INTERVAL,
             language: language,
             consentToolConfiguration: consentToolConfiguration,
             showConsentToolWhenLimitedAdTracking: CMPConsentManager.DEFAULT_LAT_VALUE
@@ -111,13 +150,13 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
      
      - Parameters:
         - vendorListURL: The URL from where to fetch the vendor list (vendors.json). If you enter your own URL, your custom list MUST BE compatible with IAB specifications and respect vendorId and purposeId distributed by the IAB.
-        - refreshInterval: The interval in seconds to refresh the vendor list.
+        - presentationInterval: The minimum interval between two presentation of the consent tool (or between to call to the delegate).
         - language: an instance of CMPLanguage reflecting the device's current language.
         - consentToolConfiguration: an instance of CMPConsentToolConfiguration to configure of the consent tool UI.
         - showConsentToolWhenLimitedAdTracking: Whether or not the consent tool UI should be shown if the user has enabled 'Limit Ad Tracking' in his device's preferences. If false, the consent tool will never be shown if user has enabled 'Limit Ad Tracking' and the consent string will be formatted has 'user does not give consent'. Note that if you have provided a delegate, it will not be called either.
      */
     @objc
-    public func configure(refreshInterval: TimeInterval = CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_TIME,
+    public func configure(presentationInterval: TimeInterval = CMPConsentManager.DEFAULT_VENDORLIST_PRESENTATION_INTERVAL,
                           language: CMPLanguage,
                           consentToolConfiguration: CMPConsentToolConfiguration,
                           showConsentToolWhenLimitedAdTracking: Bool = CMPConsentManager.DEFAULT_LAT_VALUE) {
@@ -133,15 +172,18 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
         // Language
         self.language = language
         
+        // Presentation interval
+        self.presentationInterval = presentationInterval
+        
         // Consent Tool
         self.consentToolConfiguration = consentToolConfiguration
         self.showConsentToolIfLAT = showConsentToolWhenLimitedAdTracking
         
         // Instantiate CPMVendorsManager with URL and RefreshTime and delegate
-        self.vendorListManager = CMPVendorListManager(url: CMPVendorListURL(language: language), refreshInterval: refreshInterval, delegate: self)
+        self.vendorListManager = CMPVendorListManager(url: CMPVendorListURL(language: language), refreshInterval: CMPConsentManager.DEFAULT_VENDORLIST_REFRESH_INTERVAL, delegate: self)
         
         // Check for already existing consent string in NSUserDefaults
-        if let storedConsentString = readStringFromUserDefaults(key: CMPConstants.IABConsentKeys.ConsentString) {
+        if let storedConsentString = managerState.consentString() {
             self.consentString = CMPConsentString.from(base64: storedConsentString)
         }
         
@@ -199,6 +241,10 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
             logErrorMessage("CMPConsentManager cannot show consent tool as no vendor list is available. Please wait.")
             return false;
         }
+        
+        // If there is a previous consent string & a previous vendor list, this consent string must be migrated
+        // before displaying the consent tool so the new vendors/purposes are initialized properly
+        migrateConsentStringIfNeeded()
         
         // Consider consent tool as shown
         self.consentToolIsShown = true
@@ -368,11 +414,13 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
                     if let error = error {
                         self.logErrorMessage("CMPConsentManager cannot retrieve previous vendors list because of an error \"\(error.localizedDescription)\"")
                     } else if let previousVendorList = previousVendorList {
-                        // Generate the updated consent string
-                        self.consentString = CMPConsentString.consentString(fromUpdatedVendorList: vendorList,
-                                                                            previousVendorList: previousVendorList,
-                                                                            previousConsentString: storedConsentString,
-                                                                            consentLanguage: self.language)
+                        // The previous vendor list is stored
+                        self.previousVendorList = previousVendorList
+                        
+                        // Don't display the consent tool immediately if the presentation interval isn't elapsed
+                        guard self.isPresentationIntervalElapsed else {
+                            return;
+                        }
                         
                         DispatchQueue.main.async {
                             // Display consent tool
@@ -416,6 +464,10 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
         // If the 'Limited Ad Tracking' is disabled on the device, or if the 'Limited Ad Tracking' is enabled but the publisher
         // wants to handle this option himself…
         if isTrackingAllowed || self.showConsentToolIfLAT {
+            // If there is a previous consent string & a previous vendor list, this consent string must be migrated
+            // before displaying the consent tool so the new vendors/purposes are initialized properly
+            migrateConsentStringIfNeeded()
+            
             if let delegate = self.delegate {
                 // The delegate is called so the publisher can ask for user's consent
                 delegate.consentManagerRequestsToShowConsentTool(self, forVendorList: vendorList)
@@ -425,11 +477,43 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
                     let _ = showConsentTool(fromController: viewController)
                 }
             }
+            
+            // Persistent save of the last presentation date to avoid spamming the user with the consent tool
+            managerState.saveLastPresentationDate(Date())
         } else {
             // If 'Limited Ad Tracking' is enabled and the publisher don't want to handle it himself, a consent string with no
             // consent (for all vendors / purposes) is generated and stored.
             self.consentString = CMPConsentString.consentStringWithNoConsent(consentScreen: 0, consentLanguage: self.language, vendorList: vendorList, date: Date())
         }
+    }
+    
+    /**
+     Migrate the current consent string to the current vendor list.
+     
+     This method is useful when the current consent string used by the manager has been generated using a previousVendorList
+     but when a new vendorList is available. In this case, we want to upgrade the consent string version and add the new purposes
+     and vendors into the string.
+     
+     If the consent string is migrated, the previousVendorList will be set to nil to indicates that no more migration are required.
+     
+     Note: this method will always check that the migration is actually needed so it can called without issue from anywhere.
+     */
+    private func migrateConsentStringIfNeeded() {
+        if let storedConsentString = self.consentString,
+            let previousVendorList = self.previousVendorList,
+            let vendorList = self.vendorList,
+            storedConsentString.vendorListVersion != vendorList.vendorListVersion
+                && storedConsentString.vendorListVersion == previousVendorList.vendorListVersion {
+
+            // Generate the updated consent string
+            self.consentString = CMPConsentString.consentString(fromUpdatedVendorList: vendorList,
+                                                                previousVendorList: previousVendorList,
+                                                                previousConsentString: storedConsentString,
+                                                                consentLanguage: self.language)
+        }
+
+        // Since the consent string has been updated, the previous vendor list is not needed anymore
+        self.previousVendorList = nil
     }
     
     // MARK: - Variables changes
@@ -438,7 +522,7 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
      Method called when the GDPR status variable has changed.
      */
     private func gdrpStatusChanged() {
-        saveGDPRStatus(self.subjectToGDPR)
+        managerState.saveGDPRStatus(self.subjectToGDPR)
     }
     
     /**
@@ -449,10 +533,10 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
             return;
         }
         
-        saveConsentString(newConsentString.consentString)
-        saveVendorConsentString(newConsentString.parsedVendorConsents)
-        savePurposeConsentString(newConsentString.parsedPurposeConsents)
-        saveAdvertisingConsentStatus(forConsentString: newConsentString)
+        managerState.saveConsentString(newConsentString.consentString)
+        managerState.saveVendorConsentString(newConsentString.parsedVendorConsents)
+        managerState.savePurposeConsentString(newConsentString.parsedPurposeConsents)
+        managerState.saveAdvertisingConsentStatus(forConsentString: newConsentString)
     }
         
     // MARK: - Utils - Error Display
@@ -465,81 +549,5 @@ public class CMPConsentManager: NSObject, CMPVendorListManagerDelegate, CMPConse
     private func logErrorMessage(_ message: String) {
         NSLog("[ERROR] SmartCMP: \(message)")
     }
-    
-    // MARK: - Utils - NSUserDefault Management
-    
-    /**
-     Save a string in user defaults.
-     
-     - Parameters:
-        - string: The string that needs to be saved.
-        - key: The key in user defaults where the string will be saved.
-     */
-    private func saveStringToUserDefaults(string: String, key: String) {
-        let userDefaults = UserDefaults.standard
-        userDefaults.set(string, forKey: key)
-        userDefaults.synchronize()
-    }
-    
-    /**
-     Read a string from user defaults.
-     
-     - Parameters key: The key in user defaults from where the string will be read.
-     - Returns: The string read if any, nil otherwise.
-     */
-    private func readStringFromUserDefaults(key: String) -> String? {
-        let userDefaults = UserDefaults.standard
-        let string = userDefaults.object(forKey: key) as? String
-        return string
-    }
-    
-    /**
-     Save the GDPR status in user defaults.
-     
-     - Parameter status: The status to be saved.
-     */
-    internal func saveGDPRStatus(_ status: Bool) {
-        let statusString = status ? "1" : "0"
-        saveStringToUserDefaults(string: statusString, key: CMPConstants.IABConsentKeys.SubjectToGDPR)
-    }
-    
-    /**
-     Save the consent string in user defaults.
-     
-     - Parameter string: The consent string to be saved.
-     */
-    internal func saveConsentString(_ string: String) {
-        saveStringToUserDefaults(string: string, key: CMPConstants.IABConsentKeys.ConsentString)
-    }
-    
-    /**
-     Save the purposes consent string in user defaults.
-     
-     - Parameter string: The purposes consent string to be saved.
-     */
-    internal func savePurposeConsentString(_ string: String) {
-        saveStringToUserDefaults(string: string, key: CMPConstants.IABConsentKeys.ParsedPurposeConsent)
-    }
-    
-    /**
-     Save the advertising consent status in user defaults.
-     
-     - Parameters consentString: The consent string from which the advertising consent status will be retrieved.
-     */
-    internal func saveAdvertisingConsentStatus(forConsentString consentString: CMPConsentString) {
-        let advertisingConsentStatusString = consentString.isPurposeAllowed(purposeId: CMPConstants.AdvertisingConsentStatus.PurposeId) ? "1" : "0"
-        saveStringToUserDefaults(string: advertisingConsentStatusString, key: CMPConstants.AdvertisingConsentStatus.Key)
-    }
-    
-    /**
-     Save the vendors consent string in user defaults.
-     
-     - Parameter string: The vendors consent string to be saved.
-     */
-    internal func saveVendorConsentString(_ string: String) {
-        saveStringToUserDefaults(string: string, key: CMPConstants.IABConsentKeys.ParsedVendorConsent)
-    }
-    
-    private override init() {}
     
 }
