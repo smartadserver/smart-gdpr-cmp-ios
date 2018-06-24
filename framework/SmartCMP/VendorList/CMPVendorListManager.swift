@@ -14,7 +14,8 @@ import Foundation
 /**
  Retrieves and parse a vendor list from internet.
  */
-public class CMPVendorListManager {
+@objc
+public class CMPVendorListManager: NSObject {
     
     /// Represents an error happening during vendor list refresh.
     public enum RefreshError : Error {
@@ -70,6 +71,7 @@ public class CMPVendorListManager {
          - refreshInterval: The interval between each refresh.
          - delegate: The delegate that should be warned when a vendor list is available or in case of errors.
      */
+    @objc
     public convenience init(url: CMPVendorListURL, refreshInterval: TimeInterval, delegate: CMPVendorListManagerDelegate) {
         self.init(
             url: url,
@@ -112,6 +114,7 @@ public class CMPVendorListManager {
      Note: starting the refresh timer will trigger a refresh immediately no matter when the
      last refresh happen.
      */
+    @objc
     public func startRefreshTimer() {
         if timer == nil {
             // Refresh is called automatically when the refresh timer is started
@@ -131,6 +134,7 @@ public class CMPVendorListManager {
     /**
      Stop the automatic refresh timer.
      */
+    @objc
     public func stopRefreshTimer() {
         timer?.invalidate()
         timer = nil
@@ -151,6 +155,7 @@ public class CMPVendorListManager {
      
      - Parameter forceRefresh: true if the refresh should happen no matter what, false if it should check the 'last refresh date'.
      */
+    @objc
     public func refresh(forceRefresh: Bool) {
         if forceRefresh || isRefreshNeeded() {
             refresh(vendorListURL: vendorListURL)

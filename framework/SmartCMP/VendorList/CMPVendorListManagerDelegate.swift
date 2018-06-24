@@ -14,7 +14,8 @@ import Foundation
 /**
  Delegate of CMPVendorListManager.
  */
-public protocol CMPVendorListManagerDelegate {
+@objc
+public protocol CMPVendorListManagerDelegate: class {
     
     /**
      Method called when the vendor list manager did fetch a vendor list successfully.
@@ -23,6 +24,7 @@ public protocol CMPVendorListManagerDelegate {
          - vendorListManager: The vendor list manager that fetched a vendor list.
          - vendorList: The vendor list that has been fetched.
      */
+    @objc
     func vendorListManager(_ vendorListManager: CMPVendorListManager, didFetchVendorList vendorList: CMPVendorList)
     
     /**
@@ -32,6 +34,7 @@ public protocol CMPVendorListManagerDelegate {
          - vendorListManager: The vendor list manager that failed to fetch a vendor list.
          - vendorList: The error that has been triggered when trying to fetch the vendor list.
      */
+    @objc
     func vendorListManager(_ vendorListManager: CMPVendorListManager, didFailWithError error: Error)
     
 }

@@ -15,6 +15,7 @@ import Foundation
  Utils consent string extension that contains static methods used to initialize new consent
  strings more easily.
  */
+@objc
 public extension CMPConsentString {
     
     /**
@@ -27,6 +28,7 @@ public extension CMPConsentString {
         - date: The date that will be used as creation date & last updated date (optional, it will use the current date by default).
      - Returns: A new consent string with no consent given.
      */
+    @objc
     public static func consentStringWithNoConsent(consentScreen: Int,
                                            consentLanguage: CMPLanguage,
                                            vendorList: CMPVendorList,
@@ -57,6 +59,7 @@ public extension CMPConsentString {
         - date: The date that will be used as creation date & last updated date (optional, it will use the current date by default).
      - Returns: A new consent string with every consent given.
      */
+    @objc
     public static func consentStringWithFullConsent(consentScreen: Int,
                                              consentLanguage: CMPLanguage,
                                              vendorList: CMPVendorList,
@@ -89,6 +92,7 @@ public extension CMPConsentString {
         - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
      - Returns: The new consent string.
      */
+    @objc
     public static func consentString(fromUpdatedVendorList updatedVendorList: CMPVendorList,
                                      previousVendorList: CMPVendorList,
                                      previousConsentString: CMPConsentString,
@@ -137,6 +141,7 @@ public extension CMPConsentString {
         - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
      - Returns: A new consent string with a consent given for a particular purpose.
      */
+    @objc
     public static func consentStringByAddingConsent(forPurposeId purposeId: Int,
                                              consentString: CMPConsentString,
                                              consentLanguage: CMPLanguage,
@@ -172,6 +177,7 @@ public extension CMPConsentString {
         - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
      - Returns: A new consent string with a consent removed for a particular purpose.
      */
+    @objc
     public static func consentStringByRemovingConsent(forPurposeId purposeId: Int,
                                                consentString: CMPConsentString,
                                                consentLanguage: CMPLanguage,
@@ -206,6 +212,7 @@ public extension CMPConsentString {
         - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
      - Returns: A new consent string with a consent given for a particular vendor.
      */
+    @objc
     public static func consentStringByAddingConsent(forVendorId vendorId: Int,
                                              consentString: CMPConsentString,
                                              consentLanguage: CMPLanguage,
@@ -241,6 +248,7 @@ public extension CMPConsentString {
         - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
      - Returns: A new consent string with a consent removed for a particular vendor.
      */
+    @objc
     public static func consentStringByRemovingConsent(forVendorId vendorId: Int,
                                                consentString: CMPConsentString,
                                                consentLanguage: CMPLanguage,
@@ -277,6 +285,7 @@ public extension CMPConsentString {
         - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
      - Returns: A new consent string identical to the one provided in parameters with all purposes disallowed if possible, nil otherwise.
      */
+    @objc
     public static func consentStringWithNoPurposesConsent(fromConsentString previousConsentString: CMPConsentString,
                                                    consentScreen: Int,
                                                    consentLanguage: CMPLanguage,
@@ -315,6 +324,7 @@ public extension CMPConsentString {
         - lastUpdated: The date that will be used as last updated date (optional, it will use the current date by default).
      - Returns: A new consent string identical to the one provided in parameters with all purposes allowed if possible, nil otherwise.
      */
+    @objc
     public static func consentStringWithAllPurposesConsent(fromConsentString previousConsentString: CMPConsentString,
                                                     consentScreen: Int,
                                                     consentLanguage: CMPLanguage,

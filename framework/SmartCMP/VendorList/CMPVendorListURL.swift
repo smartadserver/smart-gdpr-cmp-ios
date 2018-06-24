@@ -14,7 +14,8 @@ import Foundation
 /**
  Represents the URL to a vendor list.
  */
-public class CMPVendorListURL {
+@objc
+public class CMPVendorListURL: NSObject {
     
     /// The actual url of the vendor list.
     let url: URL
@@ -27,6 +28,7 @@ public class CMPVendorListURL {
      
      - Parameter language: The language of the user if a localized url has to be used.
      */
+    @objc
     public init(language: CMPLanguage? = nil) {
         url = URL(string: CMPConstants.VendorList.DefaultEndPoint)!
         
@@ -47,6 +49,7 @@ public class CMPVendorListURL {
         - version: The vendor list version that should be fetched.
         - language: The language of the user if a localized url has to be used.
      */
+    @objc
     public init(version: Int, language: CMPLanguage? = nil) {
         precondition(version >= 0, "Version number must be a positive number!")
         
