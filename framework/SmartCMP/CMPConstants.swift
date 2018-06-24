@@ -48,6 +48,11 @@ internal struct CMPConstants {
         static let PurposeId                        = 3 
         static let Key                              = "SmartCMP_advertisingConsentStatus"
     }
+    
+    // Miscellanous NSUSerDefaults keys
+    struct MiscKeys {
+        static let LastPresentationDate             = "SmartCMP_lastPresentationDate"
+    }
  
     /// Vendor list configuration.
     struct VendorList {

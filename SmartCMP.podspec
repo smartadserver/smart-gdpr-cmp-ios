@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                  = "SmartCMP"
-  spec.version               = "3"
+  spec.version               = "4"
   spec.author                = "Smart AdServer"
   spec.license               = { :type => "Creative Commons Legal Code, Attribution 3.0 Unported" }
   spec.homepage              = "https://github.com/smartadserver/smart-gdpr-cmp-ios"
