@@ -44,7 +44,7 @@ internal class CMPVendorListManager {
     let pollInterval: TimeInterval
     
     /// The delegate that should be warned when a vendor list is available or in case of errors.
-    let delegate: CMPVendorListManagerDelegate
+    weak var delegate: CMPVendorListManagerDelegate?
     
     /// The URL session used for network connection.
     ///
@@ -274,11 +274,11 @@ internal class CMPVendorListManager {
     private func callRefreshCallback(vendorList: CMPVendorList?, error: Error?, responseHandler: ((CMPVendorList?, Error?) -> ())?) {
         if let handler = responseHandler {
             handler(vendorList, error)
-        } else {
+        } else if let delegate = self.delegate {
             if let vendorList = vendorList {
-                self.delegate.vendorListManager(self, didFetchVendorList: vendorList)
+                delegate.vendorListManager(self, didFetchVendorList: vendorList)
             } else if let error = error {
-                self.delegate.vendorListManager(self, didFailWithError: error)
+                delegate.vendorListManager(self, didFailWithError: error)
             }
         }
     }
