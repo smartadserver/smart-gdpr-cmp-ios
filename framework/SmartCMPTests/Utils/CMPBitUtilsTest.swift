@@ -29,6 +29,11 @@ class CMPBitUtilsTests: XCTestCase {
         XCTAssertEqual(CMPBitUtils.intToBits(42, numberOfBits: 8), "00101010")
     }
     
+    func testInt64ToBits() {
+        XCTAssertEqual(CMPBitUtils.int64ToBits(10_000_000_000, numberOfBits: 1), "1001010100000010111110010000000000")
+        XCTAssertEqual(CMPBitUtils.int64ToBits(10_000_000_000, numberOfBits: 40), "0000001001010100000010111110010000000000")
+    }
+    
     func testBoolToBits() {
         XCTAssertEqual(CMPBitUtils.boolToBits(false, numberOfBits: 1), "0")
         XCTAssertEqual(CMPBitUtils.boolToBits(true, numberOfBits: 1), "1")
@@ -64,6 +69,11 @@ class CMPBitUtilsTests: XCTestCase {
         XCTAssertEqual(CMPBitUtils.bitsToInt("10"), 2)
         XCTAssertEqual(CMPBitUtils.bitsToInt("00101010"), 42)
         XCTAssertNil(CMPBitUtils.bitsToInt("00101a10"))
+    }
+    
+    func testBitsToInt64() {
+        XCTAssertEqual(CMPBitUtils.bitsToInt("1001010100000010111110010000000000"), 10_000_000_000)
+        XCTAssertEqual(CMPBitUtils.bitsToInt("0000001001010100000010111110010000000000"), 10_000_000_000)
     }
     
     func testBitsToBool() {

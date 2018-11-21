@@ -29,12 +29,7 @@ internal class CMPBitUtils {
      - Returns: A string encoded integer.
      */
     public static func intToBits(_ number: Int, numberOfBits: Int) -> String {
-        precondition(number >= 0, "'number' must be positive")
-        precondition(numberOfBits >= 0, "'numberOfBits' must be positive")
-        
-        let bits = String(number, radix: 2)
-        let padding = numberOfBits - bits.count
-        return padding > 0 ? bits.leftPadded(count: padding) : bits
+        return int64ToBits(Int64(number), numberOfBits: numberOfBits)
     }
     
     /**
@@ -45,6 +40,41 @@ internal class CMPBitUtils {
      */
     public static func bitsToInt(_ bits: String) -> Int? {
         return Int(bits, radix: 2)
+    }
+    
+    /**
+     Encode a 64 bits integer into a bit string.
+     
+     This method should be used only for numbers that could overflow a 32 bits integer
+     on older iOS devices, like deciseconds encoding.
+     
+     - Parameters:
+         - number: The integer that needs to be encoded.
+         - numberOfBits: The minimum length of the returned string.
+     - Precondition: number must be a positive number (or equals to 0).
+     - Precondition: numberOfBits must be a positive number (or equals to 0).
+     - Returns: A string encoded integer.
+     */
+    public static func int64ToBits(_ number: Int64, numberOfBits: Int) -> String {
+        precondition(number >= 0, "'number' must be positive")
+        precondition(numberOfBits >= 0, "'numberOfBits' must be positive")
+        
+        let bits = String(number, radix: 2)
+        let padding = numberOfBits - bits.count
+        return padding > 0 ? bits.leftPadded(count: padding) : bits
+    }
+    
+    /**
+     Decode an 64 bits int from a bit string.
+     
+     This method should be used only for numbers that could overflow a 32 bits integer
+     on older iOS devices, like deciseconds decoding.
+     
+     - Parameter bits: The bit string that must be decoded.
+     - Returns: An integer if bits are valid, nil otherwise.
+     */
+    public static func bitsToInt64(_ bits: String) -> Int64? {
+        return Int64(bits, radix: 2)
     }
     
     /**
