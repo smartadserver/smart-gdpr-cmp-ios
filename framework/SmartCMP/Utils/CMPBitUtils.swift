@@ -124,7 +124,7 @@ internal class CMPBitUtils {
         precondition(numberOfBits >= 0, "'numberOfBits' must be positive")
         
         let deciseconds = date.timeIntervalSince1970 * 10
-        return intToBits(Int(deciseconds.rounded()), numberOfBits: numberOfBits)
+        return int64ToBits(Int64(deciseconds.rounded()), numberOfBits: numberOfBits)
     }
     
     /**
@@ -134,7 +134,7 @@ internal class CMPBitUtils {
      - Returns: A date if bits are valid, nil otherwise.
      */
     public static func bitsToDate(_ bits: String) -> Date? {
-        if let deciseconds = bitsToInt(bits) {
+        if let deciseconds = bitsToInt64(bits) {
             return Date(timeIntervalSince1970: Double(deciseconds) / 10.0)
         } else {
             return nil
