@@ -34,7 +34,7 @@ internal class CMPConsentToolManager {
     private let vendorList: CMPVendorList
     
     /// Current view controller.
-    private var presentingViewController: UIViewController?
+    private weak var presentingViewController: UIViewController?
     
     /// Consent tool configuration.
     internal let configuration: CMPConsentToolConfiguration
@@ -99,12 +99,14 @@ internal class CMPConsentToolManager {
      - Parameter save: true if the current consent string must be saved, false if it needs to be discarded.
      */
     func dismissConsentTool(save: Bool) {
-        guard let viewController = self.presentingViewController else {
-            return;
+        let completion: () -> Void = {
+            self.delegate?.consentToolManager(self, didFinishWithConsentString: save ? self.generatedConsentString : self.initialConsentString)
         }
         
-        viewController.dismiss(animated: true) {
-            self.delegate?.consentToolManager(self, didFinishWithConsentString: save ? self.generatedConsentString : self.initialConsentString)
+        if let viewController = self.presentingViewController {
+            viewController.dismiss(animated: true, completion: completion)
+        } else {
+            completion()
         }
     }
     
