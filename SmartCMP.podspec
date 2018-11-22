@@ -12,5 +12,6 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target = "8.0"
   spec.source_files          = "framework/SmartCMP/**/*.{h,m,swift}"
   spec.resources             = "framework/SmartCMP/**/*.{plist,storyboard}"
+  spec.exclude_files         = "framework/SmartCMP/**/*.plist"
   spec.framework             = "AdSupport"
 end
