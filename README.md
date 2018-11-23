@@ -61,7 +61,7 @@ You must setup the CMP before using it. Start by creating a configuration object
 
 Call the ```configure()``` method on ```CMPConsentManager.shared``` to start the CMP.
 
-    CMPConsentManager.shared.configure(language: CMPLanguage.DEFAULT_LANGUAGE, consentToolConfiguration: self.generateConsentToolConfiguration())
+    CMPConsentManager.shared.configure(language: CMPLanguage.DEFAULT_LANGUAGE, consentToolConfiguration: config)
 
 When the CMP is started, it will automatically fetch the most recent vendors list _(vendors.json)_ and prompt the user for consent if necessary, saving the resulting consent string in iOS _NSUserDefaults_ (according to the IAB specifications).
 
