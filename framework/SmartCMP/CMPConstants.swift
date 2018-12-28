@@ -20,11 +20,8 @@ internal struct CMPConstants {
     struct CMPInfos {
         static let VERSION                          = 3
         
-        // WARNING: '33' IS THE OFFICIAL CMP ID FOR SmartCMP.
-        // You can use this ID as long as you don't change the source code of this project.
-        // If you don't use it exactly as distributed in the official Smart AdServer repository,
-        // you must get your own CMP ID by registering here: https://register.consensu.org/CMP
-        static let ID                               = 33
+        // You must get and set your own CMP ID by registering here: https://register.consensu.org/CMP
+        static let ID = [YOUR_CMP_ID]
     }
     
     /// IAB Keys for NSUserDefaults storage.
